@@ -18,7 +18,16 @@ router.post("/signup", async (req, res, next) => {
         password: hash
       });
       newUser = await user.save();
-      res.json(user);
+      const payload = {
+        id: newUser._id,
+        handler: newUser.handler,
+        role: newUser.role
+      };
+      const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
+        expiresIn: 3600
+      });
+      console.log(newUser);
+      res.json({ success: true, token: "Bearer " + token });
     }
   } catch (error) {
     next(error);

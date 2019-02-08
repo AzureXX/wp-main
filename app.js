@@ -21,6 +21,7 @@ require("./config/passport.js")(passport);
 
 //Require routes
 const authRoute = require("./routes/api/auth");
+const userRoute = require("./routes/api/user");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 app.use((err, req, res, next) => {
   res.status(500);
