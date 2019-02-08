@@ -34,7 +34,7 @@ app.use("/api/user", userRoute);
 
 app.use((err, req, res, next) => {
   res.status(500);
-  res.json({ error: err.message });
+  res.json({ message: err.message });
 });
 
 module.exports = app;

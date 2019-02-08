@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   handler: {
     type: String,
-    required: "Handler is required"
+    unique: true
   },
   email: {
     type: String,

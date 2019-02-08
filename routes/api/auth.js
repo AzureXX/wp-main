@@ -11,7 +11,6 @@ router.post("/signup", async (req, res, next) => {
   const { handler, email, password } = req.body;
   if( !password ) next(new Error("Password is required"));
   if( !email ) next(new Error("Email is required"));
-  if( !handler ) next(new Error("Handler is required"));
   try {
     let user = await User.findOne({ email: req.body.email });
     if (user) next(new Error("Email already exists"));
