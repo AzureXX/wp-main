@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   handler: {
     type: String,
-    required: true
+    required: "Handler is required"
   },
   email: {
     type: String,
@@ -19,7 +19,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: "Password is required"
   },
   date: {
     type: Date,

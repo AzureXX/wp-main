@@ -2,16 +2,18 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-
+//@route   GET api/user/current
+//@desc    Return current user's email and id
+//@access  Private
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({
-      id: req.user.id,
-      name: req.user.name,
-      email: req.user.email
-    });
+  async (req, res, next) => {
+    try {
+      res.json({ handler: req.user.handler, id: req.user.id });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

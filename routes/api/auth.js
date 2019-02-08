@@ -4,12 +4,17 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 
+//@route   POST api/auth/signup
+//@desc    Return JWT
+//@access  Public
 router.post("/signup", async (req, res, next) => {
   const { handler, email, password } = req.body;
+  if( !password ) next(new Error("Password is required"));
+  if( !email ) next(new Error("Email is required"));
+  if( !handler ) next(new Error("Handler is required"));
   try {
     let user = await User.findOne({ email: req.body.email });
     if (user) next(new Error("Email already exists"));
-    else {
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(password, salt);
       user = new User({
@@ -26,16 +31,20 @@ router.post("/signup", async (req, res, next) => {
       const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 3600
       });
-      console.log(newUser);
       res.json({ success: true, token: "Bearer " + token });
-    }
   } catch (error) {
     next(error);
   }
 });
 
+
+//@route   POST api/auth/signin
+//@desc    Return JWT
+//@access  Public
 router.post("/signin", async (req, res, next) => {
   const { email, password } = req.body;
+  if( !password ) next(new Error("Password is required"));
+  if( !email ) next(new Error("Email is required"));
   try {
     const user = await User.findOne({ email });
     if (!user) next(new Error("User Not Found"));
