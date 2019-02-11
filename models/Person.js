@@ -7,6 +7,11 @@ const PersonSchema = new Schema({
     ru: String,
     az: String
   },
+  description: {
+    en: String,
+    ru: String,
+    az: String
+  },
 })
 
 const Person = mongoose.model("Person", PersonSchema)

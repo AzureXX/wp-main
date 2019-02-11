@@ -7,6 +7,11 @@ const BookSchema = new Schema({
     ru: String,
     az: String
   },
+  description: {
+    en: String,
+    ru: String,
+    az: String
+  },
   authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
   genres: [String],
 })
