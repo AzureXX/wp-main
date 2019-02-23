@@ -13,7 +13,7 @@ const BookSchema = new Schema({
     az: String
   },
   authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
-  genres: [String],
+  genres: [String]
 })
 
 const Book = mongoose.model("Book", BookSchema)

@@ -23,7 +23,7 @@ router.get(
   }
 );
 
-//@route   GET api/get/:handler
+//@route   GET api/user/get/:handler
 //@desc    Return user by handler or id
 //@access  Public
 router.get("/get/:handler", async (req, res, next) => {
@@ -34,7 +34,7 @@ router.get("/get/:handler", async (req, res, next) => {
     const user = await User.findOne({
       $or: [{ handler: req.params.handler }, { _id: objId }]
     });
-    if (!user) return next(new Error("No user found"));
+    if (!user) throw new Error("No user found");
     res.json({
       handler: user.handler,
       id: user.id
@@ -43,20 +43,35 @@ router.get("/get/:handler", async (req, res, next) => {
     return next(error);
   }
 });
-
+//@route   put api/user/update
+//@desc    Return user by handler or id
+//@access  Private
 router.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      if(req.user.handler !== req.body.handler) {
+      if (req.user.handler !== req.body.handler) {
         let user = await User.findOne({ handler: req.body.handler });
-        if (user) return next(new Error("Handler already exist"));
+        if (user) throw new Error("Handler already exist");
       }
       await User.findOneAndUpdate(
         { _id: req.user.id },
         { handler: req.body.handler }
       );
+      return res.status(200).send("Success");
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.delete(
+  "/delete",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      await User.findOneAndDelete({ _id: req.user.id });
       return res.status(200).send("Success");
     } catch (error) {
       return next(error);

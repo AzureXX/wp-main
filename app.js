@@ -22,6 +22,9 @@ require("./config/passport.js")(passport);
 //Require routes
 const authRoute = require("./routes/api/auth");
 const userRoute = require("./routes/api/user");
+const bookRoute = require("./routes/api/book");
+const courseRoute = require("./routes/api/course");
+const movieRoute = require("./routes/api/movie");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -31,6 +34,9 @@ app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/book", bookRoute);
+app.use("/api/course", courseRoute);
+app.use("/api/movie", movieRoute);
 
 app.use((err, req, res, next) => {
   res.status(500);

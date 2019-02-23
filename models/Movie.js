@@ -12,9 +12,15 @@ const MovieSchema = new Schema({
     ru: String,
     az: String
   },
-  authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
+  actors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
+  crew: [
+    {
+      role: String,
+      person: { type: mongoose.Schema.Types.ObjectId, ref: "Person" }
+    }
+  ],
   genres: [String]
-})
+});
 
-const Movie = mongoose.model("Movie", MovieSchema)
+const Movie = mongoose.model("Movie", MovieSchema);
 module.exports = Movie;

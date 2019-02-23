@@ -9,28 +9,35 @@ const User = require("../../models/User");
 //@access  Public
 router.post("/signup", async (req, res, next) => {
   const { handler, email, password } = req.body;
-  if( !password ) return next(new Error("Password is required"));
-  if( !email ) return next(new Error("Email is required"));
+  
   try {
+    if( !password ) throw new Error("Password is required");
+    if( !email ) throw new Error("Email is required");
     let user = await User.findOne({ email: req.body.email });
-    if (user) return next(new Error("Email already exists"));
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(password, salt);
-      user = new User({
-        handler: handler,
-        email: email,
-        password: hash
-      });
-      newUser = await user.save();
-      const payload = {
-        id: newUser._id,
-        handler: newUser.handler,
-        role: newUser.role
-      };
-      const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
-        expiresIn: 360000
-      });
-      res.json({ success: true, token: "Bearer " + token });
+    
+    if (user) throw new Error("Email already exists");
+    if (handler) {
+      user = await User.findOne({ handler: handler });
+      if (user) throw new Error("Handler already exists");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    user = new User({
+      handler: handler,
+      email: email,
+      password: hash
+    });
+    const newUser = await user.save();
+    const payload = {
+      id: newUser._id,
+      handler: newUser.handler,
+      role: newUser.role
+    };
+    const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
+      expiresIn: 360000
+    });
+    res.json({ success: true, token: "Bearer " + token });
   } catch (error) {
     return next(error);
   }
@@ -42,14 +49,15 @@ router.post("/signup", async (req, res, next) => {
 //@access  Public
 router.post("/signin", async (req, res, next) => {
   const { email, password } = req.body;
-  if( !password ) return next(new Error("Password is required"));
-  if( !email ) return next(new Error("Email is required"));
+  
   try {
+    if( !password ) throw new Error("Password is required");
+    if( !email ) throw new Error("Email is required");
+    
     const user = await User.findOne({ email });
-    if (!user) return next(new Error("User Not Found"));
+    if (!user) throw new Error("User Not Found");
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      //User Matched
       const payload = {
         id: user._id,
         handler: user.handler,
@@ -60,7 +68,7 @@ router.post("/signin", async (req, res, next) => {
       });
       res.json({ success: true, token: "Bearer " + token });
     } else {
-      return next(new Error("Password is incorrect"));
+      throw new Error("Password is incorrect");
     }
   } catch (error) {
     return next(error);
