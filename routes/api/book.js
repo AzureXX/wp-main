@@ -27,6 +27,42 @@ router.post(
   }
 );
 
+//@route   PUT api/book/edit/:id
+//@desc    Edit book in database
+//@access  Private/Moderator
+router.put(
+  "/edit/:id",
+  passport.authenticate("jwt", { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    res.json("Success");
+  }
+);
 
+//@route   Delete api/book/delete
+//@desc     Delete book from database
+//@access  Private/Moderator
+router.delete(
+  "/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    res.json("Success");
+  }
+);
+
+//@route   GET api/book/get/all/:page
+//@desc    Get all books by page
+//@access  Public
+router.get("/get/all/:page",  async (req, res, next) => {
+  res.json("Success");
+})
+
+//@route   GET api/book/get/id/:id
+//@desc    Get book by id
+//@access  Public
+router.get("/get/id/:id",  async (req, res, next) => {
+  res.json("Success");
+})
 
 module.exports = router;
