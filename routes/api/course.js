@@ -18,7 +18,7 @@ router.post(
       const newCourse = new Course();
       newCourse.name.en = nameEn;
       newCourse.description.en = descriptionEn;
-      newCourse.actors = actors
+      newCourse.authors = authors
         ? authors.split(",").map(item => item.trim())
         : null;
       newCourse.genres = genres
