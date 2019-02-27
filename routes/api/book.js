@@ -99,10 +99,6 @@ router.get("/get/all/:page?", async (req, res, next) => {
   }
 });
 
-//@route   GET api/book/get/all/
-//@desc    Get all books by page
-//@access  Public
-
 //@route   GET api/book/get/id/:id
 //@desc    Get book by id
 //@access  Public
