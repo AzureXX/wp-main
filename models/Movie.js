@@ -19,7 +19,10 @@ const MovieSchema = new Schema({
       person: { type: mongoose.Schema.Types.ObjectId, ref: "Person" }
     }
   ],
-  genres: [String]
+  genres: [String],
+  wikipediaLink: {
+    en: String
+  }
 });
 
 const Movie = mongoose.model("Movie", MovieSchema);

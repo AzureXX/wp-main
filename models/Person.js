@@ -12,6 +12,9 @@ const PersonSchema = new Schema({
     ru: String,
     az: String
   },
+  wikipediaLink: {
+    en: String
+  }
 })
 
 const Person = mongoose.model("Person", PersonSchema)

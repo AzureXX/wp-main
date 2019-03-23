@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const BookSchema = new Schema({
+  ISBN: Number,
   name: {
     en: String,
     ru: String,
@@ -13,7 +14,11 @@ const BookSchema = new Schema({
     az: String
   },
   authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
-  genres: [String]
+  genres: [String],
+  wikipediaLink: {
+    en: String
+  }
+  
 })
 
 const Book = mongoose.model("Book", BookSchema)
