@@ -8,7 +8,7 @@ const User = require('../../models/User');
 //@desc    Return JWT
 //@access  Public
 router.post('/signup', async(req, res, next) => {
-    const { handler, email, password, password2, firstName, lastName } = req.body;
+    const { username, email, password, password2, firstName, lastName } = req.body;
 
     try {
         if (!password) throw new Error('Password is required');
@@ -18,15 +18,15 @@ router.post('/signup', async(req, res, next) => {
         let user = await User.findOne({ email: req.body.email });
 
         if (user) throw new Error('Email already exists');
-        if (handler) {
-            user = await User.findOne({ handler: handler });
-            if (user) throw new Error('Handler already exists');
+        if (username) {
+            user = await User.findOne({ username: username });
+            if (user) throw new Error('Username already exists');
         }
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
         user = new User({
-            handler: handler,
+            username: username,
             email: email,
             password: hash,
             firstName: firstName,
@@ -35,7 +35,7 @@ router.post('/signup', async(req, res, next) => {
         const newUser = await user.save();
         const payload = {
             id: newUser._id,
-            handler: newUser.handler,
+            username: newUser.username,
             role: newUser.role
         };
         const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
@@ -63,7 +63,7 @@ router.post('/signin', async(req, res, next) => {
         if (isMatch) {
             const payload = {
                 id: user._id,
-                handler: user.handler,
+                username: user.username,
                 role: user.role
             };
             const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {

@@ -15,7 +15,7 @@ router.get(
             console.log(req.user);
             res.json({
                 email: req.user.email,
-                handler: req.user.handler,
+                username: req.user.username,
                 id: req.user.id,
 
             });
@@ -25,20 +25,20 @@ router.get(
     }
 );
 
-//@route   GET api/user/get/:handler
-//@desc    Return user by handler or id
+//@route   GET api/user/get/:username
+//@desc    Return user by username or id
 //@access  Public
-router.get("/get/:handler", async(req, res, next) => {
+router.get("/get/:username", async(req, res, next) => {
     try {
         const objId = new ObjectId(
-            ObjectId.isValid(req.params.handler) ? req.params.handler : "123456789012"
+            ObjectId.isValid(req.params.username) ? req.params.username : "123456789012"
         );
         const user = await User.findOne({
-            $or: [{ handler: req.params.handler }, { _id: objId }]
+            $or: [{ username: req.params.username }, { _id: objId }]
         });
         if (!user) throw new Error("No user found");
         res.json({
-            handler: user.handler,
+            username: user.username,
             id: user.id
         });
     } catch (error) {
@@ -46,18 +46,18 @@ router.get("/get/:handler", async(req, res, next) => {
     }
 });
 //@route   put api/user/update
-//@desc    Return user by handler or id
+//@desc    Return user by username or id
 //@access  Private
 router.put(
     "/update",
     passport.authenticate("jwt", { session: false }),
     async(req, res, next) => {
         try {
-            if (req.user.handler !== req.body.handler) {
-                let user = await User.findOne({ handler: req.body.handler });
-                if (user) throw new Error("Handler already exist");
+            if (req.user.username !== req.body.username) {
+                let user = await User.findOne({ username: req.body.username });
+                if (user) throw new Error("Username already exist");
             }
-            await User.findOneAndUpdate({ _id: req.user.id }, { handler: req.body.handler });
+            await User.findOneAndUpdate({ _id: req.user.id }, { username: req.body.username });
             return res.status(200).send("Success");
         } catch (error) {
             return next(error);
