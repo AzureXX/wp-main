@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const BookSchema = new Schema({
-  ISBN: Number,
+  
   name: {
     en: String,
     ru: String,
@@ -15,7 +15,13 @@ const BookSchema = new Schema({
   },
   authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
   genres: [String],
+  ISBN: Number,
+  published: Date,
+  publisher: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
   wikipediaLink: {
+    en: String
+  },
+  website: {
     en: String
   },
   tags: [{name:String, level: Number}]
