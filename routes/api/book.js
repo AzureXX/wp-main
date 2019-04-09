@@ -86,8 +86,8 @@ router.get('/get/all/:page?', async (req, res, next) => {
   try {
     let page = parseInt(req.params.page);
     const size = 3;
-    const offset = (page - 1) * size;
     if (isNaN(page)) page = 1;
+    const offset = (page - 1) * size;
     const books = await Book.find()
       .skip(offset)
       .limit(size);

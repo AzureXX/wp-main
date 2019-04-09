@@ -8,7 +8,7 @@ const User = require('../../models/User');
 //@desc    Return JWT
 //@access  Public
 router.post('/signup', async(req, res, next) => {
-    const { username, email, password, password2, firstName, lastName } = req.body;
+    const { username, email, password, password2} = req.body;
 
     try {
         if (!password) throw new Error('Password is required');
@@ -28,9 +28,7 @@ router.post('/signup', async(req, res, next) => {
         user = new User({
             username: username,
             email: email,
-            password: hash,
-            firstName: firstName,
-            lastName: lastName
+            password: hash
         });
         const newUser = await user.save();
         const payload = {
