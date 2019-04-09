@@ -12,12 +12,19 @@ router.get(
     passport.authenticate("jwt", { session: false }),
     async(req, res, next) => {
         try {
-            console.log(req.user);
             res.json({
                 email: req.user.email,
                 username: req.user.username,
                 id: req.user.id,
-
+                role: req.user.role,
+                type: req.user.accountType,
+                firstname: req.user.firstname,
+                lastname: req.user.lastname,
+                description: req.user.description,
+                country: req.user.country,
+                city: req.user.city,
+                dob: req.user.dob,
+                phoneNumber: req.user.phoneNumber
             });
         } catch (error) {
             return next(error);

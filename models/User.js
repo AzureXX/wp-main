@@ -26,12 +26,12 @@ const UserSchema = new Schema({
         type: String,
         default: "private"
     },
-    firstName: String,
-    lastName: String,
+    firstname: String,
+    lastname: String,
     description: String,
     country: String,
     city: String,
-    dob: String,
+    dob: Date,
     phoneNumber: String,
     date: {
         type: Date,

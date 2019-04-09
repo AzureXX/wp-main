@@ -23,7 +23,7 @@ const BookSchema = new Schema({
   },
   website: {
     en: String
-  },
+  },  
   tags: [{name:String, level: Number}]
 })
 
