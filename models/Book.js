@@ -17,8 +17,8 @@ const BookSchema = new Schema({
   genres: [String],
   wikipediaLink: {
     en: String
-  }
-  
+  },
+  tags: [{name:String, level: Number}]
 })
 
 const Book = mongoose.model("Book", BookSchema)

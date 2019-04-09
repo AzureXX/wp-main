@@ -22,7 +22,8 @@ const MovieSchema = new Schema({
   genres: [String],
   wikipediaLink: {
     en: String
-  }
+  },
+  tags: [{name:String, level: Number}]
 });
 
 const Movie = mongoose.model("Movie", MovieSchema);

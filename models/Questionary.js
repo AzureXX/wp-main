@@ -10,8 +10,8 @@ const QuestionarySchema = new Schema({
       tagname: String,
       effect: Number
     }]
-  }]
-  
+  }],
+  tags: [{name:String, level: Number}]
 })
 
 const Questionary = mongoose.model("Questionary", QuestionarySchema)

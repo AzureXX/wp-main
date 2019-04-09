@@ -40,7 +40,8 @@ const UserSchema = new Schema({
     role: {
         type: String,
         default: "user"
-    }
+    },
+    tags: [{name:String, experience: Number}]
 })
 
 const User = mongoose.model("User", UserSchema)

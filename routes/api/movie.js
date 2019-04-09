@@ -14,8 +14,8 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
+    const { nameEn, descriptionEn, actors, genres } = req.body;
     try {
-      const { nameEn, descriptionEn, actors, genres } = req.body;
       const newMovie = new Movie();
       newMovie.name.en = nameEn;
       newMovie.description.en = descriptionEn;

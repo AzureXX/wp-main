@@ -14,7 +14,8 @@ const PersonSchema = new Schema({
   },
   wikipediaLink: {
     en: String
-  }
+  },
+  tags: [{name:String, level: Number}]
 })
 
 const Person = mongoose.model("Person", PersonSchema)
