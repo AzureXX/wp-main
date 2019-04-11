@@ -83,7 +83,7 @@ router.put(
                 dob: req.body.dob === '' ? null : req.user.dob,
                 phoneNumber: req.body.phoneNumber === '' ? req.body.phoneNumber : req.user.phoneNumber,
             });
-            return res.status(200).json('Success');
+            return res.status(200).json(user);
         } catch (error) {
             return next(error);
         }
