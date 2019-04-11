@@ -45,10 +45,21 @@ router.get('/get/:username', async(req, res, next) => {
         const user = await User.findOne({
             $or: [{ username: req.params.username }, { _id: objId }]
         });
+
         if (!user) throw new Error('No user found');
         res.json({
+            email: user.email,
             username: user.username,
-            id: user.id
+            id: user.id,
+            role: user.role,
+            type: user.accountType,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            description: user.description,
+            country: user.country,
+            city: user.city,
+            dob: user.dob,
+            phoneNumber: user.phoneNumber
         });
     } catch (error) {
         return next(error);
@@ -151,8 +162,14 @@ router.delete(
     passport.authenticate('jwt', { session: false }),
     async(req, res, next) => {
         try {
-            await User.findOneAndDelete({ _id: req.user.id });
-            return res.status(200).send('Success');
+            const { password } = req.body;
+            const isMatch = await bcrypt.compare(password, req.user.password);
+            if (isMatch) {
+                await User.findOneAndDelete({ _id: req.user.id });
+                return res.status(200).send('Successully deleted');
+            } else {
+                throw new Error('Password is incorrect');
+            }
         } catch (error) {
             return next(error);
         }
