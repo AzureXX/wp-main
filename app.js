@@ -12,12 +12,12 @@ const app = express();
 
 app.use(helmet())
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+    .connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useCreateIndex: true
+    })
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.log(err));
 
 //Passport middleware
 app.use(passport.initialize());
@@ -45,8 +45,8 @@ app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
 
 app.use((err, req, res, next) => {
-  res.status(500);
-  res.json({ message: err.message });
+    res.status(500);
+    res.json({ message: err.message });
 });
 
 module.exports = app;
