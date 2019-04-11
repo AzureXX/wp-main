@@ -63,12 +63,12 @@ router.put(
     async(req, res, next) => {
         try {
             let user;
-            if (req.user.username !== req.body.username) {
+            if (req.body.username && req.user.username !== req.body.username) {
                 user = await User.findOne({ username: req.body.username });
                 if (user) throw new Error('Username already exist');
             }
-            if (req.user.email !== req.body.email) {
-                user = await User.findOne({ username: req.body.username });
+            if (req.body.email && req.user.email !== req.body.email) {
+                user = await User.findOne({ email: req.body.email });
                 if (user) throw new Error('Email already exist');
             }
 
