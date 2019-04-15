@@ -4,6 +4,7 @@ const passport = require('passport');
 const User = require('../../models/User');
 const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcryptjs');
+
 //@route   GET api/user/current
 //@desc    Return current user's email and id
 //@access  Private
@@ -65,7 +66,8 @@ router.get('/get/:username', async(req, res, next) => {
         return next(error);
     }
 });
-//@route   put api/user/update
+
+//@route   PUT api/user/update
 //@desc    Return user by username or id
 //@access  Private
 router.put(
@@ -87,40 +89,26 @@ router.put(
                 username: req.body.username || req.user.username,
                 email: req.body.email || req.user.email,
                 firstname: req.body.firstname ?
-                    req.body.firstname :
-                    req.body.firstname === '' ?
-                    req.body.firstname :
-                    req.user.firstname,
+                    req.body.firstname : req.body.firstname === '' ?
+                    req.body.firstname : req.user.firstname,
                 lastname: req.body.lastname ?
-                    req.body.lastname :
-                    req.body.lastname === '' ?
-                    req.body.lastname :
-                    req.user.lastname,
+                    req.body.lastname : req.body.lastname === '' ?
+                    req.body.lastname : req.user.lastname,
                 city: req.body.city ?
-                    req.body.city :
-                    req.body.city === '' ?
-                    req.body.city :
-                    req.user.city,
+                    req.body.city : req.body.city === '' ?
+                    req.body.city : req.user.city,
                 country: req.body.country ?
-                    req.body.country :
-                    req.body.country === '' ?
-                    req.body.country :
-                    req.user.country,
+                    req.body.country : req.body.country === '' ?
+                    req.body.country : req.user.country,
                 description: req.body.description ?
-                    req.body.description :
-                    req.body.description === '' ?
-                    req.body.description :
-                    req.user.description,
+                    req.body.description : req.body.description === '' ?
+                    req.body.description : req.user.description,
                 dob: req.body.dob ?
-                    req.body.dob :
-                    req.body.dob === '' ?
-                    null :
-                    req.user.dob,
+                    req.body.dob : req.body.dob === '' ?
+                    null : req.user.dob,
                 phoneNumber: req.body.phoneNumber ?
-                    req.body.phoneNumber :
-                    req.body.phoneNumber === '' ?
-                    req.body.phoneNumber :
-                    req.user.phoneNumber
+                    req.body.phoneNumber : req.body.phoneNumber === '' ?
+                    req.body.phoneNumber : req.user.phoneNumber
             });
             return res.status(200).json(user);
         } catch (error) {
@@ -128,7 +116,8 @@ router.put(
         }
     }
 );
-//@route   put api/user/changepass
+
+//@route   PUT api/user/changepass
 //@desc    Changes user password
 //@access  Private
 router.put(
@@ -154,7 +143,7 @@ router.put(
     }
 );
 
-//@route   put api/user/delete
+//@route   DELETE api/user/delete
 //@desc    Deletes User
 //@access  Private
 router.delete(
@@ -175,4 +164,5 @@ router.delete(
         }
     }
 );
+
 module.exports = router;
