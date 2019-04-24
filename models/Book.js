@@ -28,7 +28,7 @@ const BookSchema = new Schema({
     ru: String,
     az: String
   },  
-  tags: [{name:String, level: Number}]
+  tags: String
 })
 
 const Book = mongoose.model("Book", BookSchema)

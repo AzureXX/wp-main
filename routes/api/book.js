@@ -15,7 +15,7 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const { name, description, authors, genres, isbn, published, publisher, wikipediaLink, website } = req.body;
+      const { name, description, authors, genres, isbn, published, publisher, wikipediaLink, website, tags } = req.body;
       const newBook = new Book({
         name: {
           us: name.us,
@@ -32,8 +32,17 @@ router.post(
         ISBN: isbn,
         published: published,
         publisher: publisher ? publisher.split(',').map(item => item.trim()) : null,
-        wikipediaLink: wikipediaLink,
-        website: website
+        wikipediaLink: {
+          us: wikipediaLink.us,
+          ru: wikipediaLink.ru,
+          az: wikipediaLink.az
+        },
+        website: {
+          us: website.us,
+          ru: website.ru,
+          az: website.az
+        },
+        tags: tags ? tags.split(',').map(item => item.trim()) : null
       });
 
       const book = await newBook.save();
