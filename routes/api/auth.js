@@ -87,11 +87,13 @@ router.post('/signin', async (req, res, next) => {
 
     Joi.validate(req.body, schema, { abortEarly: false }, (err, value) => {
       const errors = {};
-      err.details.forEach(el => {
-        errors[el.path[0]] = el.message;
-      });
-
-      if (err) throw new Error(JSON.stringify(errors));
+      
+      if (err) {
+        err.details.forEach(el => {
+          errors[el.path[0]] = el.message;
+        });
+        throw new Error(JSON.stringify(errors));
+      } 
     });
 
     const user = await User.findOne({ email });
