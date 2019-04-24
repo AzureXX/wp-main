@@ -15,7 +15,18 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const { name, description, authors, genres, isbn, published, publisher, wikipediaLink, website, tags } = req.body;
+      const {
+        name,
+        description,
+        authors,
+        genres,
+        isbn,
+        published,
+        publisher,
+        wikipediaLink,
+        website,
+        tags
+      } = req.body;
       const newBook = new Book({
         name: {
           us: name.us,
@@ -31,7 +42,8 @@ router.post(
         genres: genres ? genres.split(',').map(item => item.trim()) : null,
         ISBN: isbn,
         published: published,
-        publisher: publisher ? publisher.split(',').map(item => item.trim()) : null,
+        publisher: publisher
+          ? publisher.split(',').map(item => item.trim())
         wikipediaLink: {
           us: wikipediaLink.us,
           ru: wikipediaLink.ru,
@@ -61,19 +73,57 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { nameUs, descriptionUs, authors, genres } = req.body;
+    const {
+      name,
+      description,
+      authors,
+      genres,
+      isbn,
+      published,
+      publisher,
+      wikipediaLink,
+      website,
+      tags
+    } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const book = await Book.findById(id);
       if (!book) throw new Error('No such book exist');
-      book.name.us = nameUs;
-      book.description.us = descriptionUs;
-      book.authors = authors
-        ? authors.split(',').map(item => item.trim())
-        : null;
-      book.genres = genres ? genres.split(',').map(item => item.trim()) : null;
-      await book.save();
-      res.json('Success');
+      book = {
+        ...book,
+        ...{
+          name: {
+            us: name.us,
+            ru: name.ru,
+            az: name.az
+          },
+          description: {
+            us: description.us,
+            ru: description.ru,
+            az: description.az
+          },
+          authors: authors ? authors.split(',').map(item => item.trim()) : null,
+          genres: genres ? genres.split(',').map(item => item.trim()) : null,
+          ISBN: isbn,
+          published: published,
+          publisher: publisher
+            ? publisher.split(',').map(item => item.trim())
+            : null,
+          wikipediaLink: {
+            us: wikipediaLink.us,
+            ru: wikipediaLink.ru,
+            az: wikipediaLink.az
+          },
+          website: {
+            us: website.us,
+            ru: website.ru,
+            az: website.az
+          },
+          tags: tags ? tags.split(',').map(item => item.trim()) : null
+        }
+      };
+      const saved = await book.save();
+      res.status(200).json(saved);
     } catch (error) {
       next(error);
     }
