@@ -15,10 +15,10 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const { nameEn, descriptionEn, authors, genres } = req.body;
+      const { nameUs, descriptionUs, authors, genres } = req.body;
       const newBook = new Book();
-      newBook.name.en = nameEn;
-      newBook.description.en = descriptionEn;
+      newBook.name.us = nameUs;
+      newBook.description.us = descriptionUs;
       newBook.authors = authors
         ? authors.split(',').map(item => item.trim())
         : null;
@@ -41,13 +41,13 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { nameEn, descriptionEn, authors, genres } = req.body;
+    const { nameUs, descriptionUs, authors, genres } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const book = await Book.findById(id);
       if (!book) throw new Error('No such book exist');
-      book.name.en = nameEn;
-      book.description.en = descriptionEn;
+      book.name.us = nameUs;
+      book.description.us = descriptionUs;
       book.authors = authors
         ? authors.split(',').map(item => item.trim())
         : null;

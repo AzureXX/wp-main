@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 const BookSchema = new Schema({
   
   name: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
   description: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
@@ -19,10 +19,10 @@ const BookSchema = new Schema({
   published: Date,
   publisher: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
   wikipediaLink: {
-    en: String
+    us: String
   },
   website: {
-    en: String
+    us: String
   },  
   tags: [{name:String, level: Number}]
 })
