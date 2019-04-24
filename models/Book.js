@@ -19,10 +19,14 @@ const BookSchema = new Schema({
   published: Date,
   publisher: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
   wikipediaLink: {
-    us: String
+    us: String,
+    ru: String,
+    az: String
   },
   website: {
-    us: String
+    us: String,
+    ru: String,
+    az: String
   },  
   tags: [{name:String, level: Number}]
 })

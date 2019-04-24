@@ -15,16 +15,27 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const { nameUs, descriptionUs, authors, genres } = req.body;
-      const newBook = new Book();
-      newBook.name.us = nameUs;
-      newBook.description.us = descriptionUs;
-      newBook.authors = authors
-        ? authors.split(',').map(item => item.trim())
-        : null;
-      newBook.genres = genres
-        ? genres.split(',').map(item => item.trim())
-        : null;
+      const { name, description, authors, genres, isbn, published, publisher, wikipediaLink, website } = req.body;
+      const newBook = new Book({
+        name: {
+          us: name.us,
+          ru: name.ru,
+          az: name.az
+        },
+        description: {
+          us: description.us,
+          ru: description.ru,
+          az: description.az
+        },
+        authors: authors ? authors.split(',').map(item => item.trim()) : null,
+        genres: genres ? genres.split(',').map(item => item.trim()) : null,
+        ISBN: isbn,
+        published: published,
+        publisher: publisher ? publisher.split(',').map(item => item.trim()) : null,
+        wikipediaLink: wikipediaLink,
+        website: website
+      });
+
       const book = await newBook.save();
       res.status(200).json(book);
     } catch (error) {
@@ -69,7 +80,7 @@ router.delete(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      if (!(validation.mongooseId(req.params.id)))
+      if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       await Book.findByIdAndDelete(req.params.id);
       res.json('Success');
