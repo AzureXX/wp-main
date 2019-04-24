@@ -112,6 +112,7 @@ router.post('/signin', async(req, res, next) => {
             throw new Error('Password is incorrect');
         }
     } catch (error) {
+        console.log(error);
         return next(error);
     }
 });
