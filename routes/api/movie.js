@@ -85,7 +85,7 @@ router.delete(
 router.get('/get/all/:page?', async (req, res, next) => {
   try {
     let page = parseInt(req.params.page);
-    const size = 3;
+    const size = 100;
     if (isNaN(page)) page = 1;
     const offset = (page - 1) * size;
     if (isNaN(page)) page = 1;
