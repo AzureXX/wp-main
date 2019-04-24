@@ -44,6 +44,7 @@ router.post(
         published: published,
         publisher: publisher
           ? publisher.split(',').map(item => item.trim())
+          : null,
         wikipediaLink: {
           us: wikipediaLink.us,
           ru: wikipediaLink.ru,
