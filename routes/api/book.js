@@ -29,14 +29,14 @@ router.post(
       } = req.body;
       const newBook = new Book({
         name: {
-          us: name.us,
-          ru: name.ru,
-          az: name.az
+          us: name ? name.us : null,
+          ru: name ? name.ru : null,
+          az: name ? name.az : null,
         },
         description: {
-          us: description.us,
-          ru: description.ru,
-          az: description.az
+          us: description ? description.us : null,
+          ru: description ? description.ru : null,
+          az: description ? description.az : null,
         },
         authors: authors ? authors.split(',').map(item => item.trim()) : null,
         genres: genres ? genres.split(',').map(item => item.trim()) : null,
@@ -46,14 +46,14 @@ router.post(
           ? publisher.split(',').map(item => item.trim())
           : null,
         wikipediaLink: {
-          us: wikipediaLink.us,
-          ru: wikipediaLink.ru,
-          az: wikipediaLink.az
+          us: wikipediaLink ? wikipediaLink.us : null,
+          ru: wikipediaLink ? wikipediaLink.ru : null,
+          az: wikipediaLink ? wikipediaLink.az : null
         },
         website: {
-          us: website.us,
-          ru: website.ru,
-          az: website.az
+          us: website ? website.us : null,
+          ru: website ? website.ru : null,
+          az: website ? website.az : null,
         },
         tags: tags ? tags.split(',').map(item => item.trim()) : null
       });
@@ -94,14 +94,14 @@ router.put(
         ...book,
         ...{
           name: {
-            us: name.us,
-            ru: name.ru,
-            az: name.az
+            us: name ? name.us : null,
+            ru: name ? name.ru : null,
+            az: name ? name.az : null,
           },
           description: {
-            us: description.us,
-            ru: description.ru,
-            az: description.az
+            us: description ? description.us : null,
+            ru: description ? description.ru : null,
+            az: description ? description.az : null,
           },
           authors: authors ? authors.split(',').map(item => item.trim()) : null,
           genres: genres ? genres.split(',').map(item => item.trim()) : null,
@@ -111,14 +111,14 @@ router.put(
             ? publisher.split(',').map(item => item.trim())
             : null,
           wikipediaLink: {
-            us: wikipediaLink.us,
-            ru: wikipediaLink.ru,
-            az: wikipediaLink.az
+            us: wikipediaLink ? wikipediaLink.us : null,
+            ru: wikipediaLink ? wikipediaLink.ru : null,
+            az: wikipediaLink ? wikipediaLink.az : null
           },
           website: {
-            us: website.us,
-            ru: website.ru,
-            az: website.az
+            us: website ? website.us : null,
+            ru: website ? website.ru : null,
+            az: website ? website.az : null,
           },
           tags: tags ? tags.split(',').map(item => item.trim()) : null
         }
