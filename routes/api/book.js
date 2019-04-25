@@ -18,7 +18,7 @@ router.post(
       const {
         name,
         description,
-        authors,
+        author,
         genres,
         isbn,
         published,
@@ -27,24 +27,30 @@ router.post(
         website,
         tags
       } = req.body;
-      console.log(req.body)
+      console.log(req.body);
       const newBook = new Book({
         name: {
           us: name ? name.us : null,
           ru: name ? name.ru : null,
-          az: name ? name.az : null,
+          az: name ? name.az : null
         },
         description: {
           us: description ? description.us : null,
           ru: description ? description.ru : null,
-          az: description ? description.az : null,
+          az: description ? description.az : null
         },
-        authors: authors ? authors.split(',').map(item => item.trim()) : null,
+        authors: author
+          ? author.split(',').map(item => {
+              return transformation.mongooseId(item.trim());
+            })
+          : null,
         genres: genres ? genres.split(',').map(item => item.trim()) : null,
         ISBN: isbn,
         published: published,
         publisher: publisher
-          ? publisher.split(',').map(item => item.trim())
+          ? publisher.split(',').map(item => {
+              return transformation.mongooseId(item.trim());
+            })
           : null,
         wikipediaLink: {
           us: wikipediaLink ? wikipediaLink.us : null,
@@ -54,7 +60,7 @@ router.post(
         website: {
           us: website ? website.us : null,
           ru: website ? website.ru : null,
-          az: website ? website.az : null,
+          az: website ? website.az : null
         },
         tags: tags ? tags.split(',').map(item => item.trim()) : null
       });
@@ -97,12 +103,12 @@ router.put(
           name: {
             us: name ? name.us : null,
             ru: name ? name.ru : null,
-            az: name ? name.az : null,
+            az: name ? name.az : null
           },
           description: {
             us: description ? description.us : null,
             ru: description ? description.ru : null,
-            az: description ? description.az : null,
+            az: description ? description.az : null
           },
           authors: authors ? authors.split(',').map(item => item.trim()) : null,
           genres: genres ? genres.split(',').map(item => item.trim()) : null,
@@ -119,7 +125,7 @@ router.put(
           website: {
             us: website ? website.us : null,
             ru: website ? website.ru : null,
-            az: website ? website.az : null,
+            az: website ? website.az : null
           },
           tags: tags ? tags.split(',').map(item => item.trim()) : null
         }
