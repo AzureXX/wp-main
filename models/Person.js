@@ -3,17 +3,19 @@ const Schema = mongoose.Schema;
 
 const PersonSchema = new Schema({
   name: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
   description: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
   wikipediaLink: {
-    en: String
+    us: String,
+    ru: String,
+    az: String
   },
   tags: [{name:String, level: Number}]
 })

@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
-const Book = require('../../models/Book');
+const Person = require('../../models/Person');
 const transformation = require('../../utils/transformation');
 const validation = require('../../utils/validation');
 
-//@route   POST api/book/add
-//@desc    Adds new book to database
+//@route   POST api/person/add
+//@desc    Adds new person to database
 //@access  Private/Moderator
 router.post(
   '/add',
@@ -18,17 +18,10 @@ router.post(
       const {
         name,
         description,
-        authors,
-        genres,
-        isbn,
-        published,
-        publisher,
         wikipediaLink,
-        website,
         tags
       } = req.body;
-      console.log(req.body)
-      const newBook = new Book({
+      const newPerson = new Person({
         name: {
           us: name ? name.us : null,
           ru: name ? name.ru : null,
@@ -39,36 +32,24 @@ router.post(
           ru: description ? description.ru : null,
           az: description ? description.az : null,
         },
-        authors: authors ? authors.split(',').map(item => item.trim()) : null,
-        genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        ISBN: isbn,
-        published: published,
-        publisher: publisher
-          ? publisher.split(',').map(item => item.trim())
-          : null,
         wikipediaLink: {
           us: wikipediaLink ? wikipediaLink.us : null,
           ru: wikipediaLink ? wikipediaLink.ru : null,
           az: wikipediaLink ? wikipediaLink.az : null
         },
-        website: {
-          us: website ? website.us : null,
-          ru: website ? website.ru : null,
-          az: website ? website.az : null,
-        },
         tags: tags ? tags.split(',').map(item => item.trim()) : null
       });
 
-      const book = await newBook.save();
-      res.status(200).json(book);
+      const person = await newPerson.save();
+      res.status(200).json(person);
     } catch (error) {
       next(error);
     }
   }
 );
 
-//@route   PUT api/book/edit/:id
-//@desc    Edit book in database
+//@route   PUT api/person/edit/:id
+//@desc    Edit person in database
 //@access  Private/Moderator
 router.put(
   '/edit/:id',
@@ -78,21 +59,15 @@ router.put(
     const {
       name,
       description,
-      authors,
-      genres,
-      isbn,
-      published,
-      publisher,
       wikipediaLink,
-      website,
       tags
     } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
-      const book = await Book.findById(id);
-      if (!book) throw new Error('No such book exist');
-      book = {
-        ...book,
+      const person = await Person.findById(id);
+      if (!person) throw new Error('No such person exist');
+      person = {
+        ...person,
         ...{
           name: {
             us: name ? name.us : null,
@@ -104,27 +79,15 @@ router.put(
             ru: description ? description.ru : null,
             az: description ? description.az : null,
           },
-          authors: authors ? authors.split(',').map(item => item.trim()) : null,
-          genres: genres ? genres.split(',').map(item => item.trim()) : null,
-          ISBN: isbn,
-          published: published,
-          publisher: publisher
-            ? publisher.split(',').map(item => item.trim())
-            : null,
           wikipediaLink: {
             us: wikipediaLink ? wikipediaLink.us : null,
             ru: wikipediaLink ? wikipediaLink.ru : null,
             az: wikipediaLink ? wikipediaLink.az : null
           },
-          website: {
-            us: website ? website.us : null,
-            ru: website ? website.ru : null,
-            az: website ? website.az : null,
-          },
           tags: tags ? tags.split(',').map(item => item.trim()) : null
         }
       };
-      const saved = await book.save();
+      const saved = await person.save();
       res.status(200).json(saved);
     } catch (error) {
       next(error);
@@ -132,8 +95,8 @@ router.put(
   }
 );
 
-//@route   Delete api/book/delete
-//@desc     Delete book from database
+//@route   Delete api/person/delete
+//@desc     Delete person from database
 //@access  Private/Moderator
 router.delete(
   '/delete/:id',
@@ -143,7 +106,7 @@ router.delete(
     try {
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
-      await Book.findByIdAndDelete(req.params.id);
+      await Person.findByIdAndDelete(req.params.id);
       res.json('Success');
     } catch (error) {
       next(error);
@@ -151,8 +114,8 @@ router.delete(
   }
 );
 
-//@route   GET api/book/get/all/:page
-//@desc    Get all books by page
+//@route   GET api/person/get/all/:page
+//@desc    Get all people by page
 //@access  Public
 router.get('/get/all/:page?', async (req, res, next) => {
   try {
@@ -160,27 +123,27 @@ router.get('/get/all/:page?', async (req, res, next) => {
     const size = 100;
     if (isNaN(page)) page = 1;
     const offset = (page - 1) * size;
-    const books = await Book.find()
+    const people = await Person.find()
       .skip(offset)
       .limit(size);
-    if (books.length == 0) throw new Error('No such page');
-    if (books.length < size) res.json({ lastPage: true, books });
-    res.json({ lastPage: false, books });
+    if (people.length == 0) throw new Error('No such page');
+    if (people.length < size) res.json({ lastPage: true, people });
+    res.json({ lastPage: false, people });
   } catch (error) {
     next(error);
   }
 });
 
-//@route   GET api/book/get/id/:id
-//@desc    Get book by id
+//@route   GET api/person/get/id/:id
+//@desc    Get person by id
 //@access  Public
 router.get('/get/id/:id', async (req, res, next) => {
   try {
     const id = transformation.mongooseId(req.params.id);
-    const book = await Book.findById(id);
-    if (!book) throw new Error('No such book exist');
+    const person = await Person.findById(id);
+    if (!person) throw new Error('No such person exist');
 
-    res.json(book);
+    res.json(person);
   } catch (error) {
     next(error);
   }

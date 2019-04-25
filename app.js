@@ -31,6 +31,7 @@ const userRoute = require("./routes/api/user");
 const bookRoute = require("./routes/api/book");
 const courseRoute = require("./routes/api/course");
 const movieRoute = require("./routes/api/movie");
+const personRoute = require("./routes/api/person");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use("/api/user", userRoute);
 app.use("/api/book", bookRoute);
 app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
+app.use("/api/person", personRoute);
 
 app.use((err, req, res, next) => {
     res.status(500);
