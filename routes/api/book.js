@@ -95,7 +95,7 @@ router.put(
     } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
-      const book = await Book.findById(id);
+      let book = await Book.findById(id);
       if (!book) throw new Error('No such book exist');
       book = {
         ...book,
