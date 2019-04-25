@@ -14,13 +14,15 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { nameEn, descriptionEn, actors, genres } = req.body;
+    const { name, description, actors, genres } = req.body;
     try {
       const newMovie = new Movie();
-      newMovie.name.en = nameEn;
-      newMovie.description.en = descriptionEn;
+      newMovie.name = name;
+      newMovie.description = description;
       newMovie.actors = actors
-        ? actors.split(',').map(item => item.trim())
+        ? actors.split(',').map(item => {
+            return transformation.mongooseId(item.trim());
+          })
         : null;
       newMovie.genres = genres
         ? genres.split(',').map(item => item.trim())
@@ -46,14 +48,18 @@ router.put(
       const id = transformation.mongooseId(req.params.id);
       const movie = await Movie.findById(id);
       if (!movie) throw new Error('No such movie exist');
-      movie.name.en = nameEn;
-      movie.description.en = descriptionEn;
-      movie.authors = authors
-        ? authors.split(',').map(item => item.trim())
+      movie.name = name;
+      movie.description = description;
+      movie.actors = actors
+        ? actors.split(',').map(item => {
+            return transformation.mongooseId(item.trim());
+          })
         : null;
-      movie.genres = genres ? genres.split(',').map(item => item.trim()) : null;
-      await movie.save();
-      res.json('Success');
+        movie.genres = genres
+        ? genres.split(',').map(item => item.trim())
+        : null;
+      const saved = await movie.save();
+      res.status(200).json(saved);
     } catch (error) {
       next(error);
     }
@@ -69,7 +75,7 @@ router.delete(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      if (!(validation.mongooseId(req.params.id)))
+      if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       await Movie.findByIdAndDelete(req.params.id);
       res.json('Success');

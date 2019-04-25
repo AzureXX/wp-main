@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const MovieSchema = new Schema({
   name: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
   description: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
@@ -21,9 +21,11 @@ const MovieSchema = new Schema({
   ],
   genres: [String],
   wikipediaLink: {
-    en: String
+    us: String,
+    ru: String,
+    az: String
   },
-  tags: [{name:String, level: Number}]
+  tags: [String]
 });
 
 const Movie = mongoose.model("Movie", MovieSchema);
