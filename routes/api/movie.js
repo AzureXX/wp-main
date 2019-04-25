@@ -43,7 +43,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { nameEn, descriptionEn, actors, genres } = req.body;
+    const { name, description, actors, genres } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const movie = await Movie.findById(id);

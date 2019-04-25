@@ -15,12 +15,14 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const { nameEn, descriptionEn, authors, genres } = req.body;
+      const { name, description, authors, genres } = req.body;
       const newCourse = new Course();
-      newCourse.name.en = nameEn;
-      newCourse.description.en = descriptionEn;
+      newCourse.name = name;
+      newCourse.description = description;
       newCourse.authors = authors
-        ? authors.split(',').map(item => item.trim())
+        ? authors.split(',').map(item => {
+            return transformation.mongooseId(item.trim());
+          })
         : null;
       newCourse.genres = genres
         ? genres.split(',').map(item => item.trim())
@@ -41,21 +43,23 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { nameEn, descriptionEn, authors, genres } = req.body;
+    const { name, description, authors, genres } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const course = await Course.findById(id);
       if (!course) throw new Error('No such course exist');
-      course.name.en = nameEn;
-      course.description.en = descriptionEn;
+      course.name = name;
+      course.description = description;
       course.authors = authors
-        ? authors.split(',').map(item => item.trim())
+        ? authors.split(',').map(item => {
+            return transformation.mongooseId(item.trim());
+          })
         : null;
       course.genres = genres
         ? genres.split(',').map(item => item.trim())
         : null;
-      await course.save();
-      res.json('Success');
+      const saved = await course.save();
+      res.status(200).json(saved);
     } catch (error) {
       next(error);
     }
@@ -71,7 +75,7 @@ router.delete(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      if (!(validation.mongooseId(req.params.id)))
+      if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       await Course.findByIdAndDelete(req.params.id);
       res.json('Success');
@@ -106,7 +110,7 @@ router.get('/get/all/:page?', async (req, res, next) => {
 //@access  Public
 router.get('/get/id/:id', async (req, res, next) => {
   try {
-    const id =  transformation.mongooseId(req.params.id);
+    const id = transformation.mongooseId(req.params.id);
     const course = await Course.findById(id);
     if (!course) throw new Error('No such course exist');
     res.json(course);
