@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
   name: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
   description: {
-    en: String,
+    us: String,
     ru: String,
     az: String
   },
