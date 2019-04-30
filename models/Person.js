@@ -17,7 +17,7 @@ const PersonSchema = new Schema({
     ru: String,
     az: String
   },
-  tags: [{name:String, level: Number}]
+  tags: [String]
 })
 
 const Person = mongoose.model("Person", PersonSchema)
