@@ -14,7 +14,7 @@ router.post(
     passport.authenticate('jwt', { session: false }),
     roles.isModerator,
     async(req, res, next) => {
-        const { name, description, actors, genres, crew } = req.body;
+        const { name, description, actors, genres, crew, img } = req.body;
         try {
             const newMovie = new Movie();
             newMovie.name = name;
@@ -31,6 +31,9 @@ router.post(
                 role: item.role,
                 id: transformation.mongooseId(item.id.trim())
             }));
+            newMovie.img.us = img ? img.us : null;
+            newMovie.img.ru = img ? img.ru : null;
+            newMovie.img.az = img ? img.az : null;
             const movie = await newMovie.save();
             res.status(200).json(movie);
         } catch (error) {
@@ -47,7 +50,7 @@ router.put(
     passport.authenticate('jwt', { session: false }),
     roles.isModerator,
     async(req, res, next) => {
-        const { name, description, actors, genres } = req.body;
+        const { name, description, actors, genres, img } = req.body;
         try {
             const id = transformation.mongooseId(req.params.id);
             const movie = await Movie.findById(id);
@@ -60,6 +63,9 @@ router.put(
                 }) :
                 null;
             movie.genres = genres ? genres.split(',').map(item => item.trim()) : null;
+            movie.img.us = img ? img.us : null;
+            movie.img.ru = img ? img.ru : null;
+            movie.img.az = img ? img.az : null;
             const saved = await movie.save();
             res.status(200).json(saved);
         } catch (error) {
