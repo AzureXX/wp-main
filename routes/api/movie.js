@@ -28,7 +28,7 @@ router.post(
                 genres.split(',').map(item => item.trim()) :
                 null;
             newMovie.crew = crew.map(item => ({
-                type: item.type,
+                role: item.role,
                 id: transformation.mongooseId(item.id.trim())
             }));
             const movie = await newMovie.save();
