@@ -32,7 +32,7 @@ module.exports = {
       },
       authors: authors
         ? authors.split(',').map(item => {
-            return transformation.mongooseId(item.trim());
+            return module.exports.mongooseId(item.trim());
           })
         : null,
       genres: genres ? genres.split(',').map(item => item.trim()) : null,
@@ -40,7 +40,7 @@ module.exports = {
       published: published,
       publisher: publisher
         ? publisher.split(',').map(item => {
-            return transformation.mongooseId(item.trim());
+            return module.exports.mongooseId(item.trim());
           })
         : null,
       wikipediaLink: {
@@ -81,14 +81,14 @@ module.exports = {
       },
       actors: actors
         ? actors.split(',').map(item => {
-            return transformation.mongooseId(item.trim());
+            return module.exports.mongooseId(item.trim());
           })
         : null,
       genres: genres ? genres.split(',').map(item => item.trim()) : null,
       crew: crew
         ? crew.map(item => ({
             role: item.role,
-            id: transformation.mongooseId(item.id.trim())
+            id: module.exports.mongooseId(item.id.trim())
           }))
         : null
     };
@@ -118,14 +118,14 @@ module.exports = {
       },
       authors: authors
         ? authors.split(',').map(item => {
-            return transformation.mongooseId(item.trim());
+            return module.exports.mongooseId(item.trim());
           })
         : null,
       genres: genres ? genres.split(',').map(item => item.trim()) : null,
       published: published,
       publisher: publisher
         ? publisher.split(',').map(item => {
-            return transformation.mongooseId(item.trim());
+            return module.exports.mongooseId(item.trim());
           })
         : null,
       website: {
