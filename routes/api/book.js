@@ -15,61 +15,7 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     try {
-      const {
-        name,
-        description,
-        authors,
-        genres,
-        isbn,
-        published,
-        publisher,
-        wikipediaLink,
-        website,
-        tags,
-        img
-      } = req.body;
-      console.log(req.body);
-      const newBook = new Book({
-        name: {
-          us: name ? name.us : null,
-          ru: name ? name.ru : null,
-          az: name ? name.az : null
-        },
-        description: {
-          us: description ? description.us : null,
-          ru: description ? description.ru : null,
-          az: description ? description.az : null
-        },
-        authors: authors
-          ? authors.split(',').map(item => {
-              return transformation.mongooseId(item.trim());
-            })
-          : null,
-        genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        ISBN: isbn,
-        published: published,
-        publisher: publisher
-          ? publisher.split(',').map(item => {
-              return transformation.mongooseId(item.trim());
-            })
-          : null,
-        wikipediaLink: {
-          us: wikipediaLink ? wikipediaLink.us : null,
-          ru: wikipediaLink ? wikipediaLink.ru : null,
-          az: wikipediaLink ? wikipediaLink.az : null
-        },
-        website: {
-          us: website ? website.us : null,
-          ru: website ? website.ru : null,
-          az: website ? website.az : null
-        },
-        img: {
-          us: img ? img.us : null,
-          ru: img ? img.ru : null,
-          az: img ? img.az : null
-        },
-        tags: tags ? tags.split(',').map(item => item.trim()) : null
-      });
+      const newBook = new Book(transformation.getBookObject(req.body));
 
       const book = await newBook.save();
       res.status(200).json(book);
@@ -87,66 +33,13 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const {
-      name,
-      description,
-      authors,
-      genres,
-      isbn,
-      published,
-      publisher,
-      wikipediaLink,
-      website,
-      img,
-      tags
-    } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const book = await Book.findById(id);
       if (!book) throw new Error('No such book exist');
       const saved = await Book.findByIdAndUpdate(
         id,
-        {
-          name: {
-            us: name ? name.us : null,
-            ru: name ? name.ru : null,
-            az: name ? name.az : null
-          },
-          description: {
-            us: description ? description.us : null,
-            ru: description ? description.ru : null,
-            az: description ? description.az : null
-          },
-          authors: authors
-            ? authors.split(',').map(item => {
-                return transformation.mongooseId(item.trim());
-              })
-            : null,
-          genres: genres ? genres.split(',').map(item => item.trim()) : null,
-          ISBN: isbn,
-          published: published,
-          publisher: publisher
-            ? publisher.split(',').map(item => {
-                return transformation.mongooseId(item.trim());
-              })
-            : null,
-          wikipediaLink: {
-            us: wikipediaLink ? wikipediaLink.us : null,
-            ru: wikipediaLink ? wikipediaLink.ru : null,
-            az: wikipediaLink ? wikipediaLink.az : null
-          },
-          website: {
-            us: website ? website.us : null,
-            ru: website ? website.ru : null,
-            az: website ? website.az : null
-          },
-          img: {
-            us: img ? img.us : null,
-            ru: img ? img.ru : null,
-            az: img ? img.az : null
-          },
-          tags: tags ? tags.split(',').map(item => item.trim()) : null
-        }
+        transformation.getBookObject(req.body)
       );
 
       res.status(200).json(saved);

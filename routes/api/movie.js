@@ -38,10 +38,10 @@ router.post(
             })
           : null,
         genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        crew: crew.map(item => ({
+        crew: crew ? crew.map(item => ({
           role: item.role,
           id: transformation.mongooseId(item.id.trim())
-        }))
+        })) : null
       });
       const movie = await newMovie.save();
       res.status(200).json(movie);
@@ -87,10 +87,10 @@ router.put(
             })
           : null,
         genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        crew: crew.map(item => ({
-          role: item.role,
-          id: transformation.mongooseId(item.id.trim())
-        }))
+        crew: crew ? crew.map(item => ({
+            role: item.role,
+            id: transformation.mongooseId(item.id.trim())
+          })) : null
       });
       res.status(200).json(saved);
     } catch (error) {
