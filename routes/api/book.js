@@ -18,7 +18,7 @@ router.post(
             const {
                 name,
                 description,
-                author,
+                authors,
                 genres,
                 isbn,
                 published,
@@ -40,8 +40,8 @@ router.post(
                     ru: description ? description.ru : null,
                     az: description ? description.az : null
                 },
-                authors: author ?
-                    author.split(',').map(item => {
+                authors: authors ?
+                authors.split(',').map(item => {
                         return transformation.mongooseId(item.trim());
                     }) : null,
                 genres: genres ? genres.split(',').map(item => item.trim()) : null,
@@ -102,39 +102,46 @@ router.put(
             const id = transformation.mongooseId(req.params.id);
             const book = await Book.findById(id);
             if (!book) throw new Error('No such book exist');
-
-            book.name.us = name ? name.us : null;
-            book.name.ru = name ? name.ru : null;
-            book.name.az = name ? name.az : null;
-            book.description.us = description ? description.us : null;
-            book.description.ru = description ? description.ru : null;
-            book.description.az = description ? description.az : null;
-            book.authors = authors ?
+            await Book.updateOne({_id: book._id},{
+                name: {
+                    us: name ? name.us : null,
+                    ru: name ? name.ru : null,
+                    az: name ? name.az : null
+                },
+                description: {
+                    us: description ? description.us : null,
+                    ru: description ? description.ru : null,
+                    az: description ? description.az : null
+                },
+                authors: authors ?
                 authors.split(',').map(item => {
-                    return transformation.mongooseId(item.trim());
-                }) :
-                null;
-            book.genres = genres ? genres.split(',').map(item => item.trim()) : null;
-            book.ISBN = isbn;
-            book.published = published;
-            book.publisher = publisher ?
-                publisher.split(',').map(item => {
-                    return transformation.mongooseId(item.trim());
-                }) :
-                null;
-            book.wikipediaLink.us = wikipediaLink ? wikipediaLink.us : null;
-            book.wikipediaLink.ru = wikipediaLink ? wikipediaLink.ru : null;
-            book.wikipediaLink.az = wikipediaLink ? wikipediaLink.az : null;
-            book.website.us = website ? website.us : null;
-            book.website.ru = website ? website.ru : null;
-            book.website.az = website ? website.az : null;
-            book.img.us = img ? img.us : null;
-            book.img.ru = img ? img.ru : null;
-            book.img.az = img ? img.az : null;
-            book.tags = tags ? tags.split(',').map(item => item.trim()) : null;
-
-
-            const saved = await book.save();
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                genres: genres ? genres.split(',').map(item => item.trim()) : null,
+                ISBN: isbn,
+                published: published,
+                publisher: publisher ?
+                    publisher.split(',').map(item => {
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                wikipediaLink: {
+                    us: wikipediaLink ? wikipediaLink.us : null,
+                    ru: wikipediaLink ? wikipediaLink.ru : null,
+                    az: wikipediaLink ? wikipediaLink.az : null
+                },
+                website: {
+                    us: website ? website.us : null,
+                    ru: website ? website.ru : null,
+                    az: website ? website.az : null
+                },
+                img: {
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
+                },
+                tags: tags ? tags.split(',').map(item => item.trim()) : null
+            });
+            const saved  = await Book.findById(id);
             res.status(200).json(saved);
         } catch (error) {
             next(error);
