@@ -73,20 +73,29 @@ router.put(
             const id = transformation.mongooseId(req.params.id);
             const person = await Person.findById(id);
             if (!person) throw new Error('No such person exist');
-            person.name.us = name ? name.us : null;
-            person.name.ru = name ? name.ru : null;
-            person.name.az = name ? name.az : null;
-            person.description.us = description ? description.us : null;
-            person.description.ru = description ? description.ru : null;
-            person.description.az = description ? description.az : null;
-            person.wikipediaLink.us = wikipediaLink ? wikipediaLink.us : null;
-            person.wikipediaLink.ru = wikipediaLink ? wikipediaLink.ru : null;
-            person.wikipediaLink.az = wikipediaLink ? wikipediaLink.az : null;
-            person.img.us = img ? img.us : null;
-            person.img.ru = img ? img.ru : null;
-            person.img.az = img ? img.az : null;
-            person.tags = tags ? tags.split(',').map(item => item.trim()) : null;
-            const saved = await person.save();
+            const saved = await Person.findByIdAndUpdate(id, {
+                name: {
+                    us: name ? name.us : null,
+                    ru: name ? name.ru : null,
+                    az: name ? name.az : null,
+                },
+                description: {
+                    us: description ? description.us : null,
+                    ru: description ? description.ru : null,
+                    az: description ? description.az : null,
+                },
+                wikipediaLink: {
+                    us: wikipediaLink ? wikipediaLink.us : null,
+                    ru: wikipediaLink ? wikipediaLink.ru : null,
+                    az: wikipediaLink ? wikipediaLink.az : null
+                },
+                img: {
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
+                },
+                tags: tags ? tags.split(',').map(item => item.trim()) : null
+            });
             res.status(200).json(saved);
         } catch (error) {
             next(error);

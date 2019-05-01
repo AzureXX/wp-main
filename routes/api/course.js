@@ -15,21 +15,40 @@ router.post(
     roles.isModerator,
     async(req, res, next) => {
         try {
-            const { name, description, authors, genres, img } = req.body;
-            const newCourse = new Course();
-            newCourse.name = name;
-            newCourse.description = description;
-            newCourse.authors = authors ?
+            const { name, description, authors, genres, published, publisher, website, img, tags } = req.body;
+            const newCourse = new Course({
+                name: {
+                    us: name ? name.us : null,
+                    ru: name ? name.ru : null,
+                    az: name ? name.az : null
+                },
+                description: {
+                    us: description ? description.us : null,
+                    ru: description ? description.ru : null,
+                    az: description ? description.az : null
+                },
+                authors: authors ?
                 authors.split(',').map(item => {
-                    return transformation.mongooseId(item.trim());
-                }) :
-                null;
-            newCourse.genres = genres ?
-                genres.split(',').map(item => item.trim()) :
-                null;
-            newCourse.img.us = img ? img.us : null;
-            newCourse.img.ru = img ? img.ru : null;
-            newCourse.img.az = img ? img.az : null;
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                genres: genres ? genres.split(',').map(item => item.trim()) : null,
+                published: published,
+                publisher: publisher ?
+                    publisher.split(',').map(item => {
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                website: {
+                    us: website ? website.us : null,
+                    ru: website ? website.ru : null,
+                    az: website ? website.az : null
+                },
+                img: {
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
+                },
+                tags: tags ? tags.split(',').map(item => item.trim()) : null
+            });
             const course = await newCourse.save();
             res.status(200).json(course);
         } catch (error) {
@@ -46,25 +65,45 @@ router.put(
     passport.authenticate('jwt', { session: false }),
     roles.isModerator,
     async(req, res, next) => {
-        const { name, description, authors, genres, img } = req.body;
+        const { name, description, authors, genres, published, publisher, website, img, tags } = req.body;
         try {
             const id = transformation.mongooseId(req.params.id);
             const course = await Course.findById(id);
             if (!course) throw new Error('No such course exist');
-            course.name = name;
-            course.description = description;
-            course.authors = authors ?
+            
+            const saved = await Course.findByIdAndUpdate(id, {
+                name: {
+                    us: name ? name.us : null,
+                    ru: name ? name.ru : null,
+                    az: name ? name.az : null
+                },
+                description: {
+                    us: description ? description.us : null,
+                    ru: description ? description.ru : null,
+                    az: description ? description.az : null
+                },
+                authors: authors ?
                 authors.split(',').map(item => {
-                    return transformation.mongooseId(item.trim());
-                }) :
-                null;
-            course.genres = genres ?
-                genres.split(',').map(item => item.trim()) :
-                null;
-            course.img.us = img ? img.us : null;
-            course.img.ru = img ? img.ru : null;
-            course.img.az = img ? img.az : null;
-            const saved = await course.save();
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                genres: genres ? genres.split(',').map(item => item.trim()) : null,
+                published: published,
+                publisher: publisher ?
+                    publisher.split(',').map(item => {
+                        return transformation.mongooseId(item.trim());
+                    }) : null,
+                website: {
+                    us: website ? website.us : null,
+                    ru: website ? website.ru : null,
+                    az: website ? website.az : null
+                },
+                img: {
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
+                },
+                tags: tags ? tags.split(',').map(item => item.trim()) : null
+            });
             res.status(200).json(saved);
         } catch (error) {
             next(error);
