@@ -62,9 +62,9 @@ router.post(
                     az: website ? website.az : null
                 },
                 img: {
-                    us: img ? img.us : null,
-                    ru: img ? img.ru : null,
-                    az: img ? img.az : null
+                    us: img ? img : null,
+                    ru: img ? img : null,
+                    az: img ? img : null
                 },
                 tags: tags ? tags.split(',').map(item => item.trim()) : null
             });
@@ -135,9 +135,9 @@ router.put(
                     az: website ? website.az : null
                 },
                 img: {
-                    us: img ? img.us : null,
-                    ru: img ? img.ru : null,
-                    az: img ? img.az : null
+                    us: img ? img : null,
+                    ru: img ? img : null,
+                    az: img ? img : null
                 },
                 tags: tags ? tags.split(',').map(item => item.trim()) : null
             });
