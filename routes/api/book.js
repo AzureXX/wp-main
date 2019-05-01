@@ -39,7 +39,8 @@ router.put(
       if (!book) throw new Error('No such book exist');
       const saved = await Book.findByIdAndUpdate(
         id,
-        transformation.getBookObject(req.body)
+        transformation.getBookObject(req.body),
+        { new: true }
       );
 
       res.status(200).json(saved);

@@ -37,7 +37,11 @@ router.put(
       const movie = await Movie.findById(id);
       if (!movie) throw new Error('No such movie exist');
 
-      const saved = await Movie.findByIdAndUpdate(id, transformation.getMovieObject(req.body));
+      const saved = await Movie.findByIdAndUpdate(
+        id,
+        transformation.getMovieObject(req.body),
+        { new: true }
+      );
       res.status(200).json(saved);
     } catch (error) {
       next(error);
