@@ -62,9 +62,9 @@ router.post(
                     az: website ? website.az : null
                 },
                 img: {
-                    us: img ? img : null,
-                    ru: img ? img : null,
-                    az: img ? img : null
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
                 },
                 tags: tags ? tags.split(',').map(item => item.trim()) : null
             });
@@ -102,7 +102,7 @@ router.put(
             const id = transformation.mongooseId(req.params.id);
             const book = await Book.findById(id);
             if (!book) throw new Error('No such book exist');
-            await Book.updateOne({_id: book._id},{
+            const saved = await Book.findOneAndUpdate({_id: book._id},{
                 name: {
                     us: name ? name.us : null,
                     ru: name ? name.ru : null,
@@ -135,13 +135,13 @@ router.put(
                     az: website ? website.az : null
                 },
                 img: {
-                    us: img ? img : null,
-                    ru: img ? img : null,
-                    az: img ? img : null
+                    us: img ? img.us : null,
+                    ru: img ? img.ru : null,
+                    az: img ? img.az : null
                 },
                 tags: tags ? tags.split(',').map(item => item.trim()) : null
             });
-            const saved  = await Book.findById(id);
+            
             res.status(200).json(saved);
         } catch (error) {
             next(error);
