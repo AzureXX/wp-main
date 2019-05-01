@@ -15,36 +15,8 @@ router.post(
     roles.isModerator,
     async(req, res, next) => {
         try {
-            const {
-                name,
-                description,
-                wikipediaLink,
-                tags,
-                img
-            } = req.body;
-            const newPerson = new Person({
-                name: {
-                    us: name ? name.us : null,
-                    ru: name ? name.ru : null,
-                    az: name ? name.az : null,
-                },
-                description: {
-                    us: description ? description.us : null,
-                    ru: description ? description.ru : null,
-                    az: description ? description.az : null,
-                },
-                wikipediaLink: {
-                    us: wikipediaLink ? wikipediaLink.us : null,
-                    ru: wikipediaLink ? wikipediaLink.ru : null,
-                    az: wikipediaLink ? wikipediaLink.az : null
-                },
-                img: {
-                    us: img ? img.us : null,
-                    ru: img ? img.ru : null,
-                    az: img ? img.az : null
-                },
-                tags: tags ? tags.split(',').map(item => item.trim()) : null
-            });
+            
+            const newPerson = new Person(transformation.getPersonObject(req.body));
 
             const person = await newPerson.save();
             res.status(200).json(person);
@@ -62,40 +34,12 @@ router.put(
     passport.authenticate('jwt', { session: false }),
     roles.isModerator,
     async(req, res, next) => {
-        const {
-            name,
-            description,
-            wikipediaLink,
-            tags,
-            img
-        } = req.body;
+        
         try {
             const id = transformation.mongooseId(req.params.id);
             const person = await Person.findById(id);
             if (!person) throw new Error('No such person exist');
-            const saved = await Person.findByIdAndUpdate(id, {
-                name: {
-                    us: name ? name.us : null,
-                    ru: name ? name.ru : null,
-                    az: name ? name.az : null,
-                },
-                description: {
-                    us: description ? description.us : null,
-                    ru: description ? description.ru : null,
-                    az: description ? description.az : null,
-                },
-                wikipediaLink: {
-                    us: wikipediaLink ? wikipediaLink.us : null,
-                    ru: wikipediaLink ? wikipediaLink.ru : null,
-                    az: wikipediaLink ? wikipediaLink.az : null
-                },
-                img: {
-                    us: img ? img.us : null,
-                    ru: img ? img.ru : null,
-                    az: img ? img.az : null
-                },
-                tags: tags ? tags.split(',').map(item => item.trim()) : null
-            });
+            const saved = await Person.findByIdAndUpdate(id, transformation.getPersonObject(req.body));
             res.status(200).json(saved);
         } catch (error) {
             next(error);

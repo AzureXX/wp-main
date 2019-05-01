@@ -14,35 +14,8 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { name, description, actors, genres, crew, img } = req.body;
     try {
-      const newMovie = new Movie({
-        name: {
-          us: name ? name.us : null,
-          ru: name ? name.ru : null,
-          az: name ? name.az : null
-        },
-        description: {
-          us: description ? description.us : null,
-          ru: description ? description.ru : null,
-          az: description ? description.az : null
-        },
-        img: {
-          us: img ? img.us : null,
-          ru: img ? img.ru : null,
-          az: img ? img.az : null
-        },
-        actors: actors
-          ? actors.split(',').map(item => {
-              return transformation.mongooseId(item.trim());
-            })
-          : null,
-        genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        crew: crew ? crew.map(item => ({
-          role: item.role,
-          id: transformation.mongooseId(item.id.trim())
-        })) : null
-      });
+      const newMovie = new Movie(transformation.getMovieObject(req.body));
       const movie = await newMovie.save();
       res.status(200).json(movie);
     } catch (error) {
@@ -59,39 +32,12 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    const { name, description, actors, genres, img } = req.body;
     try {
       const id = transformation.mongooseId(req.params.id);
       const movie = await Movie.findById(id);
       if (!movie) throw new Error('No such movie exist');
 
-      const saved = await Movie.findByIdAndUpdate(id, {
-        name: {
-          us: name ? name.us : null,
-          ru: name ? name.ru : null,
-          az: name ? name.az : null
-        },
-        description: {
-          us: description ? description.us : null,
-          ru: description ? description.ru : null,
-          az: description ? description.az : null
-        },
-        img: {
-          us: img ? img.us : null,
-          ru: img ? img.ru : null,
-          az: img ? img.az : null
-        },
-        actors: actors
-          ? actors.split(',').map(item => {
-              return transformation.mongooseId(item.trim());
-            })
-          : null,
-        genres: genres ? genres.split(',').map(item => item.trim()) : null,
-        crew: crew ? crew.map(item => ({
-            role: item.role,
-            id: transformation.mongooseId(item.id.trim())
-          })) : null
-      });
+      const saved = await Movie.findByIdAndUpdate(id, transformation.getMovieObject(req.body));
       res.status(200).json(saved);
     } catch (error) {
       next(error);
