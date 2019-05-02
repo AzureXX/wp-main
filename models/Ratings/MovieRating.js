@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const MovieRatingSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     movies: [{
+        _id: false,
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
         status: String,
         rating: Number
