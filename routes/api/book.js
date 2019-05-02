@@ -6,7 +6,7 @@ const Book = require('../../models/Book');
 const BookRating = require('../../models/Ratings/BookRating');
 const transformation = require('../../utils/transformation');
 const validation = require('../../utils/validation');
-
+const requests = require('../../utils/requests');
 //@route   POST api/book/add
 //@desc    Adds new book to database
 //@access  Private/Moderator
@@ -104,31 +104,20 @@ router.get('/get/id/:id', async(req, res, next) => {
     }
 });
 
+//@route   POST api/book/rate
+//@desc    Rates book
+//@access  Private
 router.post(
     '/rate',
     passport.authenticate('jwt', { session: false }),
     async(req, res, next) => {
         try {
-            let { rating, status, id } = req.body;
-            if (rating) status = 0;
-            else if (status) rating = 0;
-
-            //gets current ratings of user
-            const ratings = await BookRating.findOne({ userId: req.user.id, 'books.id': id });
-
-            if (!ratings) { // if book is not rated by this user yet 
-                await BookRating.updateOne({ userId: req.user.id }, { userId: req.user.id, $push: { books: { id, rating, status } } }, { upsert: true });
-            } else { // if book already rated by this user 
-                await BookRating.updateOne({ userId: req.user.id, 'books.id': id }, {
-                    $set: {
-                        'books.$': { id, rating, status }
-                    }
-                });
-            }
-            res.json(get);
+            await requests.setRating(BookRating, "books", req);
+            res.json("success");
         } catch (error) {
             next(error);
         }
     }
 );
+
 module.exports = router;
