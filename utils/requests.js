@@ -11,7 +11,7 @@ module.exports = {
         const idStr = item + '.id';
         //gets current ratings of user
         const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
-        console.log(ratings);
+
         if (!ratings) {
             // if item is not rated by this user yet
             await model.updateOne({ userId: req.user.id }, {
@@ -39,11 +39,16 @@ module.exports = {
                 .limit(size);
             const ratedItems = [];
             if (req.user) {
-                const ratings = await rating.findOne({ userId: req.user.id })
+                const ratings = await rating.findOne({ userId: req.user.id });
                 items.forEach(item => {
-                    const newItem = JSON.parse(JSON.stringify(item))
-                    const index = ratings ? ratings[name].findIndex(i => i.id.toString() === item._id.toString()) : -1;
-                    if (index > 0) {
+                    const newItem = JSON.parse(JSON.stringify(item));
+
+                    const index = ratings ?
+                        ratings[name].findIndex(i => {
+                            return i.id.toString() === item._id.toString();
+                        }) :
+                        -1;
+                    if (index > -1) {
                         newItem.rating = ratings[name][index].rating;
                         newItem.status = ratings[name][index].status;
                     }
