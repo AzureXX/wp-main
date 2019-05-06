@@ -39,10 +39,14 @@ module.exports = {
                 .limit(size);
             const ratedItems = [];
             if (req.user) {
+                const ratings = await rating.findOne({ userId: req.user.id })
                 items.forEach(item => {
                     const newItem = JSON.parse(JSON.stringify(item))
-                    newItem.rating = 5;
-                    newItem.status = 0;
+                    const index = ratings ? ratings[name].findIndex(i => i.id.toString() === item._id.toString()) : -1;
+                    if (index > 0) {
+                        newItem.rating = ratings[name][index].rating;
+                        newItem.status = ratings[name][index].status;
+                    }
                     ratedItems.push(newItem);
                 });
             }
