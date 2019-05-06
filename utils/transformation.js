@@ -33,16 +33,14 @@ module.exports = {
             authors: authors ?
                 authors.split(',').map(item => {
                     return module.exports.mongooseId(item.trim());
-                }) :
-                null,
+                }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             ISBN: isbn,
             published: published,
             publisher: publisher ?
                 publisher.split(',').map(item => {
                     return module.exports.mongooseId(item.trim());
-                }) :
-                null,
+                }) : null,
             wikipediaLink: {
                 us: wikipediaLink ? wikipediaLink.us : null,
                 ru: wikipediaLink ? wikipediaLink.ru : null,
@@ -82,15 +80,13 @@ module.exports = {
             actors: actors ?
                 actors.split(',').map(item => {
                     return module.exports.mongooseId(item.trim());
-                }) :
-                null,
+                }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             crew: crew ?
                 crew.map(item => ({
                     role: item.role,
                     id: module.exports.mongooseId(item.id.trim())
-                })) :
-                null
+                })) : null
         };
     },
     getCourseObject: body => {
@@ -103,6 +99,7 @@ module.exports = {
             publisher,
             website,
             img,
+            video,
             tags
         } = body;
         return {
@@ -119,15 +116,13 @@ module.exports = {
             authors: authors ?
                 authors.split(',').map(item => {
                     return module.exports.mongooseId(item.trim());
-                }) :
-                null,
+                }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             published: published,
             publisher: publisher ?
                 publisher.split(',').map(item => {
                     return module.exports.mongooseId(item.trim());
-                }) :
-                null,
+                }) : null,
             website: {
                 us: website ? website.us : null,
                 ru: website ? website.ru : null,
@@ -137,6 +132,11 @@ module.exports = {
                 us: img ? img.us : null,
                 ru: img ? img.ru : null,
                 az: img ? img.az : null
+            },
+            video: {
+                us: video ? video.us : null,
+                ru: video ? video.ru : null,
+                az: video ? video.az : null
             },
             tags: tags ? tags.split(',').map(item => item.trim()) : null
         };
@@ -166,5 +166,11 @@ module.exports = {
             },
             tags: tags ? tags.split(',').map(item => item.trim()) : null
         };
+    },
+    getOffset: (page, size) => {
+        page = parseInt(page);
+        if (isNaN(page)) page = 1;
+        const offset = (page - 1) * size;
+        return offset
     }
 };

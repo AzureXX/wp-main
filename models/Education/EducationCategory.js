@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const CourseSchema = new Schema({
+const EducationCategorySchema = new Schema({
     name: {
         us: String,
         ru: String,
@@ -17,15 +17,8 @@ const CourseSchema = new Schema({
         ru: String,
         az: String
     },
-    video: {
-        us: String,
-        ru: String,
-        az: String
-    },
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
-    genres: [String],
     tags: [String]
 })
 
-const Course = mongoose.model("Course", CourseSchema)
-module.exports = Course;
+const EducationCategory = mongoose.model("EducationCategory", EducationCategorySchema)
+module.exports = EducationCategory;

@@ -73,20 +73,7 @@ router.delete(
 //@desc    Get all courses by page
 //@access  Public
 router.get('/get/all/:page?', async(req, res, next) => {
-    try {
-        let page = parseInt(req.params.page);
-        const size = 100;
-        if (isNaN(page)) page = 1;
-        const offset = (page - 1) * size;
-        const courses = await Course.find()
-            .skip(offset)
-            .limit(size);
-        if (courses.length == 0) throw new Error('No such page');
-        if (courses.length < size) res.json({ lastPage: true, courses });
-        res.json({ lastPage: false, courses });
-    } catch (error) {
-        next(error);
-    }
+    await requests.getAllItems(req, res, next, Course, "courses", 20, CourseRating)
 });
 
 //@route   GET api/course/get/id/:id

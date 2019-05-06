@@ -17,7 +17,6 @@ router.post(
     async(req, res, next) => {
         try {
             const newBook = new Book(transformation.getBookObject(req.body));
-
             const book = await newBook.save();
             res.status(200).json(book);
         } catch (error) {
@@ -72,22 +71,18 @@ router.delete(
 //@route   GET api/book/get/all/:page
 //@desc    Get all books by page
 //@access  Public
-router.get('/get/all/:page?', async(req, res, next) => {
-    try {
-        let page = parseInt(req.params.page);
-        const size = 100;
-        if (isNaN(page)) page = 1;
-        const offset = (page - 1) * size;
-        const books = await Book.find()
-            .skip(offset)
-            .limit(size);
-        if (books.length == 0) throw new Error('No such page');
-        if (books.length < size) res.json({ lastPage: true, books });
-        res.json({ lastPage: false, books });
-    } catch (error) {
-        next(error);
+router.get(
+    '/get/all/:page?',
+    (req, res, next) => {
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            req.user = user;
+            next();
+        })(req, res, next);
+    },
+    async(req, res, next) => {
+        await requests.getAllItems(req, res, next, Book, 'books', 20, BookRating);
     }
-});
+);
 
 //@route   GET api/book/get/id/:id
 //@desc    Get book by id
@@ -112,8 +107,8 @@ router.post(
     passport.authenticate('jwt', { session: false }),
     async(req, res, next) => {
         try {
-            await requests.setRating(BookRating, "books", req);
-            res.json("success");
+            await requests.setRating(BookRating, 'books', req);
+            res.json('success');
         } catch (error) {
             next(error);
         }

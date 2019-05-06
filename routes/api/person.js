@@ -74,20 +74,7 @@ router.delete(
 //@desc    Get all people by page
 //@access  Public
 router.get('/get/all/:page?', async(req, res, next) => {
-    try {
-        let page = parseInt(req.params.page);
-        const size = 100;
-        if (isNaN(page)) page = 1;
-        const offset = (page - 1) * size;
-        const people = await Person.find()
-            .skip(offset)
-            .limit(size);
-        if (people.length == 0) throw new Error('No such page');
-        if (people.length < size) res.json({ lastPage: true, people });
-        res.json({ lastPage: false, people });
-    } catch (error) {
-        next(error);
-    }
+    await requests.getAllItems(req, res, next, Person, "people", 20, PersonRating)
 });
 
 //@route   GET api/person/get/id/:id

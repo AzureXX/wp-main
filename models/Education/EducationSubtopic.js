@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const CourseSchema = new Schema({
+const EducationSubtopicSchema = new Schema({
     name: {
         us: String,
         ru: String,
@@ -17,15 +17,9 @@ const CourseSchema = new Schema({
         ru: String,
         az: String
     },
-    video: {
-        us: String,
-        ru: String,
-        az: String
-    },
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
-    genres: [String],
-    tags: [String]
+    tags: [String],
+    topics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'EducationTopic'}]
 })
 
-const Course = mongoose.model("Course", CourseSchema)
-module.exports = Course;
+const EducationSubtopic = mongoose.model("EducationSubtopic", EducationSubtopicSchema)
+module.exports = EducationSubtopic;

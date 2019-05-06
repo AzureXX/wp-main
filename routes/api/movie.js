@@ -73,21 +73,7 @@ router.delete(
 //@desc    Get all movies by page
 //@access  Public
 router.get('/get/all/:page?', async(req, res, next) => {
-    try {
-        let page = parseInt(req.params.page);
-        const size = 100;
-        if (isNaN(page)) page = 1;
-        const offset = (page - 1) * size;
-        if (isNaN(page)) page = 1;
-        const movies = await Movie.find()
-            .skip(offset)
-            .limit(size);
-        if (movies.length == 0) throw new Error('No such page');
-        if (movies.length < size) res.json({ lastPage: true, movies });
-        res.json({ lastPage: false, movies });
-    } catch (error) {
-        next(error);
-    }
+    await requests.getAllItems(req, res, next, Movie, "movies", 20, MovieRating)
 });
 
 //@route   GET api/movie/get/id/:id
