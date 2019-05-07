@@ -73,12 +73,7 @@ router.delete(
 //@access  Public
 router.get(
     '/get/all/:page?',
-    (req, res, next) => {
-        passport.authenticate('jwt', { session: false }, (err, user, info) => {
-            req.user = user;
-            next();
-        })(req, res, next);
-    },
+    roles.isUser,
     async(req, res, next) => {
         await requests.getAllItems(req, res, next, Book, 'books', BookRating, 20);
     }
@@ -89,12 +84,7 @@ router.get(
 //@access  Public
 router.get(
     '/get/id/:id',
-    (req, res, next) => {
-        passport.authenticate('jwt', { session: false }, (err, user, info) => {
-            req.user = user;
-            next();
-        })(req, res, next);
-    },
+    roles.isUser,
     async(req, res, next) => {
         await requests.getItem(req, res, next, Book, 'books', BookRating);
     }

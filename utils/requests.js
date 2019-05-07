@@ -45,6 +45,7 @@ module.exports = {
         .skip(offset)
         .limit(size);
       const ratedItems = [];
+      console.log(req.user);
       if (req.user) {
         const ratings = await rating.findOne({ userId: req.user.id });
         items.forEach(item => {
