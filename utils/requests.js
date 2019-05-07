@@ -30,7 +30,7 @@ module.exports = {
         }
     },
     //Get array of items from DB by page
-    async getAllItems(req, res, next, model, name, size, rating) {
+    async getAllItems(req, res, next, model, name, rating, size) {
         try {
             const offset = transformation.getOffset(req.params.page, size);
             let items = await model
@@ -67,6 +67,28 @@ module.exports = {
                     lastPage: false,
                     [name]: ratedItems.length > 0 ? ratedItems : items
                 });
+        } catch (error) {
+            next(error);
+        }
+    },
+    async getItem(req,res,next,model,name,rating) {
+        try {
+            const id = transformation.mongooseId(req.params.id);
+            const item = await model.findById(id);
+            if (!item) throw new Error(`No such ${name} exist`);
+            ratings = await rating.findOne({ userId: req.user.id });
+            const newItem = JSON.parse(JSON.stringify(item));
+
+            const index = ratings ?
+                ratings[name].findIndex(i => {
+                    return i.id.toString() === item._id.toString();
+                }) :
+                -1;
+            if (index > -1) {
+                newItem.rating = ratings[name][index].rating;
+                newItem.status = ratings[name][index].status;
+            }
+            res.json(newItem);
         } catch (error) {
             next(error);
         }

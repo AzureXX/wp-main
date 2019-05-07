@@ -80,24 +80,25 @@ router.get(
         })(req, res, next);
     },
     async(req, res, next) => {
-        await requests.getAllItems(req, res, next, Book, 'books', 20, BookRating);
+        await requests.getAllItems(req, res, next, Book, 'books', BookRating, 20);
     }
 );
 
 //@route   GET api/book/get/id/:id
 //@desc    Get book by id
 //@access  Public
-router.get('/get/id/:id', async(req, res, next) => {
-    try {
-        const id = transformation.mongooseId(req.params.id);
-        const book = await Book.findById(id);
-        if (!book) throw new Error('No such book exist');
-
-        res.json(book);
-    } catch (error) {
-        next(error);
+router.get(
+    '/get/id/:id',
+    (req, res, next) => {
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            req.user = user;
+            next();
+        })(req, res, next);
+    },
+    async(req, res, next) => {
+        await requests.getItem(req, res, next, Book, 'books', BookRating);
     }
-});
+);
 
 //@route   POST api/book/rate
 //@desc    Rates book

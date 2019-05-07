@@ -73,21 +73,14 @@ router.delete(
 //@desc    Get all movies by page
 //@access  Public
 router.get('/get/all/:page?', async(req, res, next) => {
-    await requests.getAllItems(req, res, next, Movie, "movies", 20, MovieRating)
+    await requests.getAllItems(req, res, next, Movie, "movies", MovieRating, 20)
 });
 
 //@route   GET api/movie/get/id/:id
 //@desc    Get movie by id
 //@access  Public
 router.get('/get/id/:id', async(req, res, next) => {
-    try {
-        const id = transformation.mongooseId(req.params.id);
-        const movie = await Movie.findById(id);
-        if (!movie) throw new Error('No such movie exist');
-        res.json(movie);
-    } catch (error) {
-        next(error);
-    }
+    await requests.getItem(req, res, next, Movie, 'movies', MovieRating);
 });
 
 //@route   POST api/course/rate

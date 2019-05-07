@@ -74,22 +74,14 @@ router.delete(
 //@desc    Get all people by page
 //@access  Public
 router.get('/get/all/:page?', async(req, res, next) => {
-    await requests.getAllItems(req, res, next, Person, "people", 20, PersonRating)
+    await requests.getAllItems(req, res, next, Person, "people", PersonRating, 20)
 });
 
 //@route   GET api/person/get/id/:id
 //@desc    Get person by id
 //@access  Public
 router.get('/get/id/:id', async(req, res, next) => {
-    try {
-        const id = transformation.mongooseId(req.params.id);
-        const person = await Person.findById(id);
-        if (!person) throw new Error('No such person exist');
-
-        res.json(person);
-    } catch (error) {
-        next(error);
-    }
+    await requests.getItem(req, res, next, Person, 'people', PersonRating);
 });
 
 //@route   POST api/course/rate
