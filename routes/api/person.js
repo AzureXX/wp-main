@@ -12,79 +12,68 @@ const requests = require('../../utils/requests');
 //@desc    Adds new person to database
 //@access  Private/Moderator
 router.post(
-    '/add',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        try {
-            const newPerson = new Person(transformation.getPersonObject(req.body), {
-                new: true
-            });
-            const person = await newPerson.save();
-            res.status(200).json(person);
-        } catch (error) {
-            next(error);
-        }
-    }
+  '/add',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.createItem(req, res, next, Person, 'person');
+  }
 );
 
 //@route   PUT api/person/edit/:id
 //@desc    Edit person in database
 //@access  Private/Moderator
 router.put(
-    '/edit/:id',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        try {
-            const id = transformation.mongooseId(req.params.id);
-            const person = await Person.findById(id);
-            if (!person) throw new Error('No such person exist');
-            const saved = await Person.findByIdAndUpdate(
-                id,
-                transformation.getPersonObject(req.body)
-            );
-            res.status(200).json(saved);
-        } catch (error) {
-            next(error);
-        }
-    }
+  '/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.editItem(req, res, next, Person, 'person');
+  }
 );
 
 //@route   Delete api/person/delete
 //@desc     Delete person from database
 //@access  Private/Moderator
 router.delete(
-    '/delete/:id',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        await requests.deleteItem(req,res,next,Person);
-    }
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.deleteItem(req, res, next, Person);
+  }
 );
 
 //@route   GET api/person/get/all/:page
 //@desc    Get all people by page
 //@access  Public
-router.get('/get/all/:page?',roles.isUser,  async(req, res, next) => {
-    await requests.getAllItems(req, res, next, Person, "people", PersonRating, 20)
+router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
+  await requests.getAllItems(
+    req,
+    res,
+    next,
+    Person,
+    'people',
+    PersonRating,
+    20
+  );
 });
 
 //@route   GET api/person/get/id/:id
 //@desc    Get person by id
 //@access  Public
-router.get('/get/id/:id', roles.isUser, async(req, res, next) => {
-    await requests.getItem(req, res, next, Person, 'people', PersonRating);
+router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
+  await requests.getItem(req, res, next, Person, 'people', PersonRating);
 });
 
 //@route   POST api/course/rate
 //@desc    Rates course
 //@access  Private
 router.post(
-    '/rate',
-    passport.authenticate('jwt', { session: false }),
-    async(req, res, next) => {
-        await requests.setRating(req,res,next,PersonRating, "people");
-    }
+  '/rate',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.setRating(req, res, next, PersonRating, 'people');
+  }
 );
 module.exports = router;

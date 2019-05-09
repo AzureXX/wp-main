@@ -11,87 +11,61 @@ const requests = require('../../utils/requests');
 //@desc    Adds new book to database
 //@access  Private/Moderator
 router.post(
-    '/add',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        try {
-            const newBook = new Book(transformation.getBookObject(req.body));
-            const book = await newBook.save();
-            res.status(200).json(book);
-        } catch (error) {
-            next(error);
-        }
-    }
+  '/add',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.createItem(req, res, next, Book, 'book');
+  }
 );
 
 //@route   PUT api/book/edit/:id
 //@desc    Edit book in database
 //@access  Private/Moderator
 router.put(
-    '/edit/:id',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        try {
-            const id = transformation.mongooseId(req.params.id);
-            const book = await Book.findById(id);
-            if (!book) throw new Error('No such book exist');
-            const saved = await Book.findByIdAndUpdate(
-                id,
-                transformation.getBookObject(req.body), { new: true }
-            );
-
-            res.status(200).json(saved);
-        } catch (error) {
-            next(error);
-        }
-    }
+  '/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.editItem(req, res, next, Book, 'book');
+  }
 );
 
 //@route   Delete api/book/delete
 //@desc     Delete book from database
 //@access  Private/Moderator
 router.delete(
-    '/delete/:id',
-    passport.authenticate('jwt', { session: false }),
-    roles.isModerator,
-    async(req, res, next) => {
-        await requests.deleteItem(req,res,next,Book);
-    }
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    await requests.deleteItem(req, res, next, Book);
+  }
 );
 
 //@route   GET api/book/get/all/:page
 //@desc    Get all books by page
 //@access  Public
-router.get(
-    '/get/all/:page?',
-    roles.isUser,
-    async(req, res, next) => {
-        await requests.getAllItems(req, res, next, Book, 'books', BookRating, 20);
-    }
-);
+router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
+  await requests.getAllItems(req, res, next, Book, 'books', BookRating, 20);
+});
 
 //@route   GET api/book/get/id/:id
 //@desc    Get book by id
 //@access  Public
-router.get(
-    '/get/id/:id',
-    roles.isUser,
-    async(req, res, next) => {
-        await requests.getItem(req, res, next, Book, 'books', BookRating);
-    }
-);
+router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
+  await requests.getItem(req, res, next, Book, 'books', BookRating);
+});
 
 //@route   POST api/book/rate
 //@desc    Rates book
 //@access  Private
 router.post(
-    '/rate',
-    passport.authenticate('jwt', { session: false }),
-    async(req, res, next) => {
-        await requests.setRating(req,res,next,BookRating, "books");
-    }
+  '/rate',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.setRating(req, res, next, BookRating, 'books');
+  }
 );
 
 module.exports = router;

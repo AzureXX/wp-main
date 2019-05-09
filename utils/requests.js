@@ -3,7 +3,7 @@ const passport = require('passport');
 const transformation = require('./transformation');
 
 module.exports = {
-  async setRating(req,res,next, model, item) {
+  async setRating(req, res, next, model, item) {
     try {
       let { rating, status, id } = req.body;
       if (rating) status = 0;
@@ -114,6 +114,29 @@ module.exports = {
         throw new Error('ID is not valid');
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
+    } catch (error) {
+      next(error);
+    }
+  },
+  async editItem(req, res, next, model, name) {
+    try {
+      const id = transformation.mongooseId(req.params.id);
+      const item = await model.findById(id);
+      if (!item) throw new Error(`No such ${name} exist`);
+      const saved = await model.findByIdAndUpdate(
+        id,
+        transformation.getObject(req.body, name)
+      );
+      res.status(200).json(saved);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async createItem(req, res, next, model, name) {
+    try {
+      const newItem = new model(transformation.getObject(req.body, name));
+      const item = await newItem.save();
+      res.status(200).json(item);
     } catch (error) {
       next(error);
     }

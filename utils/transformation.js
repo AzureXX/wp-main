@@ -4,7 +4,19 @@ module.exports = {
     mongooseId: id => {
         return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
     },
-    getBookObject: body => {
+    getObject (body, type)  {
+        switch (type) {
+            case "book":
+                return this.getBookObject(body)
+                case "movie":
+                return this.getMovieObject(body)
+                case "course":
+                return this.getCourseObject(body)
+                case "person":
+                return this.getPersonObject(body)
+        }
+    },
+    getBookObject(body) {
         const {
             name,
             description,
@@ -32,14 +44,14 @@ module.exports = {
             },
             authors: authors ?
                 authors.split(',').map(item => {
-                    return module.exports.mongooseId(item.trim());
+                    return this.mongooseId(item.trim());
                 }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             ISBN: isbn,
             published: published,
             publisher: publisher ?
                 publisher.split(',').map(item => {
-                    return module.exports.mongooseId(item.trim());
+                    return this.mongooseId(item.trim());
                 }) : null,
             wikipediaLink: {
                 us: wikipediaLink ? wikipediaLink.us : null,
@@ -59,7 +71,7 @@ module.exports = {
             tags: tags ? tags.split(',').map(item => item.trim()) : null
         };
     },
-    getMovieObject: body => {
+    getMovieObject(body)  {
         const { name, description, actors, genres, img, crew } = body;
         return {
             name: {
@@ -79,17 +91,17 @@ module.exports = {
             },
             actors: actors ?
                 actors.split(',').map(item => {
-                    return module.exports.mongooseId(item.trim());
+                    return this.mongooseId(item.trim());
                 }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             crew: crew ?
                 crew.map(item => ({
                     role: item.role,
-                    id: module.exports.mongooseId(item.id.trim())
+                    id: this.mongooseId(item.id.trim())
                 })) : null
         };
     },
-    getCourseObject: body => {
+    getCourseObject(body)  {
         const {
             name,
             description,
@@ -115,13 +127,13 @@ module.exports = {
             },
             authors: authors ?
                 authors.split(',').map(item => {
-                    return module.exports.mongooseId(item.trim());
+                    return this.mongooseId(item.trim());
                 }) : null,
             genres: genres ? genres.split(',').map(item => item.trim()) : null,
             published: published,
             publisher: publisher ?
                 publisher.split(',').map(item => {
-                    return module.exports.mongooseId(item.trim());
+                    return this.mongooseId(item.trim());
                 }) : null,
             website: {
                 us: website ? website.us : null,
@@ -141,7 +153,7 @@ module.exports = {
             tags: tags ? tags.split(',').map(item => item.trim()) : null
         };
     },
-    getPersonObject: body => {
+    getPersonObject(body)  {
         const { name, description, wikipediaLink, tags, img } = body;
         return {
             name: {
