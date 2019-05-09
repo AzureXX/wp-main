@@ -57,14 +57,7 @@ router.delete(
     passport.authenticate('jwt', { session: false }),
     roles.isModerator,
     async(req, res, next) => {
-        try {
-            if (!validation.mongooseId(req.params.id))
-                throw new Error('ID is not valid');
-            await Book.findByIdAndDelete(req.params.id);
-            res.json('Success');
-        } catch (error) {
-            next(error);
-        }
+        await requests.deleteItem(req,res,next,Book);
     }
 );
 
@@ -97,12 +90,7 @@ router.post(
     '/rate',
     passport.authenticate('jwt', { session: false }),
     async(req, res, next) => {
-        try {
-            await requests.setRating(BookRating, 'books', req);
-            res.json('success');
-        } catch (error) {
-            next(error);
-        }
+        await requests.setRating(req,res,next,BookRating, "books");
     }
 );
 

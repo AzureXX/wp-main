@@ -3,37 +3,42 @@ const passport = require('passport');
 const transformation = require('./transformation');
 
 module.exports = {
-  async setRating(model, item, req) {
-    let { rating, status, id } = req.body;
-    if (rating) status = 0;
-    else if (status) rating = 0;
-    const dollarStr = item + '.$';
-    const idStr = item + '.id';
-    //gets current ratings of user
-    const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
+  async setRating(req,res,next, model, item) {
+    try {
+      let { rating, status, id } = req.body;
+      if (rating) status = 0;
+      else if (status) rating = 0;
+      const dollarStr = item + '.$';
+      const idStr = item + '.id';
+      //gets current ratings of user
+      const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
 
-    if (!ratings) {
-      // if item is not rated by this user yet
-      await model.updateOne(
-        { userId: req.user.id },
-        {
-          userId: req.user.id,
-          $push: {
-            [item]: { id, rating, status }
+      if (!ratings) {
+        // if item is not rated by this user yet
+        await model.updateOne(
+          { userId: req.user.id },
+          {
+            userId: req.user.id,
+            $push: {
+              [item]: { id, rating, status }
+            }
+          },
+          { upsert: true }
+        );
+      } else {
+        // if item already rated by this user
+        await model.updateOne(
+          { userId: req.user.id, [idStr]: id },
+          {
+            $set: {
+              [dollarStr]: { id, rating, status }
+            }
           }
-        },
-        { upsert: true }
-      );
-    } else {
-      // if item already rated by this user
-      await model.updateOne(
-        { userId: req.user.id, [idStr]: id },
-        {
-          $set: {
-            [dollarStr]: { id, rating, status }
-          }
-        }
-      );
+        );
+      }
+      res.json('success');
+    } catch (error) {
+      next(error);
     }
   },
   //Get array of items from DB by page
@@ -99,6 +104,16 @@ module.exports = {
         }
       }
       res.json(newItem);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async deleteItem(req, res, next, model) {
+    try {
+      if (!validation.mongooseId(req.params.id))
+        throw new Error('ID is not valid');
+      await model.findByIdAndDelete(req.params.id);
+      res.json('Success');
     } catch (error) {
       next(error);
     }
