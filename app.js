@@ -34,6 +34,11 @@ const courseRoute = require("./routes/api/course");
 const movieRoute = require("./routes/api/movie");
 const personRoute = require("./routes/api/person");
 
+const educationCategoryRoute = require("./routes/api/education/category");
+const educationSubcategoryRoute = require("./routes/api/education/subcategory");
+const educationTopicRoute = require("./routes/api/education/topic");
+const educationSubtopicRoute = require("./routes/api/education/subtopic");
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,6 +51,11 @@ app.use("/api/book", bookRoute);
 app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/person", personRoute);
+
+app.use("/api/education/category", educationCategoryRoute);
+app.use("/api/education/subcategory", educationSubcategoryRoute);
+app.use("/api/education/topic", educationTopicRoute);
+app.use("/api/education/subtopic", educationSubtopicRoute);
 
 app.use((err, req, res, next) => {
     res.status(500);

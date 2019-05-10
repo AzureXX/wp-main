@@ -4,8 +4,7 @@ const passport = require('passport');
 const roles = require('../../utils/roles');
 const Course = require('../../models/Course');
 const CourseRating = require('../../models/Ratings/CourseRating');
-const transformation = require('../../utils/transformation');
-const validation = require('../../utils/validation');
+
 const requests = require('../../utils/requests');
 
 //@route   POST api/course/add
@@ -32,7 +31,7 @@ router.put(
   }
 );
 
-//@route   Delete api/course/delete
+//@route   DELETE api/course/delete/:id
 //@desc     Delete course from database
 //@access  Private/Moderator
 router.delete(

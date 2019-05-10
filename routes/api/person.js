@@ -4,8 +4,7 @@ const passport = require('passport');
 const roles = require('../../utils/roles');
 const Person = require('../../models/Person');
 const PersonRating = require('../../models/Ratings/PersonRating');
-const transformation = require('../../utils/transformation');
-const validation = require('../../utils/validation');
+
 const requests = require('../../utils/requests');
 
 //@route   POST api/person/add
@@ -32,7 +31,7 @@ router.put(
   }
 );
 
-//@route   Delete api/person/delete
+//@route   DELETE api/person/delete/:id
 //@desc     Delete person from database
 //@access  Private/Moderator
 router.delete(

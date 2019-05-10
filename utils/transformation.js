@@ -11,8 +11,16 @@ module.exports = {
       az: item ? item.az : null
     };
   },
-  strToArr(item, id) {
-    if (id)
+  common({name,description,img, tags}) {
+    return {
+      name: this.multi(name),
+      description: this.multi(description),
+      img: this.multi(img),
+      tags: this.strToArr(tags)
+    }
+  },
+  strToArr(item, isID) {
+    if (isID)
       return item
         ? item.split(',').map(i => {
             return this.mongooseId(i.trim());
@@ -30,26 +38,29 @@ module.exports = {
         return this.getCourseObject(body);
       case 'person':
         return this.getPersonObject(body);
+      case 'educationCategory':
+        return this.getEducationCategoryObject(body);
+      case 'educationSubcategory':
+        return this.getEducationSubcategoryObject(body);
+      case 'educationTopic':
+        return this.getEducationTopicObject(body);
+      case 'educationSubtopic':
+        return this.getEducationSubtopicObject(body);
     }
   },
   getBookObject(body) {
     const {
-      name,
-      description,
       authors,
       genres,
       isbn,
       published,
       publisher,
       wikipediaLink,
-      website,
-      tags,
-      img
+      website
     } = body;
 
     return {
-      name: this.multi(name),
-      description: this.multi(description),
+      ...this.common(body),
       authors: this.strToArr(authors, true),
       genres: this.strToArr(genres),
       ISBN: isbn,
@@ -57,16 +68,12 @@ module.exports = {
       publisher: this.strToArr(publisher, true),
       wikipediaLink: this.multi(wikipediaLink),
       website: this.multi(website),
-      img: this.multi(img),
-      tags: this.strToArr(tags)
     };
   },
   getMovieObject(body) {
-    const { name, description, actors, genres, img, crew, tags } = body;
+    const {  actors, genres, crew } = body;
     return {
-      name: this.multi(name),
-      description: this.multi(description),
-      img: this.multi(img),
+      ...this.common(body),
       actors: this.strToArr(actors, true),
       genres: this.strToArr(genres),
       crew: crew
@@ -74,44 +81,58 @@ module.exports = {
             role: item.role,
             id: this.mongooseId(item.id.trim())
           }))
-        : null,
-      tags: this.strToArr(tags)
+        : null
+      
     };
   },
   getCourseObject(body) {
     const {
-      name,
-      description,
       authors,
       genres,
       published,
       publisher,
       website,
-      img,
       video,
-      tags
     } = body;
     return {
-      name: this.multi(name),
-      description: this.multi(description),
+      ...this.common(body),
       authors: this.strToArr(authors, true),
       genres: genres ? genres.split(',').map(item => item.trim()) : null,
       published: published,
       publisher: this.strToArr(publisher, true),
       website: this.multi(website),
-      img: this.multi(img),
-      video: this.multi(video),
-      tags: this.strToArr(tags)
+      video: this.multi(video)
     };
   },
   getPersonObject(body) {
-    const { name, description, wikipediaLink, tags, img } = body;
+    const { wikipediaLink } = body;
     return {
-      name: this.multi(name),
-      description: this.multi(description),
+      ...this.common(body),
       wikipediaLink: this.multi(wikipediaLink),
-      img: this.multi(img),
-      tags: this.strToArr(tags)
+    };
+  },
+  getEducationCategoryObject(body) {
+    return this.common(body);
+  },
+  getEducationSubcategoryObject(body) {
+    const { categories } = body;
+    return {
+      ...this.common(body),
+      categories: this.strToArr(categories, true)
+    };
+  },
+  getEducationTopicObject(body) {
+    const { subcategories } = body;
+    return {
+      ...this.common(body),
+      subcategories: this.strToArr(subcategories, true)
+    };
+  },
+  getEducationSubtopicObject(body) {
+    const { topics } = body;
+    return {
+      ...this.common(body),
+      topics: this.strToArr(topics, true)
     };
   },
   getOffset: (page, size) => {

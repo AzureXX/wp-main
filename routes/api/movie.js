@@ -4,8 +4,7 @@ const passport = require('passport');
 const roles = require('../../utils/roles');
 const Movie = require('../../models/Movie');
 const MovieRating = require('../../models/Ratings/MovieRating');
-const transformation = require('../../utils/transformation');
-const validation = require('../../utils/validation');
+
 const requests = require('../../utils/requests');
 
 //@route   POST api/movie/add
@@ -32,7 +31,7 @@ router.put(
   }
 );
 
-//@route   Delete api/movie/delete
+//@route   DELETE api/movie/delete/:id
 //@desc     Delete movie from database
 //@access  Private/Moderator
 router.delete(
