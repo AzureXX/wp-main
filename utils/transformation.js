@@ -11,13 +11,13 @@ module.exports = {
       az: item ? item.az : null
     };
   },
-  common({name,description,img, tags}) {
+  common({ name, description, img, tags }) {
     return {
       name: this.multi(name),
       description: this.multi(description),
       img: this.multi(img),
       tags: this.strToArr(tags)
-    }
+    };
   },
   strToArr(item, isID) {
     if (isID)
@@ -67,11 +67,11 @@ module.exports = {
       published: published,
       publisher: this.strToArr(publisher, true),
       wikipediaLink: this.multi(wikipediaLink),
-      website: this.multi(website),
+      website: this.multi(website)
     };
   },
   getMovieObject(body) {
-    const {  actors, genres, crew } = body;
+    const { actors, genres, crew } = body;
     return {
       ...this.common(body),
       actors: this.strToArr(actors, true),
@@ -82,18 +82,10 @@ module.exports = {
             id: this.mongooseId(item.id.trim())
           }))
         : null
-      
     };
   },
   getCourseObject(body) {
-    const {
-      authors,
-      genres,
-      published,
-      publisher,
-      website,
-      video,
-    } = body;
+    const { authors, genres, published, publisher, website, video } = body;
     return {
       ...this.common(body),
       authors: this.strToArr(authors, true),
@@ -108,24 +100,30 @@ module.exports = {
     const { wikipediaLink } = body;
     return {
       ...this.common(body),
-      wikipediaLink: this.multi(wikipediaLink),
+      wikipediaLink: this.multi(wikipediaLink)
     };
   },
   getEducationCategoryObject(body) {
-    return this.common(body);
-  },
-  getEducationSubcategoryObject(body) {
-    const { categories } = body;
-    return {
-      ...this.common(body),
-      categories: this.strToArr(categories, true)
-    };
-  },
-  getEducationTopicObject(body) {
     const { subcategories } = body;
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true)
+    };
+  },
+  getEducationSubcategoryObject(body) {
+    const { categories, topics } = body;
+    return {
+      ...this.common(body),
+      categories: this.strToArr(categories, true),
+      topic: this.strToArr(topics, true)
+    };
+  },
+  getEducationTopicObject(body) {
+    const { subcategories, subtopics } = body;
+    return {
+      ...this.common(body),
+      subcategories: this.strToArr(subcategories, true),
+      subtopics: this.strToArr(subtopics, true)
     };
   },
   getEducationSubtopicObject(body) {
