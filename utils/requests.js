@@ -41,13 +41,14 @@ module.exports = {
     }
   },
   //Get array of items from DB by page
-  async getAllItems(req, res, next, model, name, rating, size) {
+  async getAllItems(req, res, next, model, name, rating, size ) {
     try {
+      const populate = req.body.populate?  req.body.populate : ""
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find()
         .skip(offset)
-        .limit(size);
+        .limit(size).populate(populate);
       const ratedItems = [];
       if (req.user) {
         const ratings = await rating.findOne({ userId: req.user.id });

@@ -115,7 +115,7 @@ module.exports = {
     return {
       ...this.common(body),
       categories: this.strToArr(categories, true),
-      topic: this.strToArr(topics, true)
+      topics: this.strToArr(topics, true)
     };
   },
   getEducationTopicObject(body) {
