@@ -43,7 +43,8 @@ module.exports = {
   //Get array of items from DB by page
   async getAllItems(req, res, next, model, name, rating, size ) {
     try {
-      const populate = req.body.populate?  req.body.populate : ""
+      const populate = req.query.populate?  req.query.populate : ""
+      
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find()
