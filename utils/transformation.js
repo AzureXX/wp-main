@@ -104,33 +104,37 @@ module.exports = {
     };
   },
   getEducationCategoryObject(body) {
-    const { subcategories } = body;
-    return {
-      ...this.common(body),
-      subcategories: this.strToArr(subcategories, true)
-    };
-  },
-  getEducationSubcategoryObject(body) {
-    const { categories, topics } = body;
-    return {
-      ...this.common(body),
-      categories: this.strToArr(categories, true),
-      topics: this.strToArr(topics, true)
-    };
-  },
-  getEducationTopicObject(body) {
-    const { subcategories, subtopics } = body;
+    const { subcategories , icon} = body;
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true),
-      subtopics: this.strToArr(subtopics, true)
+      icon
+    };
+  },
+  getEducationSubcategoryObject(body) {
+    const { categories, topics, icon } = body;
+    return {
+      ...this.common(body),
+      categories: this.strToArr(categories, true),
+      topics: this.strToArr(topics, true),
+      icon
+    };
+  },
+  getEducationTopicObject(body) {
+    const { subcategories, subtopics, icon } = body;
+    return {
+      ...this.common(body),
+      subcategories: this.strToArr(subcategories, true),
+      subtopics: this.strToArr(subtopics, true), 
+      icon
     };
   },
   getEducationSubtopicObject(body) {
-    const { topics } = body;
+    const { topics, icon } = body;
     return {
       ...this.common(body),
-      topics: this.strToArr(topics, true)
+      topics: this.strToArr(topics, true),
+      icon
     };
   },
   getOffset: (page, size) => {
