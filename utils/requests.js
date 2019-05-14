@@ -87,7 +87,8 @@ module.exports = {
   async getItem(req, res, next, model, name, rating) {
     try {
       const id = transformation.mongooseId(req.params.id);
-      const item = await model.findById(id);
+      const populate = req.query.populate?req.query.populate : "";
+      const item = await model.findById(id).populate(populate);
       if (!item) throw new Error(`No such ${name} exist`);
       const newItem = JSON.parse(JSON.stringify(item));
       let ratings;
