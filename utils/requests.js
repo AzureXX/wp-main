@@ -41,15 +41,16 @@ module.exports = {
     }
   },
   //Get array of items from DB by page
-  async getAllItems(req, res, next, model, name, rating, size ) {
+  async getAllItems(req, res, next, model, name, rating, size) {
     try {
-      const populate = req.query.populate?  req.query.populate : ""
-      
+      const populate = req.query.populate ? req.query.populate : '';
+
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find()
         .skip(offset)
-        .limit(size).populate(populate);
+        .limit(size)
+        .populate(populate);
       const ratedItems = [];
       if (req.user) {
         const ratings = await rating.findOne({ userId: req.user.id });
@@ -69,7 +70,7 @@ module.exports = {
         });
       }
 
-      if (items.length == 0) throw new Error('No such page');
+      if (items.length == 0 && page == 1) throw new Error('No ' +name +' in our database');
       if (items.length < size)
         res.json({
           lastPage: true,
@@ -87,7 +88,7 @@ module.exports = {
   async getItem(req, res, next, model, name, rating) {
     try {
       const id = transformation.mongooseId(req.params.id);
-      const populate = req.query.populate?req.query.populate : "";
+      const populate = req.query.populate ? req.query.populate : '';
       const item = await model.findById(id).populate(populate);
       if (!item) throw new Error(`No such ${name} exist`);
       const newItem = JSON.parse(JSON.stringify(item));
@@ -142,10 +143,12 @@ module.exports = {
       next(error);
     }
   },
-  async getUserRatingList(req,res,next,type) {
+  async getUserRatingList(req, res, next, type) {
     try {
       const Model = transformation.getRatingModel(type);
-      const ratings = await Model.findOne({userId: req.params.id}).populate(type+".id")
+      const ratings = await Model.findOne({ userId: req.params.id }).populate(
+        type + '.id'
+      );
       res.json(ratings);
     } catch (error) {
       next(error);
