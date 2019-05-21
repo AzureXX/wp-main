@@ -1,4 +1,9 @@
 const ObjectId = require('mongoose').Types.ObjectId;
+const BookRating = require("../models/Ratings/BookRating")
+const MovieRating = require("../models/Ratings/MovieRating")
+const CourseRating = require("../models/Ratings/CourseRating")
+const PersonRating = require("../models/Ratings/PersonRating")
+
 
 module.exports = {
   mongooseId(id) {
@@ -18,6 +23,21 @@ module.exports = {
       img: this.multi(img),
       tags: this.strToArr(tags)
     };
+  },
+  getRatingModel(type) {
+    switch(type) {
+      case "books":
+        return BookRating
+      case "movies":
+        return MovieRating
+      case "courses":
+        return CourseRating
+      case "people":
+        return PersonRating  
+      default:
+        return null
+    }
+    
   },
   strToArr(item, isID) {
     if (isID)

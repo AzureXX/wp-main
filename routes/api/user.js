@@ -4,6 +4,7 @@ const passport = require('passport');
 const User = require('../../models/User');
 const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcryptjs');
+const requests = require("../../utils/requests.js")
 
 //@route   GET api/user/current
 //@desc    Return current user's email and id
@@ -32,6 +33,7 @@ router.get(
         }
     }
 );
+
 
 //@route   GET api/user/get/:username
 //@desc    Return user by username or id
@@ -66,6 +68,8 @@ router.get('/get/:username', async(req, res, next) => {
         return next(error);
     }
 });
+
+
 
 //@route   PUT api/user/update
 //@desc    Return user by username or id
@@ -164,5 +168,13 @@ router.delete(
         }
     }
 );
+
+
+//@route   GET api/user/getrating/:type/:id
+//@desc    Return user by username or id
+//@access  Public
+router.get("/getrating/:type/:id", async (req,res,next) => {
+        await requests.getUserRatingList(req,res,next,req.params.type);
+})
 
 module.exports = router;

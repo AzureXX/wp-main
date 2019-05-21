@@ -141,5 +141,14 @@ module.exports = {
     } catch (error) {
       next(error);
     }
+  },
+  async getUserRatingList(req,res,next,type) {
+    try {
+      const Model = transformation.getRatingModel(type);
+      const ratings = await Model.findOne({userId: req.params.id}).populate(type+".id");
+      res.json(ratings);
+    } catch (error) {
+      next(error);
+    }
   }
 };
