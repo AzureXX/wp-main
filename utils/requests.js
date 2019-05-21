@@ -56,8 +56,8 @@ module.exports = {
         const ratings = await rating.findOne({ userId: req.user.id });
         items.forEach(item => {
           const newItem = JSON.parse(JSON.stringify(item));
-          console.log(ratings)
-          const index = ratings.length > 0
+          
+          const index = ratings && ratings.length > 0
             ? ratings[name].findIndex(i => {
                 return i.id.toString() === item._id.toString();
               })
@@ -94,7 +94,7 @@ module.exports = {
       let ratings;
       if (req.user) {
         ratings = await rating.findOne({ userId: req.user.id });
-        const index = ratings.length > 0 
+        const index = ratings && ratings.length > 0 
           ? ratings[name].findIndex(i => {
               return i.id && i.id.toString() === item._id.toString();
             })
