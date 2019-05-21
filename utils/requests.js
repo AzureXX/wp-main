@@ -70,7 +70,7 @@ module.exports = {
         });
       }
 
-      if (items.length == 0 && page == 1) throw new Error('No ' +name +' in our database');
+      if (items.length == 0 && offset == 0) throw new Error('No ' +name +' in our database');
       if (items.length < size)
         res.json({
           lastPage: true,
