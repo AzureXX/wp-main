@@ -7,7 +7,11 @@ const BookRatingSchema = new Schema({
         _id: false,
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
         status: Number,
-        rating: Number
+        rating: Number,
+        date: {
+            type: Date,
+            default : new Date
+        }
     }]
 });
 

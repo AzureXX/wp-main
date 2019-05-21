@@ -7,7 +7,11 @@ const PersonRatingSchema = new Schema({
         _id: false,
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
         status: String,
-        rating: Number
+        rating: Number,
+        date: {
+            type: Date,
+            default : new Date
+        }
     }]
 });
 
