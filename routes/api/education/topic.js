@@ -47,7 +47,7 @@ router.delete(
 //@desc    Get all education topics by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, EducationTopic, 'topics', EducationTopicRating, 20);
+  await requests.getAllItems(req, res, next, EducationTopic, 'topics', EducationTopicRating, 1000);
 });
 
 //@route   GET api/education/topic/get/id/:id

@@ -47,7 +47,7 @@ router.delete(
 //@desc    Get all education subcategories by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, EducationSubcategory, 'subcategories', EducationSubcategoryRating, 20);
+  await requests.getAllItems(req, res, next, EducationSubcategory, 'subcategories', EducationSubcategoryRating, 1000);
 });
 
 //@route   GET api/education/subcategory/get/id/:id

@@ -69,8 +69,7 @@ module.exports = {
           ratedItems.push(newItem);
         });
       }
-
-      if (items.length == 0 && offset == 0) throw new Error('No ' +name +' in our database');
+      
       if (items.length < size)
         res.json({
           lastPage: true,

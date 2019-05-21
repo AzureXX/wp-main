@@ -47,7 +47,7 @@ router.delete(
 //@desc    Get all education subtopics by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, EducationSubtopic, 'subtopics', EducationSubtopicRating, 20);
+  await requests.getAllItems(req, res, next, EducationSubtopic, 'subtopics', EducationSubtopicRating, 1000);
 });
 
 //@route   GET api/education/subtopic/get/id/:id
