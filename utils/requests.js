@@ -146,7 +146,10 @@ module.exports = {
     try {
       const Model = transformation.getRatingModel(type);
       const ratings = await Model.findOne({ userId: req.params.id }).populate(
-        type + '.id'
+        {
+          path: type + '.id',
+          select: "name"
+        }
       );
       res.json(ratings);
     } catch (error) {
