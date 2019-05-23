@@ -24,7 +24,7 @@ const CourseSchema = new Schema({
     },
     authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
     genres: [String],
-    tags: [String]
+    tags: [{_id: false, name:String, level: Number}]
 })
 
 const Course = mongoose.model("Course", CourseSchema)

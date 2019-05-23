@@ -2,16 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const QuestionarySchema = new Schema({
-  multiple: Boolean,
-  text: String,
-  answers: [{
-    text: String,
-    result: [{
-      tagname: String,
-      effect: Number
-    }]
-  }],
-  tags: [{name:String, level: Number}]
+  Questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+  tags: [{_id: false, name:String, level: Number}]
 })
 
 const Questionary = mongoose.model("Questionary", QuestionarySchema)

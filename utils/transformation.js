@@ -21,7 +21,7 @@ module.exports = {
       name: this.multi(name),
       description: this.multi(description),
       img: this.multi(img),
-      tags: this.strToArr(tags)
+      tags: tags
     };
   },
   getRatingModel(type) {
@@ -156,6 +156,9 @@ module.exports = {
       topics: this.strToArr(topics, true),
       icon
     };
+  },
+  getQuestionObject(body) {
+    const {multiple} = body
   },
   getOffset: (page, size) => {
     page = parseInt(page);

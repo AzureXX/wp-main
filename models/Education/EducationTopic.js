@@ -17,7 +17,7 @@ const EducationTopicSchema = new Schema({
         ru: String,
         az: String
     },
-    tags: [String],
+    tags: [{_id: false, name:String, level: Number}],
     subcategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubcategory'}],
     subtopics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubtopic'}],
     icon:String

@@ -41,7 +41,7 @@ const UserSchema = new Schema({
         type: String,
         default: "user"
     },
-    tags: [{name:String, experience: Number}]
+    tags: [{_id: false, name:String, level: Number}]
 })
 
 const User = mongoose.model("User", UserSchema)
