@@ -33,6 +33,7 @@ const bookRoute = require("./routes/api/book");
 const courseRoute = require("./routes/api/course");
 const movieRoute = require("./routes/api/movie");
 const personRoute = require("./routes/api/person");
+const vacanciesRoute = require("./routes/api/vacancies");
 
 const educationCategoryRoute = require("./routes/api/education/category");
 const educationSubcategoryRoute = require("./routes/api/education/subcategory");
@@ -51,12 +52,15 @@ app.use("/api/book", bookRoute);
 app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/person", personRoute);
+app.use("/api/vacancies", vacanciesRoute);
 
 app.use("/api/education/category", educationCategoryRoute);
 app.use("/api/education/subcategory", educationSubcategoryRoute);
 app.use("/api/education/topic", educationTopicRoute);
 app.use("/api/education/subtopic", educationSubtopicRoute);
 
+
+app.use("/api/files", require("./routes/api/files"));
 app.use((err, req, res, next) => {
     res.status(500);
     res.json({ message: err.message });

@@ -15,5 +15,10 @@ module.exports = {
       req.user = user;
       next();
     })(req, res, next);
-  }
+  },
+  isBusiness: (req, res, next) => {
+    if (req.user.accountType !== "business")
+      return next(new Error("Not authorised"));
+    next();
+  },
 };

@@ -44,13 +44,18 @@ module.exports = {
   async getAllItems(req, res, next, model, name, rating, size) {
     try {
       const populate = req.query.populate ? req.query.populate : '';
-
+      const select = req.query.select ? req.query.select : '';
+      const only = req.query.only ? req.query.only : '';
+      console.log(only)
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
-        .find()
+        .find({}, only)
         .skip(offset)
         .limit(size)
-        .populate(populate);
+        .populate({
+          path: populate,
+          select: select
+        });
       const ratedItems = [];
       if (req.user) {
         const ratings = await rating.findOne({ userId: req.user.id });
