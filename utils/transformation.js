@@ -24,6 +24,15 @@ module.exports = {
       tags: tags
     };
   },
+  strToArr(item, isID) {
+    if (isID)
+      return item
+        ? item.split(',').map(i => {
+            return this.mongooseId(i.trim());
+          })
+        : null;
+    return item ? item.split(',').map(i => i.trim()) : null;
+  },
   getRatingModel(type) {
     switch(type) {
       case "books":
@@ -39,15 +48,7 @@ module.exports = {
     }
     
   },
-  strToArr(item, isID) {
-    if (isID)
-      return item
-        ? item.split(',').map(i => {
-            return this.mongooseId(i.trim());
-          })
-        : null;
-    return item ? item.split(',').map(i => i.trim()) : null;
-  },
+  
   getObject(body, type) {
     switch (type) {
       case 'book':
@@ -66,6 +67,8 @@ module.exports = {
         return this.getEducationTopicObject(body);
       case 'educationSubtopic':
         return this.getEducationSubtopicObject(body);
+      case 'vacancy':
+        return this.getVacancyObject(body);  
     }
   },
   getBookObject(body) {
@@ -156,6 +159,14 @@ module.exports = {
       topics: this.strToArr(topics, true),
       icon
     };
+  },
+  getVacancyObject(body) {
+    const {minAge, maxAge, creator} = body;
+    return {
+      minAge,
+      maxAge,
+      creator: this.mongooseId(creator)
+    }
   },
   getQuestionObject(body) {
     const {multiple} = body

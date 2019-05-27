@@ -46,7 +46,7 @@ module.exports = {
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
-      console.log(only)
+      
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find({}, only)
