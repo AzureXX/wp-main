@@ -65,6 +65,8 @@ module.exports = {
         return this.getEducationTopicObject(req.body);
       case 'educationSubtopic':
         return this.getEducationSubtopicObject(req.body);
+      case 'question':
+        return this.getQuestionObject(req.body);
       case 'vacancy':
         return this.getVacancyObject(req);
     }
@@ -196,7 +198,20 @@ module.exports = {
     };
   },
   getQuestionObject(body) {
-    const { multiple } = body;
+    const { multiple, text,answers, tags } = body;
+    return {
+      multiple,
+      text,
+      answers,
+      tags
+    }
+  },
+  getQuestionaryObject(body) {
+    const { questions, tags } = body;
+    return {
+      questions: this.strToArr(authors, true),
+      tags
+    }
   },
   getOffset: (page, size) => {
     page = parseInt(page);

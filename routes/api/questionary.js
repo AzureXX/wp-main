@@ -2,57 +2,57 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
-const Question = require('../../models/Question');
+const Questionary = require('../../models/Questionary');
 
 const requests = require('../../utils/requests');
-//@route   POST api/question/add
-//@desc    Adds new question to database
+//@route   POST api/questionary/add
+//@desc    Adds new questionary to database
 //@access  Private/Moderator
 router.post(
   '/add',
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, Question, 'question');
+    await requests.createItem(req, res, next, Questionary, 'questionary');
   }
 );
 
-//@route   PUT api/question/edit/:id
-//@desc    Edit question in database
+//@route   PUT api/questionary/edit/:id
+//@desc    Edit questionary in database
 //@access  Private/Moderator
 router.put(
   '/edit/:id',
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, Question, 'question');
+    await requests.editItem(req, res, next, Questionary, 'questionary');
   }
 );
 
-//@route   DELETE api/question/delete/:id
-//@desc     Delete question from database
+//@route   DELETE api/questionary/delete/:id
+//@desc     Delete questionary from database
 //@access  Private/Moderator
 router.delete(
   '/delete/:id',
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, Question);
+    await requests.deleteItem(req, res, next, Questionary);
   }
 );
 
-//@route   GET api/question/get/all/:page
-//@desc    Get all questions by page
+//@route   GET api/questionary/get/all/:page
+//@desc    Get all questionaries by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, Question, 'questions', null, 20);
+  await requests.getAllItems(req, res, next, Questionary, 'questionaries', null, 20);
 });
 
-//@route   GET api/question/get/id/:id
-//@desc    Get question by id
+//@route   GET api/questionary/get/id/:id
+//@desc    Get questionary by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, Question, 'questions', null);
+  await requests.getItem(req, res, next, Questionary, 'questionaries', null);
 });
 
 module.exports = router;

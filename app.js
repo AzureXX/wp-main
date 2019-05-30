@@ -33,7 +33,9 @@ const bookRoute = require("./routes/api/book");
 const courseRoute = require("./routes/api/course");
 const movieRoute = require("./routes/api/movie");
 const personRoute = require("./routes/api/person");
-const vacanciesRoute = require("./routes/api/vacancies");
+const vacancyRoute = require("./routes/api/vacancy");
+const questionRoute = require("./routes/api/question");
+const questionaryRoute = require("./routes/api/questionary");
 
 const educationCategoryRoute = require("./routes/api/education/category");
 const educationSubcategoryRoute = require("./routes/api/education/subcategory");
@@ -52,8 +54,9 @@ app.use("/api/book", bookRoute);
 app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/person", personRoute);
-app.use("/api/vacancies", vacanciesRoute);
-
+app.use("/api/vacancy", vacancyRoute);
+app.use("/api/question", questionRoute);
+app.use("/api/questionary", questionaryRoute);
 app.use("/api/education/category", educationCategoryRoute);
 app.use("/api/education/subcategory", educationSubcategoryRoute);
 app.use("/api/education/topic", educationTopicRoute);

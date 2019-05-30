@@ -8,7 +8,7 @@ const QuestionSchema = new Schema({
     _id: false,
     text: String,
     result: [{
-      tagname: String,
+      tagName: String,
       effect: Number
     }]
   }],
@@ -17,5 +17,3 @@ const QuestionSchema = new Schema({
 
 const Question = mongoose.model("Question", QuestionSchema)
 module.exports = Question;
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
