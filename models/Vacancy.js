@@ -14,7 +14,7 @@ const VacancySchema = new Schema({
   contactPerson: String,
   topics:[mongoose.Schema.Types.ObjectId],
   experience: String,
-  salary: Number,
+  salary: String,
   city: String,
   category: String,
   creator: {
