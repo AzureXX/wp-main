@@ -128,7 +128,7 @@ module.exports = {
       next(error);
     }
   },
-  async editItem(req, res, next, model, name) {
+  async editItem(req, res, next, model, name, check) {
     try {
       const id = transformation.mongooseId(req.params.id);
       const item = await model.findById(id);
