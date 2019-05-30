@@ -57,7 +57,7 @@ module.exports = {
           select: select
         });
       const ratedItems = [];
-      if (req.user) {
+      if (req.user && rating) {
         const ratings = await rating.findOne({ userId: req.user.id });
         items.forEach(item => {
           const newItem = JSON.parse(JSON.stringify(item));
@@ -97,7 +97,7 @@ module.exports = {
       if (!item) throw new Error(`No such ${name} exist`);
       const newItem = JSON.parse(JSON.stringify(item));
       let ratings;
-      if (req.user) {
+      if (req.user && rating) {
         ratings = await rating.findOne({ userId: req.user.id });
         const index = ratings  
           ? ratings[name].findIndex(i => {
@@ -114,10 +114,14 @@ module.exports = {
       next(error);
     }
   },
-  async deleteItem(req, res, next, model) {
+  async deleteItem(req, res, next, model, check) {
     try {
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
+      if(check) {
+        const item = await model.findById(req.params.id);
+        if(item.userId.toString() !== req.user.id) throw new Error('Not authorized');
+      }  
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
     } catch (error) {
@@ -129,9 +133,12 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
+      if(check) { 
+        if(item.userId.toString() !== req.user.id) throw new Error('Not authorized');
+      }
       const saved = await model.findByIdAndUpdate(
         id,
-        transformation.getObject(req.body, name)
+        transformation.getObject(req, name)
       );
       res.status(200).json(saved);
     } catch (error) {
@@ -140,7 +147,7 @@ module.exports = {
   },
   async createItem(req, res, next, model, name) {
     try {
-      const newItem = new model(transformation.getObject(req.body, name));
+      const newItem = new model(transformation.getObject(req, name));
       const item = await newItem.save();
       res.status(200).json(item);
     } catch (error) {

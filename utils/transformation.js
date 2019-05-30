@@ -1,9 +1,8 @@
 const ObjectId = require('mongoose').Types.ObjectId;
-const BookRating = require("../models/Ratings/BookRating")
-const MovieRating = require("../models/Ratings/MovieRating")
-const CourseRating = require("../models/Ratings/CourseRating")
-const PersonRating = require("../models/Ratings/PersonRating")
-
+const BookRating = require('../models/Ratings/BookRating');
+const MovieRating = require('../models/Ratings/MovieRating');
+const CourseRating = require('../models/Ratings/CourseRating');
+const PersonRating = require('../models/Ratings/PersonRating');
 
 module.exports = {
   mongooseId(id) {
@@ -34,41 +33,40 @@ module.exports = {
     return item ? item.split(',').map(i => i.trim()) : null;
   },
   getRatingModel(type) {
-    switch(type) {
-      case "books":
-        return BookRating
-      case "movies":
-        return MovieRating
-      case "courses":
-        return CourseRating
-      case "people":
-        return PersonRating  
+    switch (type) {
+      case 'books':
+        return BookRating;
+      case 'movies':
+        return MovieRating;
+      case 'courses':
+        return CourseRating;
+      case 'people':
+        return PersonRating;
       default:
-        return null
+        return null;
     }
-    
   },
-  
-  getObject(body, type) {
+
+  getObject(req, type) {
     switch (type) {
       case 'book':
-        return this.getBookObject(body);
+        return this.getBookObject(req.body);
       case 'movie':
-        return this.getMovieObject(body);
+        return this.getMovieObject(req.body);
       case 'course':
-        return this.getCourseObject(body);
+        return this.getCourseObject(req.body);
       case 'person':
-        return this.getPersonObject(body);
+        return this.getPersonObject(req.body);
       case 'educationCategory':
-        return this.getEducationCategoryObject(body);
+        return this.getEducationCategoryObject(req.body);
       case 'educationSubcategory':
-        return this.getEducationSubcategoryObject(body);
+        return this.getEducationSubcategoryObject(req.body);
       case 'educationTopic':
-        return this.getEducationTopicObject(body);
+        return this.getEducationTopicObject(req.body);
       case 'educationSubtopic':
-        return this.getEducationSubtopicObject(body);
+        return this.getEducationSubtopicObject(req.body);
       case 'vacancy':
-        return this.getVacancyObject(body);  
+        return this.getVacancyObject(req);
     }
   },
   getBookObject(body) {
@@ -127,7 +125,7 @@ module.exports = {
     };
   },
   getEducationCategoryObject(body) {
-    const { subcategories , icon} = body;
+    const { subcategories, icon } = body;
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true),
@@ -148,7 +146,7 @@ module.exports = {
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true),
-      subtopics: this.strToArr(subtopics, true), 
+      subtopics: this.strToArr(subtopics, true),
       icon
     };
   },
@@ -160,16 +158,45 @@ module.exports = {
       icon
     };
   },
-  getVacancyObject(body) {
-    const {minAge, maxAge, creator} = body;
+  getVacancyObject(req) {
+    const {
+      education,
+      position,
+      email,
+      phone,
+      ageMin,
+      ageMax,
+      requirements,
+      workInfo,
+      companyName,
+      contactPerson,
+      topics,
+      experience,
+      salary,
+      city,
+      category
+    } = req.body;
     return {
-      minAge,
-      maxAge,
-      creator: this.mongooseId(creator)
-    }
+      creator: this.mongooseId(req.user._id),
+      education: education,
+      position: position,
+      email: email,
+      phone: phone,
+      ageMin: ageMin,
+      ageMax: ageMax,
+      requirements: requirements,
+      workInfo: workInfo,
+      companyName: companyName,
+      contactPerson: contactPerson,
+      topics: topics,
+      experience: experience,
+      salary: salary,
+      city: city,
+      category: category
+    };
   },
   getQuestionObject(body) {
-    const {multiple} = body
+    const { multiple } = body;
   },
   getOffset: (page, size) => {
     page = parseInt(page);

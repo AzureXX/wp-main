@@ -23,9 +23,9 @@ router.post(
 router.put(
   '/edit/:id',
   passport.authenticate('jwt', { session: false }),
-  roles.isModerator,
+  roles.isBusiness,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, Vacancy, 'vacancy');
+    await requests.editItem(req, res, next, Vacancy, 'vacancy', true);
   }
 );
 
@@ -37,7 +37,7 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   roles.isBusiness,
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, Vacancy);
+    await requests.deleteItem(req, res, next, Vacancy, true);
   }
 );
 
@@ -46,6 +46,18 @@ router.delete(
 //@access  Public
 router.get('/get/all/:page?', async (req, res, next) => {
   await requests.getAllItems(req, res, next, Vacancy, 'vacancies', null, 20);
+});
+
+//@route   GET api/vacancy/get/current
+//@desc    Get all vacancies of that user
+//@access  Public
+router.get('/get/current',roles.isBusiness, async (req, res, next) => {
+  try {
+    const response = await Vacancy.find({creator: req.user.id})
+    res.json(response);
+  } catch (error) {
+    next(error)
+  }
 });
 
 //@route   GET api/vacancy/get/id/:id
