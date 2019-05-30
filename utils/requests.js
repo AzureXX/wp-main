@@ -120,7 +120,7 @@ module.exports = {
         throw new Error('ID is not valid');
       if(check) {
         const item = await model.findById(req.params.id);
-        if(item.userId.toString() !== req.user.id) throw new Error('Not authorized');
+        if(item.creator.toString() !== req.user.id) throw new Error('Not authorized');
       }  
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
@@ -133,8 +133,9 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
-      if(check) { 
-        if(item.userId.toString() !== req.user.id) throw new Error('Not authorized');
+      console.log(item);
+      if(check) {
+        if(item.creator.toString() !== req.user.id) throw new Error('Not authorized');
       }
       const saved = await model.findByIdAndUpdate(
         id,

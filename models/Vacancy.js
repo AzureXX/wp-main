@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const VacancySchema = new Schema({
   education: String,
-  possition:String,
+  position:String,
   email: String,
   phone: String,
   ageMin: Number,
