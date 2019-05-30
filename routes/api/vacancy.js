@@ -51,14 +51,19 @@ router.get('/get/all/:page?', async (req, res, next) => {
 //@route   GET api/vacancy/get/current
 //@desc    Get all vacancies of that user
 //@access  Public
-router.get('/get/current',roles.isBusiness, async (req, res, next) => {
-  try {
-    const response = await Vacancy.find({creator: req.user.id})
-    res.json(response);
-  } catch (error) {
-    next(error)
+router.get(
+  '/get/current',
+  passport.authenticate('jwt', { session: false }),
+  roles.isBusiness,
+  async (req, res, next) => {
+    try {
+      const response = await Vacancy.find({ creator: req.user.id });
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 //@route   GET api/vacancy/get/id/:id
 //@desc    Get vacancy by id
@@ -66,6 +71,5 @@ router.get('/get/current',roles.isBusiness, async (req, res, next) => {
 router.get('/get/id/:id', async (req, res, next) => {
   await requests.getItem(req, res, next, Vacancy, 'vacancies', null);
 });
-
 
 module.exports = router;
