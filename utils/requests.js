@@ -54,7 +54,8 @@ module.exports = {
         .limit(size)
         .populate({
           path: populate,
-          select: select
+          select: select,
+          populate: {path: "categories subcategories topics subtopics"}
         });
       const ratedItems = [];
       if (req.user && rating) {
@@ -93,7 +94,13 @@ module.exports = {
     try {
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
-      const item = await model.findById(id).populate(populate);
+      const select = req.query.select ? req.query.select : '';
+      
+      const item = await model.findById(id).populate({
+        path: populate,
+        select: select,
+        populate: {path: "categories subcategories topics subtopics"}
+      });
       if (!item) throw new Error(`No such ${name} exist`);
       const newItem = JSON.parse(JSON.stringify(item));
       let ratings;
