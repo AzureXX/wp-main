@@ -1,19 +1,31 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const QuestionSchema = new Schema({
   multiple: Boolean,
-  text: String,
-  answers: [{
-    _id: false,
-    text: String,
-    result: [{
-      tagName: String,
-      effect: Number
-    }]
-  }],
-  tags: [{_id: false, name:String, level: Number}]
-})
+  text: {
+    us: String,
+    ru: String,
+    az: String
+  },
+  answers: [
+    {
+      _id: false,
+      text: {
+        us: String,
+        ru: String,
+        az: String
+      },
+      result: [
+        {
+          tagName: String,
+          effect: Number
+        }
+      ]
+    }
+  ],
+  tags: [{ _id: false, name: String, level: Number }]
+});
 
-const Question = mongoose.model("Question", QuestionSchema)
+const Question = mongoose.model('Question', QuestionSchema);
 module.exports = Question;

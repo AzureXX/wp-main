@@ -201,7 +201,7 @@ module.exports = {
     const { multiple, text,answers, tags } = body;
     return {
       multiple,
-      text,
+      text: this.multi(text),
       answers,
       tags
     }
