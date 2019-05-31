@@ -41,7 +41,7 @@ const educationCategoryRoute = require("./routes/api/education/category");
 const educationSubcategoryRoute = require("./routes/api/education/subcategory");
 const educationTopicRoute = require("./routes/api/education/topic");
 const educationSubtopicRoute = require("./routes/api/education/subtopic");
-
+const searchRoute = require("./routes/api/search");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -62,6 +62,7 @@ app.use("/api/education/subcategory", educationSubcategoryRoute);
 app.use("/api/education/topic", educationTopicRoute);
 app.use("/api/education/subtopic", educationSubtopicRoute);
 
+app.use("/api/search", searchRoute);
 
 app.use("/api/files", require("./routes/api/files"));
 app.use((err, req, res, next) => {
