@@ -211,7 +211,7 @@ module.exports = {
   getQuestionaryObject(body) {
     const { questions, tags } = body;
     return {
-      questions: this.strToArr(authors, true),
+      questions: this.strToArr(questions, true),
       tags
     }
   },
