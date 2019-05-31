@@ -67,6 +67,8 @@ module.exports = {
         return this.getEducationSubtopicObject(req.body);
       case 'question':
         return this.getQuestionObject(req.body);
+      case 'questionary':
+        return this.getQuestionaryObject(req.body);  
       case 'vacancy':
         return this.getVacancyObject(req);
     }
