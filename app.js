@@ -41,6 +41,9 @@ const educationCategoryRoute = require("./routes/api/education/category");
 const educationSubcategoryRoute = require("./routes/api/education/subcategory");
 const educationTopicRoute = require("./routes/api/education/topic");
 const educationSubtopicRoute = require("./routes/api/education/subtopic");
+
+const recommendationsBookRoute = require("./routes/api/recommendations/book");
+
 const searchRoute = require("./routes/api/search");
 app.use(logger("dev"));
 app.use(express.json());
@@ -57,10 +60,14 @@ app.use("/api/person", personRoute);
 app.use("/api/vacancy", vacancyRoute);
 app.use("/api/question", questionRoute);
 app.use("/api/questionary", questionaryRoute);
+
 app.use("/api/education/category", educationCategoryRoute);
 app.use("/api/education/subcategory", educationSubcategoryRoute);
 app.use("/api/education/topic", educationTopicRoute);
 app.use("/api/education/subtopic", educationSubtopicRoute);
+
+app.use("/api/recommendations/book", recommendationsBookRoute);
+
 
 app.use("/api/search", searchRoute);
 

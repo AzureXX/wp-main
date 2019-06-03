@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const BookRecommendationSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     books: [{
-        id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+        _id: false,
+        data: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
         points: Number
     }]
 });
