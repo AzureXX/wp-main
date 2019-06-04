@@ -184,8 +184,10 @@ module.exports = {
       const plural = transformation.getPlural(name);
 
       const ratings = await itemRatingModel.findOne({ userId: req.user._id });
-
-      const rated = ratings[plural].map(item => item.id);
+      let rated = [];
+      if(ratings) {
+        rated = ratings[plural].map(item => item.id);
+      } 
 
       const items = await itemModel.find({ _id: { $nin: rated } });
       const pointedItems = items.map(item => ({
