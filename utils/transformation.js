@@ -3,7 +3,14 @@ const BookRating = require('../models/Ratings/BookRating');
 const MovieRating = require('../models/Ratings/MovieRating');
 const CourseRating = require('../models/Ratings/CourseRating');
 const PersonRating = require('../models/Ratings/PersonRating');
-
+const Book = require('../models/Book');
+const Movie = require('../models/Movie');
+const Course = require('../models/Course');
+const Person = require('../models/Person');
+const BookRecommendation = require('../models/Recommendations/BookRecommendation');
+const MovieRecommendation = require('../models/Recommendations/MovieRecommendation');
+const CourseRecommendation = require('../models/Recommendations/CourseRecommendation');
+const PersonRecommendation = require('../models/Recommendations/PersonRecommendation');
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -32,20 +39,6 @@ module.exports = {
         : null;
     return item ? item.split(',').map(i => i.trim()) : null;
   },
-  getRatingModel(type) {
-    switch (type) {
-      case 'books':
-        return BookRating;
-      case 'movies':
-        return MovieRating;
-      case 'courses':
-        return CourseRating;
-      case 'people':
-        return PersonRating;
-      default:
-        return null;
-    }
-  },
 
   getObject(req, type) {
     switch (type) {
@@ -68,7 +61,7 @@ module.exports = {
       case 'question':
         return this.getQuestionObject(req.body);
       case 'questionary':
-        return this.getQuestionaryObject(req.body);  
+        return this.getQuestionaryObject(req.body);
       case 'vacancy':
         return this.getVacancyObject(req);
     }
@@ -200,25 +193,89 @@ module.exports = {
     };
   },
   getQuestionObject(body) {
-    const { multiple, text,answers, tags } = body;
+    const { multiple, text, answers, tags } = body;
     return {
       multiple,
       text: this.multi(text),
       answers,
       tags
-    }
+    };
   },
   getQuestionaryObject(body) {
     const { questions, tags } = body;
     return {
       questions: this.strToArr(questions, true),
       tags
-    }
+    };
   },
-  getOffset: (page, size) => {
+  getOffset(page, size) {
     page = parseInt(page);
     if (isNaN(page)) page = 1;
     const offset = (page - 1) * size;
     return offset;
+  },
+  getModel(name) {
+    switch (name) {
+      case 'book':
+        return Book;
+      case 'movie':
+        return Movie;
+      case 'course':
+        return Course;
+      case 'person':
+        return Person;
+      default:
+        return null;
+    }
+  },
+  getRatingModel(type) {
+    switch (type) {
+      case 'books':
+        return BookRating;
+      case 'movies':
+        return MovieRating;
+      case 'courses':
+        return CourseRating;
+      case 'people':
+        return PersonRating;
+      case 'book':
+        return BookRating;
+      case 'movie':
+        return MovieRating;
+      case 'course':
+        return CourseRating;
+      case 'person':
+        return PersonRating;
+      default:
+        return null;
+    }
+  },
+  getRecommendationModel(name) {
+    switch (name) {
+      case 'book':
+        return BookRecommendation;
+      case 'movie':
+        return MovieRecommendation;
+      case 'course':
+        return CourseRecommendation;
+      case 'person':
+        return PersonRecommendation;
+      default:
+        return null;
+    }
+  },
+  getPlural(name) {
+    switch (name) {
+      case 'book':
+        return 'books';
+      case 'movie':
+        return 'movies';
+      case 'course':
+        return 'courses';
+      case 'person':
+        return 'people';
+      default:
+        return null;
+    }
   }
 };

@@ -46,7 +46,7 @@ module.exports = {
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
-      
+
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find({}, only)
@@ -55,14 +55,14 @@ module.exports = {
         .populate({
           path: populate,
           select: select,
-          populate: {path: "categories subcategories topics subtopics"}
+          populate: { path: 'categories subcategories topics subtopics' }
         });
       const ratedItems = [];
       if (req.user && rating) {
         const ratings = await rating.findOne({ userId: req.user.id });
         items.forEach(item => {
           const newItem = JSON.parse(JSON.stringify(item));
-          
+
           const index = ratings
             ? ratings[name].findIndex(i => {
                 return i.id.toString() === item._id.toString();
@@ -95,18 +95,18 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
-      
+
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
-        populate: {path: "categories subcategories topics subtopics"}
+        populate: { path: 'categories subcategories topics subtopics' }
       });
       if (!item) throw new Error(`No such ${name} exist`);
       const newItem = JSON.parse(JSON.stringify(item));
       let ratings;
       if (req.user && rating) {
         ratings = await rating.findOne({ userId: req.user.id });
-        const index = ratings  
+        const index = ratings
           ? ratings[name].findIndex(i => {
               return i.id && i.id.toString() === item._id.toString();
             })
@@ -125,10 +125,11 @@ module.exports = {
     try {
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
-      if(check) {
+      if (check) {
         const item = await model.findById(req.params.id);
-        if(item.creator.toString() !== req.user.id) throw new Error('Not authorized');
-      }  
+        if (item.creator.toString() !== req.user.id)
+          throw new Error('Not authorized');
+      }
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
     } catch (error) {
@@ -141,8 +142,9 @@ module.exports = {
       const item = await model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
       console.log(item);
-      if(check) {
-        if(item.creator.toString() !== req.user.id) throw new Error('Not authorized');
+      if (check) {
+        if (item.creator.toString() !== req.user.id)
+          throw new Error('Not authorized');
       }
       const saved = await model.findByIdAndUpdate(
         id,
@@ -165,15 +167,52 @@ module.exports = {
   async getUserRatingList(req, res, next, type) {
     try {
       const Model = transformation.getRatingModel(type);
-      const ratings = await Model.findOne({ userId: req.params.id }).populate(
-        {
-          path: type + '.id',
-          select: "name"
-        }
-      );
+      const ratings = await Model.findOne({ userId: req.params.id }).populate({
+        path: type + '.id',
+        select: 'name'
+      });
       res.json(ratings);
     } catch (error) {
       next(error);
+    }
+  },
+  async updateItemReccomendations(req, res, next, name) {
+    try {
+      const itemRatingModel = transformation.getRatingModel(name);
+      const itemModel = transformation.getModel(name);
+      const itemRecommendationModel = transformation.getRecommendationModel(name);
+      const plural = transformation.getPlural(name);
+
+      const ratings = await itemRatingModel.findOne({ userId: req.user._id });
+
+      const rated = ratings[plural].map(item => item.id);
+
+      const items = await itemModel.find({ _id: { $nin: rated } });
+      const pointedItems = items.map(item => ({
+        data: item._id,
+        points: Math.floor(Math.random() * 10000)
+      }));
+      pointedItems.sort((a, b) => b.points - a.points);
+      const toSave = { userId: req.user._id, [plural]: pointedItems };
+      const recs = await itemRecommendationModel.findOneAndUpdate(
+        { userId: req.user.id },
+        toSave,
+        { upsert: true, returnOriginal: false, new: true }
+      );
+      res.json(recs);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getItemRecommendations(req,res,next,name) {
+    try {
+      const itemRecommendationModel = transformation.getRecommendationModel(name);
+      const plural = transformation.getPlural(name);
+
+      const recs = await itemRecommendationModel.findOne({userId: req.user.id}).populate(plural + ".data")
+      res.json(recs)
+    } catch (error) {
+      next(error)
     }
   }
 };

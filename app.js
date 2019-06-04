@@ -43,6 +43,9 @@ const educationTopicRoute = require("./routes/api/education/topic");
 const educationSubtopicRoute = require("./routes/api/education/subtopic");
 
 const recommendationsBookRoute = require("./routes/api/recommendations/book");
+const recommendationsMovieRoute = require("./routes/api/recommendations/movie");
+const recommendationsCourseRoute = require("./routes/api/recommendations/course");
+const recommendationsPersonRoute = require("./routes/api/recommendations/person");
 
 const searchRoute = require("./routes/api/search");
 app.use(logger("dev"));
@@ -67,6 +70,9 @@ app.use("/api/education/topic", educationTopicRoute);
 app.use("/api/education/subtopic", educationSubtopicRoute);
 
 app.use("/api/recommendations/book", recommendationsBookRoute);
+app.use("/api/recommendations/movie", recommendationsMovieRoute);
+app.use("/api/recommendations/course", recommendationsCourseRoute);
+app.use("/api/recommendations/person", recommendationsPersonRoute);
 
 
 app.use("/api/search", searchRoute);

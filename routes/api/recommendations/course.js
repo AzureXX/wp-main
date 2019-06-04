@@ -3,25 +3,25 @@ const router = express.Router();
 const passport = require('passport');
 const requests = require("../../../utils/requests")
 
-//@route   GET api/recommendations/book
-//@desc    Gets books recommendations from database
+//@route   GET api/recommendations/course
+//@desc    Gets courses recommendations from database
 //@access  Private
 router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.getItemRecommendations(req,res,next, "book")
+    await requests.getItemRecommendations(req,res,next, "course")
   }
 );
 
-//@route   POST api/recommendations/book
-//@desc    Calculate recommendations for books
+//@route   POST api/recommendations/course
+//@desc    Calculate recommendations for courses
 //@access  Private
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.updateItemReccomendations(req,res,next, "book");
+    await requests.updateItemReccomendations(req,res,next, "course");
   }
 );
 
