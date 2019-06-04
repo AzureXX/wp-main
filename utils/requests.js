@@ -200,7 +200,7 @@ module.exports = {
         { userId: req.user.id },
         toSave,
         { upsert: true, returnOriginal: false, new: true }
-      );
+      ).populate(plural+ ".data");
       res.json(recs);
     } catch (error) {
       next(error);
