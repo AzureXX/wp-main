@@ -21,7 +21,7 @@ router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.updateItemReccomendations(req,res,next, "book");
+    await requests.updateItemRecommendations(req,res,next, "book");
   }
 );
 

@@ -176,7 +176,7 @@ module.exports = {
       next(error);
     }
   },
-  async updateItemReccomendations(req, res, next, name) {
+  async updateItemRecommendations(req, res, next, name) {
     try {
       const itemRatingModel = transformation.getRatingModel(name);
       const itemModel = transformation.getModel(name);

@@ -47,6 +47,7 @@ const recommendationsMovieRoute = require("./routes/api/recommendations/movie");
 const recommendationsCourseRoute = require("./routes/api/recommendations/course");
 const recommendationsPersonRoute = require("./routes/api/recommendations/person");
 
+const collectRoute = require('./routes/api/collect')
 const searchRoute = require("./routes/api/search");
 app.use(logger("dev"));
 app.use(express.json());
@@ -73,6 +74,9 @@ app.use("/api/recommendations/book", recommendationsBookRoute);
 app.use("/api/recommendations/movie", recommendationsMovieRoute);
 app.use("/api/recommendations/course", recommendationsCourseRoute);
 app.use("/api/recommendations/person", recommendationsPersonRoute);
+
+
+app.use("/api/collect", collectRoute);
 
 
 app.use("/api/search", searchRoute);
