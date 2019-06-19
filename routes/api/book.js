@@ -4,7 +4,7 @@ const passport = require('passport');
 const roles = require('../../utils/roles');
 const Book = require('../../models/Book');
 const BookRating = require('../../models/Ratings/BookRating');
-
+const axios = require('axios');
 const requests = require('../../utils/requests');
 //@route   POST api/book/add
 //@desc    Adds new book to database
@@ -67,4 +67,37 @@ router.post(
   }
 );
 
+router.post(
+  '/google',
+  passport.authenticate('jwt', { session: false }),
+  roles.isAdmin,
+  async (req, res, next) => {
+    try {
+      console.log(req.body)
+      if(!req.body.id) throw new Error("You need ID")
+      const response = await axios.get(
+        'https://www.googleapis.com/books/v1/volumes/'+ req.body.id
+      );
+      const newBook = new Book({
+        name: {
+          us: response.data.volumeInfo.title
+        },
+        description: {
+          us: response.data.volumeInfo.description
+        },
+        ISBN: response.data.volumeInfo.industryIdentifiers[1].identifier,
+        img: {
+          us:"https://books.google.com/books/content?id="+req.body.id+"&printsec=frontcover&img=1&zoom=1"
+        },
+        website: {
+          us: "https://books.google.az/books?id="+req.body.id
+        }
+      })
+      const book = await newBook.save();
+      res.json(book)
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 module.exports = router;
