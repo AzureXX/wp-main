@@ -11,10 +11,10 @@ module.exports = {
       const idStr = item + '.id';
       //gets current ratings of user
       const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
-
+      let response;
       if (!ratings) {
         // if item is not rated by this user yet
-        await model.updateOne(
+        response = await model.findOneAndUpdate(
           { userId: req.user.id },
           {
             userId: req.user.id,
@@ -22,20 +22,34 @@ module.exports = {
               [item]: { id, rating, status }
             }
           },
-          { upsert: true }
-        );
+          { upsert: true,
+            returnOriginal: false,
+            new: true
+          }
+        ).populate({
+          path: idStr,
+          select: 'name'
+        });
       } else {
         // if item already rated by this user
-        await model.updateOne(
+        response = await model.findOneAndUpdate(
           { userId: req.user.id, [idStr]: id },
           {
             $set: {
               [dollarStr]: { id, rating, status }
             }
+          },
+          { upsert: true,
+            returnOriginal: false,
+            new: true
           }
-        );
+        ).populate({
+          path: idStr,
+          select: 'name'
+        });
       }
-      res.json('success');
+      
+      res.json(response);
     } catch (error) {
       next(error);
     }
