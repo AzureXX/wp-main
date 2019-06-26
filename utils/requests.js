@@ -168,10 +168,46 @@ module.exports = {
     try {
       const Model = transformation.getRatingModel(type);
       const ratings = await Model.findOne({ userId: req.params.id }).populate({
-        path: type + '.id',
+        path: !req.query.populate ? type + '.id' : '',
         select: 'name'
       });
       res.json(ratings);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getUserRatingListAll(req, res, next) {
+    try {
+      const BookRating = transformation.getRatingModel('books');
+      const MovieRating = transformation.getRatingModel('movies');
+      const CourseRating = transformation.getRatingModel('courses');
+
+      let bookRating = BookRating.findOne({ userId: req.params.id }).populate(
+        {
+          path: !req.query.populate ? 'books' + '.id' : '',
+          select: 'name'
+        }
+      );
+      let movieRating = MovieRating.findOne({
+        userId: req.params.id
+      }).populate({
+        path: !req.query.populate ? 'movies' + '.id' : '',
+        select: 'name'
+      });
+      let courseRating = CourseRating.findOne({
+        userId: req.params.id
+      }).populate({
+        path: !req.query.populate ? "courses" + '.id' : '',
+        select: 'name'
+      });
+      bookRating = await bookRating;
+      movieRating = await movieRating;
+      courseRating = await courseRating;
+      res.json({
+        books: bookRating.books,
+        movies: movieRating.movies,
+        courses: courseRating.courses
+      });
     } catch (error) {
       next(error);
     }
@@ -180,14 +216,16 @@ module.exports = {
     try {
       const itemRatingModel = transformation.getRatingModel(name);
       const itemModel = transformation.getModel(name);
-      const itemRecommendationModel = transformation.getRecommendationModel(name);
+      const itemRecommendationModel = transformation.getRecommendationModel(
+        name
+      );
       const plural = transformation.getPlural(name);
 
       const ratings = await itemRatingModel.findOne({ userId: req.user._id });
       let rated = [];
-      if(ratings) {
+      if (ratings) {
         rated = ratings[plural].map(item => item.id);
-      } 
+      }
 
       const items = await itemModel.find({ _id: { $nin: rated } });
       const pointedItems = items.map(item => ({
@@ -196,25 +234,31 @@ module.exports = {
       }));
       pointedItems.sort((a, b) => b.points - a.points);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
-      const recs = await itemRecommendationModel.findOneAndUpdate(
-        { userId: req.user.id },
-        toSave,
-        { upsert: true, returnOriginal: false, new: true }
-      ).populate(plural+ ".data");
+      const recs = await itemRecommendationModel
+        .findOneAndUpdate({ userId: req.user.id }, toSave, {
+          upsert: true,
+          returnOriginal: false,
+          new: true
+        })
+        .populate(plural + '.data');
       res.json(recs);
     } catch (error) {
       next(error);
     }
   },
-  async getItemRecommendations(req,res,next,name) {
+  async getItemRecommendations(req, res, next, name) {
     try {
-      const itemRecommendationModel = transformation.getRecommendationModel(name);
+      const itemRecommendationModel = transformation.getRecommendationModel(
+        name
+      );
       const plural = transformation.getPlural(name);
 
-      const recs = await itemRecommendationModel.findOne({userId: req.user.id}).populate(plural + ".data")
-      res.json(recs)
+      const recs = await itemRecommendationModel
+        .findOne({ userId: req.user.id })
+        .populate(plural + '.data');
+      res.json(recs);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 };
