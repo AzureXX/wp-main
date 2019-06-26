@@ -14,41 +14,39 @@ module.exports = {
       let response;
       if (!ratings) {
         // if item is not rated by this user yet
-        response = await model.findOneAndUpdate(
-          { userId: req.user.id },
-          {
-            userId: req.user.id,
-            $push: {
-              [item]: { id, rating, status }
-            }
-          },
-          { upsert: true,
-            returnOriginal: false,
-            new: true
-          }
-        ).populate({
-          path: idStr,
-          select: 'name'
-        });
+        response = await model
+          .findOneAndUpdate(
+            { userId: req.user.id },
+            {
+              userId: req.user.id,
+              $push: {
+                [item]: { id, rating, status }
+              }
+            },
+            { upsert: true, returnOriginal: false, new: true }
+          )
+          .populate({
+            path: idStr,
+            select: 'name'
+          });
       } else {
         // if item already rated by this user
-        response = await model.findOneAndUpdate(
-          { userId: req.user.id, [idStr]: id },
-          {
-            $set: {
-              [dollarStr]: { id, rating, status }
-            }
-          },
-          { upsert: true,
-            returnOriginal: false,
-            new: true
-          }
-        ).populate({
-          path: idStr,
-          select: 'name'
-        });
+        response = await model
+          .findOneAndUpdate(
+            { userId: req.user.id, [idStr]: id },
+            {
+              $set: {
+                [dollarStr]: { id, rating, status }
+              }
+            },
+            { upsert: true, returnOriginal: false, new: true }
+          )
+          .populate({
+            path: idStr,
+            select: 'name'
+          });
       }
-      
+
       res.json(response);
     } catch (error) {
       next(error);
@@ -71,35 +69,11 @@ module.exports = {
           select: select,
           populate: { path: 'categories subcategories topics subtopics' }
         });
-      const ratedItems = [];
-      if (req.user && rating) {
-        const ratings = await rating.findOne({ userId: req.user.id });
-        items.forEach(item => {
-          const newItem = JSON.parse(JSON.stringify(item));
 
-          const index = ratings
-            ? ratings[name].findIndex(i => {
-                return i.id.toString() === item._id.toString();
-              })
-            : -1;
-          if (index > -1) {
-            newItem.rating = ratings[name][index].rating;
-            newItem.status = ratings[name][index].status;
-          }
-          ratedItems.push(newItem);
-        });
-      }
-
-      if (items.length < size)
-        res.json({
-          lastPage: true,
-          [name]: ratedItems.length > 0 ? ratedItems : items
-        });
-      else
-        res.json({
-          lastPage: false,
-          [name]: ratedItems.length > 0 ? ratedItems : items
-        });
+      res.json({
+        lastPage: items.length < size,
+        [name]: items
+      });
     } catch (error) {
       next(error);
     }
@@ -116,21 +90,9 @@ module.exports = {
         populate: { path: 'categories subcategories topics subtopics' }
       });
       if (!item) throw new Error(`No such ${name} exist`);
-      const newItem = JSON.parse(JSON.stringify(item));
-      let ratings;
-      if (req.user && rating) {
-        ratings = await rating.findOne({ userId: req.user.id });
-        const index = ratings
-          ? ratings[name].findIndex(i => {
-              return i.id && i.id.toString() === item._id.toString();
-            })
-          : -1;
-        if (index > -1) {
-          newItem.rating = ratings[name][index].rating;
-          newItem.status = ratings[name][index].status;
-        }
-      }
-      res.json(newItem);
+      
+      
+      res.json(item);
     } catch (error) {
       next(error);
     }
@@ -196,12 +158,10 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
 
-      let bookRating = BookRating.findOne({ userId: req.params.id }).populate(
-        {
-          path: !req.query.populate ? 'books' + '.id' : '',
-          select: 'name'
-        }
-      );
+      let bookRating = BookRating.findOne({ userId: req.params.id }).populate({
+        path: !req.query.populate ? 'books' + '.id' : '',
+        select: 'name'
+      });
       let movieRating = MovieRating.findOne({
         userId: req.params.id
       }).populate({
@@ -211,7 +171,7 @@ module.exports = {
       let courseRating = CourseRating.findOne({
         userId: req.params.id
       }).populate({
-        path: !req.query.populate ? "courses" + '.id' : '',
+        path: !req.query.populate ? 'courses' + '.id' : '',
         select: 'name'
       });
       bookRating = await bookRating;
