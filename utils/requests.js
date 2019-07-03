@@ -83,14 +83,12 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
-
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
         populate: { path: 'categories subcategories topics subtopics' }
       });
       if (!item) throw new Error(`No such ${name} exist`);
-      
       
       res.json(item);
     } catch (error) {
@@ -117,7 +115,6 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
-      console.log(item);
       if (check) {
         if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');

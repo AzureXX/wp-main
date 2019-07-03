@@ -174,7 +174,6 @@ router.delete(
 //@desc    Return user by username or id
 //@access  Public
 router.get("/getrating/:type/:id", async (req,res,next) => {
-    console.log(req.params.type === "all")
     if(req.params.type === "all") {
         await requests.getUserRatingListAll(req,res,next,req.params.type);
     } else {
