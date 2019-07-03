@@ -67,7 +67,7 @@ module.exports = {
         .populate({
           path: populate,
           select: select,
-          populate: { path: 'categories subcategories topics subtopics' }
+          populate: { path: 'categories subcategories topics subtopics courses' }
         });
 
       res.json({
