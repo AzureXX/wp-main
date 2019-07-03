@@ -122,37 +122,41 @@ module.exports = {
     };
   },
   getEducationCategoryObject(body) {
-    const { subcategories, icon } = body;
+    const { subcategories, icon, courses } = body;
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true),
-      icon
+      icon,
+      courses: this.strToArr(courses, true)
     };
   },
   getEducationSubcategoryObject(body) {
-    const { categories, topics, icon } = body;
+    const { categories, topics, icon, courses } = body;
     return {
       ...this.common(body),
       categories: this.strToArr(categories, true),
       topics: this.strToArr(topics, true),
-      icon
+      icon,
+      courses: this.strToArr(courses, true)
     };
   },
   getEducationTopicObject(body) {
-    const { subcategories, subtopics, icon } = body;
+    const { subcategories, subtopics, icon, courses } = body;
     return {
       ...this.common(body),
       subcategories: this.strToArr(subcategories, true),
       subtopics: this.strToArr(subtopics, true),
-      icon
+      icon,
+      courses: this.strToArr(courses, true)
     };
   },
   getEducationSubtopicObject(body) {
-    const { topics, icon } = body;
+    const { topics, icon, courses } = body;
     return {
       ...this.common(body),
       topics: this.strToArr(topics, true),
-      icon
+      icon,
+      courses: this.strToArr(courses, true)
     };
   },
   getVacancyObject(req) {

@@ -19,7 +19,8 @@ const EducationSubtopicSchema = new Schema({
     },
     tags: [{_id: false, name:String, level: Number}],
     topics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'EducationTopic'}],
-    icon:String
+    icon:String,
+    courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Courses'}]
 })
 
 const EducationSubtopic = mongoose.model("EducationSubtopic", EducationSubtopicSchema)

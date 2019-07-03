@@ -19,7 +19,8 @@ const EducationCategorySchema = new Schema({
     },
     tags: [{_id: false, name:String, level: Number}],
     subcategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubcategory'}],
-    icon:String
+    icon:String,
+    courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Courses'}]
 })
 
 const EducationCategory = mongoose.model("EducationCategory", EducationCategorySchema)
