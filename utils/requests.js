@@ -162,6 +162,7 @@ module.exports = {
         path: !req.query.populate ? 'books' + '.id' : '',
         select: 'name'
       });
+      
       let movieRating = MovieRating.findOne({
         userId: req.params.id
       }).populate({
@@ -178,9 +179,9 @@ module.exports = {
       movieRating = await movieRating;
       courseRating = await courseRating;
       res.json({
-        books: bookRating.books,
-        movies: movieRating.movies,
-        courses: courseRating.courses
+        books: bookRating ? bookRating.books : [],
+        movies: movieRating? movieRating.movies : [],
+        courses: courseRating? courseRating.courses : []
       });
     } catch (error) {
       next(error);
