@@ -5,12 +5,35 @@ module.exports = {
   async setRating(req, res, next, model, item) {
     try {
       let { rating, status, id } = req.body;
-      if (rating) status = 0;
-      else if (status) rating = 0;
       const dollarStr = item + '.$';
       const idStr = item + '.id';
-      //gets current ratings of user
+
       const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
+
+      if(status === 2 && ratings) {
+        const response  = await model
+          .findOneAndUpdate(
+            { userId: req.user.id, [idStr]: id },
+            {
+              $pull: {
+                [item]: {id} 
+              }
+            },
+            { upsert: true, returnOriginal: false, new: true }
+          )
+          .populate({
+            path: idStr,
+            select: 'name'
+          });
+          console.log(response);
+          return res.json(response);
+      } 
+
+      if (rating) status = 0;
+      else if (status) rating = 0;
+      
+      //gets current ratings of user
+      
       let response;
       if (!ratings) {
         // if item is not rated by this user yet
