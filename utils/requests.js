@@ -81,10 +81,20 @@ module.exports = {
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
+      const filter = {};
+      
+      if(req.query.filter) {
+        filterJSON = JSON.parse(req.query.filter)
+        
+        filterJSON.genres ?  filter.genres = { $all : filterJSON.genres }: null
 
+        filterJSON.published ? filter.published = {"$gte": new Date(filterJSON.published.start, 0, 1), "$lt": new Date(filterJSON.published.end + 1, 0, 1)} : null
+
+        filterJSON.released ? filter.released = {"$gte": new Date(filterJSON.released.start, 0, 1), "$lt": new Date(filterJSON.released.end + 1, 0, 1)} : null
+      }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
-        .find({}, only)
+        .find(filter, only)
         .skip(offset)
         .limit(size)
         .populate({
