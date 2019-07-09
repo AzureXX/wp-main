@@ -5,6 +5,11 @@ module.exports = {
   async setRating(req, res, next, model, item) {
     try {
       let { rating, status, id } = req.body;
+      const recModel = transformation.getRecommendationModel(item);
+      
+      
+      recModel.updateOne({userId: req.user.id}, {$pull: {[item]: {data: id}}}).exec();
+      
       const dollarStr = item + '.$';
       const idStr = item + '.id';
 

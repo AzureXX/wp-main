@@ -235,33 +235,34 @@ module.exports = {
   getRatingModel(type) {
     switch (type) {
       case 'books':
-        return BookRating;
-      case 'movies':
-        return MovieRating;
-      case 'courses':
-        return CourseRating;
-      case 'people':
-        return PersonRating;
       case 'book':
         return BookRating;
-      case 'movie':
+      case 'movies':
+      case 'movie':  
         return MovieRating;
-      case 'course':
+      case 'courses':
+      case 'course':  
         return CourseRating;
-      case 'person':
+      case 'people':
+      case 'person':  
         return PersonRating;
+      
       default:
         return null;
     }
   },
   getRecommendationModel(name) {
     switch (name) {
-      case 'book':
+      case 'books':
+      case 'book':  
         return BookRecommendation;
+      case 'movies':
       case 'movie':
         return MovieRecommendation;
+      case 'courses':  
       case 'course':
         return CourseRecommendation;
+      case 'people':  
       case 'person':
         return PersonRecommendation;
       default:
