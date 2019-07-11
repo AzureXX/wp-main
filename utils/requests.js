@@ -91,12 +91,13 @@ module.exports = {
       if(req.query.filter) {
         filterJSON = JSON.parse(req.query.filter)
         
-        filterJSON.genres ?  filter.genres = { $all : filterJSON.genres }: null
+        filterJSON.genres && filterJSON.genres.length > 0 ?  filter.genres = { $all : filterJSON.genres }: null
 
         filterJSON.published ? filter.published = {"$gte": new Date(filterJSON.published.start, 0, 1), "$lt": new Date(filterJSON.published.end + 1, 0, 1)} : null
 
         filterJSON.released ? filter.released = {"$gte": new Date(filterJSON.released.start, 0, 1), "$lt": new Date(filterJSON.released.end + 1, 0, 1)} : null
       }
+
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find(filter, only)
