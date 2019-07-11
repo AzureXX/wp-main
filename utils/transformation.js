@@ -89,7 +89,7 @@ module.exports = {
     };
   },
   getMovieObject(body) {
-    const { actors, genres, crew } = body;
+    const { actors, genres, crew, released } = body;
     return {
       ...this.common(body),
       actors: this.strToArr(actors, true),
@@ -99,7 +99,8 @@ module.exports = {
             role: item.role,
             id: this.mongooseId(item.id.trim())
           }))
-        : null
+        : null,
+      released : released  
     };
   },
   getCourseObject(body) {

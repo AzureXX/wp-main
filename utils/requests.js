@@ -6,22 +6,23 @@ module.exports = {
     try {
       let { rating, status, id } = req.body;
       const recModel = transformation.getRecommendationModel(item);
-      
-      
-      recModel.updateOne({userId: req.user.id}, {$pull: {[item]: {data: id}}}).exec();
-      
+
+      recModel
+        .updateOne({ userId: req.user.id }, { $pull: { [item]: { data: id } } })
+        .exec();
+
       const dollarStr = item + '.$';
       const idStr = item + '.id';
 
       const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
 
-      if(status === 2 && ratings) {
-        const response  = await model
+      if (status === 2 && ratings) {
+        const response = await model
           .findOneAndUpdate(
             { userId: req.user.id, [idStr]: id },
             {
               $pull: {
-                [item]: {id} 
+                [item]: { id }
               }
             },
             { upsert: true, returnOriginal: false, new: true }
@@ -30,15 +31,15 @@ module.exports = {
             path: idStr,
             select: 'name'
           });
-          console.log(response);
-          return res.json(response);
-      } 
+        console.log(response);
+        return res.json(response);
+      }
 
       if (rating) status = 0;
       else if (status) rating = 0;
-      
+
       //gets current ratings of user
-      
+
       let response;
       if (!ratings) {
         // if item is not rated by this user yet
@@ -87,17 +88,34 @@ module.exports = {
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
       const filter = {};
-      
-      if(req.query.filter) {
-        filterJSON = JSON.parse(req.query.filter)
-        
-        filterJSON.genres && filterJSON.genres.length > 0 ?  filter.genres = { $all : filterJSON.genres }: null
+      console.log(req.query.filter);
+      if (req.query.filter) {
+        filterJSON = JSON.parse(req.query.filter);
 
-        filterJSON.published ? filter.published = {"$gte": new Date(filterJSON.published.start, 0, 1), "$lt": new Date(filterJSON.published.end + 1, 0, 1)} : null
+        filterJSON.genres && filterJSON.genres.length > 0
+          ? (filter.genres = { $all: filterJSON.genres })
+          : null;
 
-        filterJSON.released ? filter.released = {"$gte": new Date(filterJSON.released.start, 0, 1), "$lt": new Date(filterJSON.released.end + 1, 0, 1)} : null
+        filterJSON.published &&
+        filterJSON.published.start !=null &&
+        filterJSON.published.end !=null
+          ? (filter.published = {
+              $gte: new Date(filterJSON.published.start, 0, 1),
+              $lt: new Date(filterJSON.published.end + 1, 0, 1)
+            })
+          : null;
+
+        filterJSON.released &&
+        filterJSON.released.start !=null &&
+        filterJSON.released.end !=null
+          ? (filter.released = {
+              $gte: new Date(filterJSON.released.start, 0, 1),
+              $lt: new Date(filterJSON.released.end + 1, 0, 1)
+            })
+          : null;
       }
 
+      console.log(filter);
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find(filter, only)
@@ -106,7 +124,9 @@ module.exports = {
         .populate({
           path: populate,
           select: select,
-          populate: { path: 'categories subcategories topics subtopics courses' }
+          populate: {
+            path: 'categories subcategories topics subtopics courses'
+          }
         });
 
       res.json({
@@ -128,7 +148,7 @@ module.exports = {
         populate: { path: 'categories subcategories topics subtopics' }
       });
       if (!item) throw new Error(`No such ${name} exist`);
-      
+
       res.json(item);
     } catch (error) {
       next(error);
@@ -198,7 +218,7 @@ module.exports = {
         path: !req.query.populate ? 'books' + '.id' : '',
         select: 'name'
       });
-      
+
       let movieRating = MovieRating.findOne({
         userId: req.params.id
       }).populate({
@@ -216,8 +236,8 @@ module.exports = {
       courseRating = await courseRating;
       res.json({
         books: bookRating ? bookRating.books : [],
-        movies: movieRating? movieRating.movies : [],
-        courses: courseRating? courseRating.courses : []
+        movies: movieRating ? movieRating.movies : [],
+        courses: courseRating ? courseRating.courses : []
       });
     } catch (error) {
       next(error);
