@@ -35,7 +35,7 @@ const movieRoute = require("./routes/api/movie");
 const personRoute = require("./routes/api/person");
 const vacancyRoute = require("./routes/api/vacancy");
 const questionRoute = require("./routes/api/question");
-const questionaryRoute = require("./routes/api/questionary");
+const questionnaireRoute = require("./routes/api/questionnaire");
 
 const educationCategoryRoute = require("./routes/api/education/category");
 const educationSubcategoryRoute = require("./routes/api/education/subcategory");
@@ -63,7 +63,7 @@ app.use("/api/movie", movieRoute);
 app.use("/api/person", personRoute);
 app.use("/api/vacancy", vacancyRoute);
 app.use("/api/question", questionRoute);
-app.use("/api/questionary", questionaryRoute);
+app.use("/api/questionnaire", questionnaireRoute);
 
 app.use("/api/education/category", educationCategoryRoute);
 app.use("/api/education/subcategory", educationSubcategoryRoute);

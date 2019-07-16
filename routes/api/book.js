@@ -53,7 +53,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get book by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, Book, 'books', BookRating);
+  await requests.getItem(req, res, next, Book, 'books');
 });
 
 //@route   POST api/book/rate

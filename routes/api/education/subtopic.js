@@ -54,7 +54,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get education subtopic by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, EducationSubtopic, 'subtopic', EducationSubtopicRating);
+  await requests.getItem(req, res, next, EducationSubtopic, 'subtopic');
 });
 
 //@route   POST api/education/subtopic/rate

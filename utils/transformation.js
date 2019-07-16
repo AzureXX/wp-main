@@ -1,16 +1,32 @@
 const ObjectId = require('mongoose').Types.ObjectId;
+
+// RATINGS MODELS
 const BookRating = require('../models/Ratings/BookRating');
 const MovieRating = require('../models/Ratings/MovieRating');
 const CourseRating = require('../models/Ratings/CourseRating');
 const PersonRating = require('../models/Ratings/PersonRating');
+
+// CONTENT MODELS
 const Book = require('../models/Book');
 const Movie = require('../models/Movie');
 const Course = require('../models/Course');
 const Person = require('../models/Person');
+
+// EDUCATION MODELS
+const EducationCategory = require('../models/Education/EducationCategory');
+const EducationSubcategory = require('../models/Education/EducationSubcategory');
+const EducationSubtopic = require('../models/Education/EducationSubtopic');
+const EducationTopic = require('../models/Education/EducationTopic');
+
+// RECOMENDATION MODELS
 const BookRecommendation = require('../models/Recommendations/BookRecommendation');
 const MovieRecommendation = require('../models/Recommendations/MovieRecommendation');
 const CourseRecommendation = require('../models/Recommendations/CourseRecommendation');
 const PersonRecommendation = require('../models/Recommendations/PersonRecommendation');
+
+//Questions Models
+const Question = require('../models/Question');
+const Questionnaire = require('../models/Questionnaire');
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -60,8 +76,8 @@ module.exports = {
         return this.getEducationSubtopicObject(req.body);
       case 'question':
         return this.getQuestionObject(req.body);
-      case 'questionary':
-        return this.getQuestionaryObject(req.body);
+      case 'questionnaire':
+        return this.getQuestionnaireObject(req.body);
       case 'vacancy':
         return this.getVacancyObject(req);
     }
@@ -100,11 +116,19 @@ module.exports = {
             id: this.mongooseId(item.id.trim())
           }))
         : null,
-      released : released  
+      released: released
     };
   },
   getCourseObject(body) {
-    const { authors, genres, published, publisher, website, video, link } = body;
+    const {
+      authors,
+      genres,
+      published,
+      publisher,
+      website,
+      video,
+      link
+    } = body;
     return {
       ...this.common(body),
       authors: this.strToArr(authors, true),
@@ -207,7 +231,7 @@ module.exports = {
       tags
     };
   },
-  getQuestionaryObject(body) {
+  getQuestionnaireObject(body) {
     const { questions, tags } = body;
     return {
       questions: this.strToArr(questions, true),
@@ -223,13 +247,35 @@ module.exports = {
   getModel(name) {
     switch (name) {
       case 'book':
+      case 'books':
         return Book;
       case 'movie':
+      case 'movies':
         return Movie;
       case 'course':
+      case 'courses':
         return Course;
       case 'person':
+      case 'people':
         return Person;
+      case 'category':
+      case 'categories':
+        return EducationCategory;
+      case 'subcategory':
+      case 'subcategories':
+        return EducationSubcategory;
+      case 'topic':
+      case 'topics':
+        return EducationTopic;
+      case 'subtopic':
+      case 'subtopics':
+        return EducationSubtopic;
+      case 'question':
+      case 'questions':
+        return Question;
+      case 'questionnaire':
+      case 'questionnaires':
+        return Questionnaire;
       default:
         return null;
     }
@@ -240,15 +286,14 @@ module.exports = {
       case 'book':
         return BookRating;
       case 'movies':
-      case 'movie':  
+      case 'movie':
         return MovieRating;
       case 'courses':
-      case 'course':  
+      case 'course':
         return CourseRating;
       case 'people':
-      case 'person':  
+      case 'person':
         return PersonRating;
-      
       default:
         return null;
     }
@@ -256,15 +301,15 @@ module.exports = {
   getRecommendationModel(name) {
     switch (name) {
       case 'books':
-      case 'book':  
+      case 'book':
         return BookRecommendation;
       case 'movies':
       case 'movie':
         return MovieRecommendation;
-      case 'courses':  
+      case 'courses':
       case 'course':
         return CourseRecommendation;
-      case 'people':  
+      case 'people':
       case 'person':
         return PersonRecommendation;
       default:
