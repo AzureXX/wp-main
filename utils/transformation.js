@@ -104,7 +104,7 @@ module.exports = {
     };
   },
   getCourseObject(body) {
-    const { authors, genres, published, publisher, website, video } = body;
+    const { authors, genres, published, publisher, website, video, link } = body;
     return {
       ...this.common(body),
       authors: this.strToArr(authors, true),
@@ -112,7 +112,8 @@ module.exports = {
       published: published,
       publisher: this.strToArr(publisher, true),
       website: this.multi(website),
-      video: this.multi(video)
+      video: this.multi(video),
+      link: this.multi(link)
     };
   },
   getPersonObject(body) {
