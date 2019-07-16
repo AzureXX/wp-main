@@ -52,7 +52,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get question by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, Question, 'questions');
+  await requests.getItem(req, res, next, 'questions');
 });
 
 module.exports = router;

@@ -54,7 +54,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get education topic by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, EducationTopic, 'topic');
+  await requests.getItem(req, res, next, 'topic');
 });
 
 //@route   POST api/education/topic/rate

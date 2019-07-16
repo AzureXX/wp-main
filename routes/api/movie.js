@@ -54,7 +54,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get movie by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, Movie, 'movies');
+  await requests.getItem(req, res, next, 'movies');
 });
 
 //@route   POST api/course/rate

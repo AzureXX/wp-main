@@ -62,7 +62,7 @@ router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
 //@desc    Get course by id
 //@access  Public
 router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
-  await requests.getItem(req, res, next, Course, 'courses');
+  await requests.getItem(req, res, next, 'courses');
 });
 
 //@route   POST api/course/rate

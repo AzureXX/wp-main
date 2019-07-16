@@ -137,9 +137,9 @@ module.exports = {
       next(error);
     }
   },
-  async getItem(req, res, next, model, name) {
+  async getItem(req, res, next, name) {
     try {
-      
+      const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';

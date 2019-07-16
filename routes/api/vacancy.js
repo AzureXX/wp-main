@@ -69,7 +69,7 @@ router.get(
 //@desc    Get vacancy by id
 //@access  Public
 router.get('/get/id/:id', async (req, res, next) => {
-  await requests.getItem(req, res, next, Vacancy, 'vacancies');
+  await requests.getItem(req, res, next, 'vacancies');
 });
 
 module.exports = router;

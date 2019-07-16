@@ -27,6 +27,9 @@ const PersonRecommendation = require('../models/Recommendations/PersonRecommenda
 //Questions Models
 const Question = require('../models/Question');
 const Questionnaire = require('../models/Questionnaire');
+
+//Vacancy Models
+const Vacancy = require('../models/Vacancy');
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -276,6 +279,9 @@ module.exports = {
       case 'questionnaire':
       case 'questionnaires':
         return Questionnaire;
+      case 'vacancy':
+      case 'vacancies':
+        return Vacancy;
       default:
         return null;
     }
