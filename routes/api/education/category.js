@@ -64,7 +64,7 @@ router.post(
   '/rate',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.setRating(req, res, next, EducationCategoryRating, 'categories');
+    await requests.setRating(req, res, next, 'categories');
   }
 );
 

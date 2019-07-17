@@ -2,11 +2,11 @@ const validation = require('./validation');
 const transformation = require('./transformation');
 
 module.exports = {
-  async setRating(req, res, next, model, item) {
+  async setRating(req, res, next, item) {
     try {
       let { rating, status, id } = req.body;
       const recModel = transformation.getRecommendationModel(item);
-
+      const model = transformation.getRatingModel(item);
       recModel
         .updateOne({ userId: req.user.id }, { $pull: { [item]: { data: id } } })
         .exec();

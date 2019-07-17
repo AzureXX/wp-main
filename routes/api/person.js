@@ -72,7 +72,7 @@ router.post(
   '/rate',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.setRating(req, res, next, PersonRating, 'people');
+    await requests.setRating(req, res, next, 'people');
   }
 );
 module.exports = router;
