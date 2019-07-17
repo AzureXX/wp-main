@@ -97,8 +97,8 @@ module.exports = {
           : null;
 
         filterJSON.published &&
-        filterJSON.published.start !=null &&
-        filterJSON.published.end !=null
+        filterJSON.published.start != null &&
+        filterJSON.published.end != null
           ? (filter.published = {
               $gte: new Date(filterJSON.published.start, 0, 1),
               $lt: new Date(filterJSON.published.end + 1, 0, 1)
@@ -106,8 +106,8 @@ module.exports = {
           : null;
 
         filterJSON.released &&
-        filterJSON.released.start !=null &&
-        filterJSON.released.end !=null
+        filterJSON.released.start != null &&
+        filterJSON.released.end != null
           ? (filter.released = {
               $gte: new Date(filterJSON.released.start, 0, 1),
               $lt: new Date(filterJSON.released.end + 1, 0, 1)
@@ -291,6 +291,51 @@ module.exports = {
       res.json(recs);
     } catch (error) {
       next(error);
+    }
+  },
+  async setEducationStatus(req, res, next, type) {
+    try {
+      const EducationStatusModel = transformation.getEducationStatusModel(type);
+      const status = await EducationStatusModel.updateOne(
+        { userId: req.user.id, [type]: req.body.id },
+        {
+          userId: req.user.id,
+          [type]: req.body.id,
+          status: parseInt(req.body.status)
+        },
+        { upsert: true }
+      );
+      res.json("success");
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getUserEducationStatus(req, res, next, type) {
+    try {
+      const EducationStatusModel = transformation.getEducationStatusModel(type);
+      const statuses = await EducationStatusModel.find({
+        userId: req.params.id
+      });
+      res.json(statuses);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getUserEducationStatusAll(req, res, next) {
+    try {
+      const Subcategory = transformation.getEducationStatusModel("subcategory");
+      const Topic = transformation.getEducationStatusModel("topic");
+      const Subtopic = transformation.getEducationStatusModel("subtopic");
+      let subcategories = Subcategory.find({userId: req.params.id}, '-_id -__v')
+      let topics = Topic.find({userId: req.params.id}, '-_id -__v')
+      let subtopics = Subtopic.find({userId: req.params.id}, '-_id -__v')
+      subcategories = await subcategories;
+      topics = await topics;
+      subtopics = await subtopics;
+
+      res.json({subcategories,topics,subtopics})
+    } catch (error) {
+      next(error)
     }
   }
 };

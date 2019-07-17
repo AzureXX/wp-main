@@ -175,10 +175,20 @@ router.delete(
 //@access  Public
 router.get("/getrating/:type/:id", async (req,res,next) => {
     if(req.params.type === "all") {
-        await requests.getUserRatingListAll(req,res,next,req.params.type);
+        await requests.getUserRatingListAll(req,res,next);
     } else {
         await requests.getUserRatingList(req,res,next,req.params.type);
     }
 })
 
+//@route   GET api/user/getrating/:type/:id
+//@desc    Return user by username or id
+//@access  Public
+router.get("/getedustatus/:type/:id", async (req,res,next) => {
+    if(req.params.type === "all") {
+        await requests.getUserEducationStatusAll(req,res,next);
+    } else {
+        await requests.getUserEducationStatus(req,res,next,req.params.type);
+    }
+})
 module.exports = router;

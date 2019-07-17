@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
-const EducationTopic = require("../../../models/Education/EducationTopic")
-const EducationTopicRating = require('../../../models/Ratings/Education/EducationTopicRating')
+const EducationTopic = require('../../../models/Education/EducationTopic');
+const EducationTopicRating = require('../../../models/Ratings/Education/EducationTopicRating');
 const requests = require('../../../utils/requests');
-
 
 //@route   POST api/education/topic/add
 //@desc    Adds new education topic to database
@@ -47,7 +46,15 @@ router.delete(
 //@desc    Get all education topics by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, EducationTopic, 'topics', EducationTopicRating, 1000);
+  await requests.getAllItems(
+    req,
+    res,
+    next,
+    EducationTopic,
+    'topics',
+    EducationTopicRating,
+    1000
+  );
 });
 
 //@route   GET api/education/topic/get/id/:id
@@ -67,4 +74,17 @@ router.post(
     await requests.setRating(req, res, next, EducationTopicRating, 'topic');
   }
 );
+
+//@route   POST api/education/topic/setstatus
+//@desc    Sets status for education topic
+//@access  Private
+router.post(
+  '/setstatus',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.setEducationStatus(req, res, next, 'topic');
+  }
+);
+
+
 module.exports = router;

@@ -67,4 +67,15 @@ router.post(
     await requests.setRating(req, res, next, EducationSubtopicRating, 'subtopic');
   }
 );
+
+//@route   POST api/education/subtopic/setstatus
+//@desc    Sets status for education subtopic
+//@access  Private
+router.post(
+  '/setstatus',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.setEducationStatus(req, res, next, 'subtopic');
+  }
+);
 module.exports = router;

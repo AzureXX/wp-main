@@ -18,6 +18,12 @@ const EducationSubcategory = require('../models/Education/EducationSubcategory')
 const EducationSubtopic = require('../models/Education/EducationSubtopic');
 const EducationTopic = require('../models/Education/EducationTopic');
 
+// EDUCATION STATUS MODELS
+const EducationCategoryStatus = require('../models/Education/Status/EducationCategoryStatus');
+const EducationSubcategoryStatus = require('../models/Education/Status/EducationSubcategoryStatus');
+const EducationSubtopicStatus = require('../models/Education/Status/EducationSubtopicStatus');
+const EducationTopicStatus = require('../models/Education/Status/EducationTopicStatus');
+
 // RECOMENDATION MODELS
 const BookRecommendation = require('../models/Recommendations/BookRecommendation');
 const MovieRecommendation = require('../models/Recommendations/MovieRecommendation');
@@ -320,6 +326,23 @@ module.exports = {
         return PersonRecommendation;
       default:
         return null;
+    }
+  },
+  getEducationStatusModel(name) {
+    switch(name) {
+      case 'category':
+      case 'categories':
+        return EducationCategoryStatus;
+      case 'subcategory':
+      case 'subcategories':
+        return EducationSubcategoryStatus;
+      case 'topic':
+      case 'topics':
+        return EducationTopicStatus;
+      case 'subtopic':
+      case 'subtopics':
+        return EducationSubtopicStatus;
+      default: return null;  
     }
   },
   getPlural(name) {
