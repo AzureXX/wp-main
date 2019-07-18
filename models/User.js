@@ -41,7 +41,25 @@ const UserSchema = new Schema({
         type: String,
         default: "user"
     },
-    tags: [{_id: false, name:String, level: Number}]
+    tags: [{_id: false, name:String, level: Number}],
+    generalAccessOptions: {
+        showEmail: {
+            type: Boolean,
+            default: false
+        },
+        showPhone: {
+            type: Boolean,
+            default: false
+        },
+        showName: {
+            type: Boolean,
+            default: false
+        },
+        showDOB: {
+            type: Boolean,
+            default: false
+        }
+    }
 })
 
 const User = mongoose.model("User", UserSchema)

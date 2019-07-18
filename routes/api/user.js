@@ -191,4 +191,28 @@ router.get("/getedustatus/:type/:id", async (req,res,next) => {
         await requests.getUserEducationStatus(req,res,next,req.params.type);
     }
 })
+
+//@route   PUT api/user/generalaccess
+//@desc    Return user by username or id
+//@access  Private
+router.put(
+    '/generalaccess',
+    passport.authenticate('jwt', { session: false }),
+    async(req, res, next) => {
+        try {
+           const user = await User.findOneAndUpdate({ _id: req.user.id }, {
+                generalAccessOptions : {
+                    showEmail: !!req.body.showEmail,
+                    showPhone: !!req.body.showPhone,
+                    showName: !!req.body.showName,
+                    showDOB: !!req.body.showDOB,
+                }
+            }, {new: true});
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 module.exports = router;
