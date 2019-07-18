@@ -26,7 +26,8 @@ router.get(
                 country: req.user.country,
                 city: req.user.city,
                 dob: req.user.dob,
-                phoneNumber: req.user.phoneNumber
+                phoneNumber: req.user.phoneNumber,
+                generalAccessOptions: req.user.generalAccessOptions
             });
         } catch (error) {
             return next(error);
