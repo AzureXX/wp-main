@@ -47,7 +47,7 @@ router.delete(
 //@desc    Get all movies by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, Movie, 'movies', MovieRating, 20);
+  await requests.getAllItems(req, res, next, 'movies', 20);
 });
 
 //@route   GET api/movie/get/id/:id

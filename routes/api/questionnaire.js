@@ -45,7 +45,7 @@ router.delete(
 //@desc    Get all questionnaire by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, Questionnaire, 'questionnaires', null, 20);
+  await requests.getAllItems(req, res, next, 'questionnaires', 20);
 });
 
 //@route   GET api/questionnaire/get/id/:id

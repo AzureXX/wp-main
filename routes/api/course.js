@@ -47,15 +47,7 @@ router.delete(
 //@desc    Get all courses by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(
-    req,
-    res,
-    next,
-    Course,
-    'courses',
-    CourseRating,
-    20
-  );
+  await requests.getAllItems(req, res, next, 'courses', 20);
 });
 
 //@route   GET api/course/get/id/:id

@@ -82,8 +82,9 @@ module.exports = {
     }
   },
   //Get array of items from DB by page
-  async getAllItems(req, res, next, model, name, rating, size) {
+  async getAllItems(req, res, next, name, size) {
     try {
+      const model = transformation.getModel(name)
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';

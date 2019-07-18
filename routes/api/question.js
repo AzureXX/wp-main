@@ -45,7 +45,7 @@ router.delete(
 //@desc    Get all questions by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(req, res, next, Question, 'questions', null, 20);
+  await requests.getAllItems(req, res, next, 'questions', 20);
 });
 
 //@route   GET api/question/get/id/:id

@@ -47,15 +47,7 @@ router.delete(
 //@desc    Get all people by page
 //@access  Public
 router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
-  await requests.getAllItems(
-    req,
-    res,
-    next,
-    Person,
-    'people',
-    PersonRating,
-    20
-  );
+  await requests.getAllItems(req, res, next, 'people', 20);
 });
 
 //@route   GET api/person/get/id/:id

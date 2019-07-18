@@ -45,7 +45,7 @@ router.delete(
 //@desc    Get all vacancies by page
 //@access  Public
 router.get('/get/all/:page?', async (req, res, next) => {
-  await requests.getAllItems(req, res, next, Vacancy, 'vacancies', null, 20);
+  await requests.getAllItems(req, res, next, 'vacancies', 20);
 });
 
 //@route   GET api/vacancy/get/current
