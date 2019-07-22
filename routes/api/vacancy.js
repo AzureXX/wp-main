@@ -30,7 +30,7 @@ router.put(
 );
 
 //@route   DELETE api/vacancy/delete/:id
-//@desc     Delete book from database
+//@desc     Delete vacancy from database
 //@access  Private/Business
 router.delete(
   '/delete/:id',
@@ -50,7 +50,7 @@ router.get('/get/all/:page?', async (req, res, next) => {
 
 //@route   GET api/vacancy/get/current
 //@desc    Get all vacancies of that user
-//@access  Public
+//@access  Private
 router.get(
   '/get/current',
   passport.authenticate('jwt', { session: false }),

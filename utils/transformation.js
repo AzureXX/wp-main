@@ -36,6 +36,9 @@ const Questionnaire = require('../models/Questionnaire');
 
 //Vacancy Models
 const Vacancy = require('../models/Vacancy');
+
+const AccessGroup = require('../models/AccessGroup');
+
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -89,6 +92,8 @@ module.exports = {
         return this.getQuestionnaireObject(req.body);
       case 'vacancy':
         return this.getVacancyObject(req);
+      case 'accessgroup':
+        return this.getAccessGroupObject(req);
     }
   },
   getBookObject(body) {
@@ -247,6 +252,18 @@ module.exports = {
       tags
     };
   },
+  getAccessGroupObject(req) {
+    let { name, users, showEmail, showPhone, showName, showDOB } = req.body;
+    if (!users) users = []
+    return {
+      creator: this.mongooseId(req.user._id),
+      name: name,
+      users: this.strToArr(users.join(','), true),
+      options: {
+        showEmail, showPhone, showName, showDOB
+      }
+    };
+  },
   getOffset(page, size) {
     page = parseInt(page);
     if (isNaN(page)) page = 1;
@@ -288,6 +305,9 @@ module.exports = {
       case 'vacancy':
       case 'vacancies':
         return Vacancy;
+      case 'accessgroup':
+      case 'accessgroups':
+        return AccessGroup;
       default:
         return null;
     }
@@ -329,7 +349,7 @@ module.exports = {
     }
   },
   getEducationStatusModel(name) {
-    switch(name) {
+    switch (name) {
       case 'category':
       case 'categories':
         return EducationCategoryStatus;
@@ -342,7 +362,8 @@ module.exports = {
       case 'subtopic':
       case 'subtopics':
         return EducationSubtopicStatus;
-      default: return null;  
+      default:
+        return null;
     }
   },
   getPlural(name) {
