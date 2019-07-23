@@ -35,7 +35,7 @@ router.delete(
   '/delete/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, AccessGroup, true);
+    await requests.deleteItem(req, res, next, "accessgroup", true);
   }
 );
 

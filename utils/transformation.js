@@ -255,12 +255,14 @@ module.exports = {
   getAccessGroupObject(req) {
     let { name, users, showEmail, showPhone, showName, showDOB } = req.body;
     if (!users) users = []
+    console.log(req.body)
+    
     return {
       creator: this.mongooseId(req.user._id),
       name: name,
       users: this.strToArr(users.join(','), true),
       options: {
-        showEmail, showPhone, showName, showDOB
+        showEmail: showEmail || false, showPhone: showPhone || false, showName: showName || false, showDOB: showDOB || false
       }
     };
   },

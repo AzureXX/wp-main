@@ -156,8 +156,9 @@ module.exports = {
       next(error);
     }
   },
-  async deleteItem(req, res, next, model, check) {
+  async deleteItem(req, res, next, name, check) {
     try {
+      const model = transformation.getModel(name)
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       if (check) {

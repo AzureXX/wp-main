@@ -38,7 +38,7 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, EducationTopic);
+    await requests.deleteItem(req, res, next, "topic");
   }
 );
 
