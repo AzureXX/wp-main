@@ -63,7 +63,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
-      const response = await AccessGroup.findOne({ creator: req.user.id, _id: req.params.id });
+      const response = await AccessGroup.findOne({ creator: req.user.id, _id: req.params.id }).populate("users");
       res.json(response);
     } catch (error) {
       next(error);

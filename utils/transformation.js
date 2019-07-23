@@ -1,5 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 
+
+const User = require("../models/User")
 // RATINGS MODELS
 const BookRating = require('../models/Ratings/BookRating');
 const MovieRating = require('../models/Ratings/MovieRating');
@@ -274,6 +276,9 @@ module.exports = {
   },
   getModel(name) {
     switch (name) {
+      case 'user':
+      case 'users':
+        return User;
       case 'book':
       case 'books':
         return Book;

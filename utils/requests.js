@@ -140,6 +140,9 @@ module.exports = {
   },
   async getItem(req, res, next, name) {
     try {
+      //const access = await this.getUserAccess(req,res,next,req.user.id);
+
+      console.log(req.query.populate)
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
@@ -336,6 +339,18 @@ module.exports = {
       subtopics = await subtopics;
 
       res.json({subcategories,topics,subtopics})
+    } catch (error) {
+      next(error)
+    }
+  },
+  async getUserAccess(req,res,next, user) {
+    try {
+      const User = transformation.getModel("user");
+      const AccessModel = transformation.getModel("accessgroup")
+      const userData = User.findById(user);
+      const accessGroups = AccessModel.find({creator: user, users: {$in: req.user._id}})
+      console.log(req.user.id)
+      console.log(accessGroups)
     } catch (error) {
       next(error)
     }
