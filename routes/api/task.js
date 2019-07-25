@@ -16,4 +16,26 @@ router.post(
   }
 );
 
+//@route   GET api/task/my
+//@desc    Get my tasks
+//@access  Private
+router.get(
+  '/my',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.getMyTasks(req,res,next)
+  }
+);
+
+//@route   GET api/task/forme
+//@desc    Get tasks for me
+//@access  Private
+router.get(
+  '/forme',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.getTasksForMe(req,res,next)
+  }
+);
+
 module.exports = router;

@@ -10,7 +10,10 @@ const TaskSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  type: String,
+  type: {
+    type: String,
+  
+  },
   item: {
     type: mongoose.Schema.Types.ObjectId,
     refPath: 'type'
@@ -18,7 +21,8 @@ const TaskSchema = new Schema({
   level: String,
   comment: String,
   deadline: Date,
-  status: {type:String, default: "new"}
+  status: {type:String, default: "new"},
+  archived: {type: Boolean, default: false} 
 })
 
 const Task = mongoose.model("Task", TaskSchema)

@@ -365,4 +365,22 @@ module.exports = {
       next(error);
     }
   },
+  async getMyTasks(req,res,next) {
+    try {
+      const Task = transformation.getModel("task")
+      const tasks = await Task.find({creator: req.user.id}).populate("user item","name username")
+      res.json(tasks)
+    } catch (error) {
+      next(error)
+    }
+  },
+  async getTasksForMe(req,res,next) {
+    try {
+      const Task = transformation.getModel("task")
+      const tasks = await Task.find({user: req.user.id}).populate("creator item", "name username")
+      res.json(tasks)
+    } catch (error) {
+      next(error)
+    }
+  }
 };
