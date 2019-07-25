@@ -54,7 +54,7 @@ router.put(
 //@desc    Update task archive status
 //@access  Private
 router.put(
-  '/archive/:id',
+  '/archived/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     await requests.updateTaskArchive(req,res,next)
