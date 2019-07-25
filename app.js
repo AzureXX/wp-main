@@ -36,6 +36,7 @@ const personRoute = require("./routes/api/person");
 const vacancyRoute = require("./routes/api/vacancy");
 const questionRoute = require("./routes/api/question");
 const questionnaireRoute = require("./routes/api/questionnaire");
+const taskRoute = require("./routes/api/task");
 
 const accessGroupRoute = require("./routes/api/accessgroup");
 
@@ -66,6 +67,7 @@ app.use("/api/person", personRoute);
 app.use("/api/vacancy", vacancyRoute);
 app.use("/api/question", questionRoute);
 app.use("/api/questionnaire", questionnaireRoute);
+app.use("/api/task", taskRoute);
 app.use("/api/accessgroup", accessGroupRoute);
 
 app.use("/api/education/category", educationCategoryRoute);

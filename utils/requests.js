@@ -142,7 +142,7 @@ module.exports = {
     try {
       //const access = await this.getUserAccess(req,res,next,req.user.id);
 
-      console.log(req.query.populate)
+      
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
@@ -354,5 +354,15 @@ module.exports = {
     } catch (error) {
       next(error)
     }
-  }
+  },
+  async createTask(req, res, next) {
+    try {
+      const Task = transformation.getModel("task")
+      const newTask = new Task(transformation.getObject(req, "task"));
+      const task = await newTask.save();
+      res.status(200).json(task);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

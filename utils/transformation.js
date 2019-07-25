@@ -1,7 +1,7 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 
-
-const User = require("../models/User")
+const User = require('../models/User');
+const Task = require('../models/Task');
 // RATINGS MODELS
 const BookRating = require('../models/Ratings/BookRating');
 const MovieRating = require('../models/Ratings/MovieRating');
@@ -96,6 +96,8 @@ module.exports = {
         return this.getVacancyObject(req);
       case 'accessgroup':
         return this.getAccessGroupObject(req);
+      case 'task':
+        return this.getTaskObject(req);
     }
   },
   getBookObject(body) {
@@ -256,16 +258,35 @@ module.exports = {
   },
   getAccessGroupObject(req) {
     let { name, users, showEmail, showPhone, showName, showDOB } = req.body;
-    if (!users) users = []
-    console.log(req.body)
-    
+    if (!users) users = [];
+    console.log(req.body);
+
     return {
       creator: this.mongooseId(req.user._id),
       name: name,
       users: this.strToArr(users.join(','), true),
       options: {
-        showEmail: showEmail || false, showPhone: showPhone || false, showName: showName || false, showDOB: showDOB || false
+        showEmail: showEmail || false,
+        showPhone: showPhone || false,
+        showName: showName || false,
+        showDOB: showDOB || false
       }
+    };
+  },
+  getTaskObject(req) {
+    const {
+      user,type,item,level,comment,deadline,status
+    } = req.body;
+
+    return {
+      creator: this.mongooseId(req.user._id),
+      user: this.mongooseId(user),
+      type: type,
+      item: this.mongooseId(item),
+      level: level,
+      comment: comment,
+      deadline: deadline,
+      status: status
     };
   },
   getOffset(page, size) {
@@ -315,6 +336,9 @@ module.exports = {
       case 'accessgroup':
       case 'accessgroups':
         return AccessGroup;
+      case 'task':
+      case 'tasks':
+        return Task;
       default:
         return null;
     }
