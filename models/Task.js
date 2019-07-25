@@ -4,19 +4,22 @@ const Schema = mongoose.Schema;
 const TaskSchema = new Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   type: {
     type: String,
-  
+    required: true
   },
   item: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: 'type'
+    refPath: 'type',
+    required: true
   },
   level: String,
   comment: String,
