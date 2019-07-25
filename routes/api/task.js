@@ -38,4 +38,26 @@ router.get(
   }
 );
 
+//@route   PUT api/task/status/:id
+//@desc    Update task status
+//@access  Private
+router.put(
+  '/status/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.updateTaskStatus(req,res,next)
+  }
+);
+
+
+//@route   PUT api/task/archive/:id
+//@desc    Update task archive status
+//@access  Private
+router.put(
+  '/archive/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.updateTaskArchive(req,res,next)
+  }
+);
 module.exports = router;

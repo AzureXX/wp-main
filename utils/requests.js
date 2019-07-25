@@ -84,7 +84,7 @@ module.exports = {
   //Get array of items from DB by page
   async getAllItems(req, res, next, name, size) {
     try {
-      const model = transformation.getModel(name)
+      const model = transformation.getModel(name);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
@@ -142,7 +142,6 @@ module.exports = {
     try {
       //const access = await this.getUserAccess(req,res,next,req.user.id);
 
-      
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
@@ -161,7 +160,7 @@ module.exports = {
   },
   async deleteItem(req, res, next, name, check) {
     try {
-      const model = transformation.getModel(name)
+      const model = transformation.getModel(name);
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       if (check) {
@@ -310,7 +309,7 @@ module.exports = {
         },
         { upsert: true }
       );
-      res.json("success");
+      res.json('success');
     } catch (error) {
       next(error);
     }
@@ -328,59 +327,112 @@ module.exports = {
   },
   async getUserEducationStatusAll(req, res, next) {
     try {
-      const Subcategory = transformation.getEducationStatusModel("subcategory");
-      const Topic = transformation.getEducationStatusModel("topic");
-      const Subtopic = transformation.getEducationStatusModel("subtopic");
-      let subcategories = Subcategory.find({userId: req.params.id}, '-_id -__v')
-      let topics = Topic.find({userId: req.params.id}, '-_id -__v')
-      let subtopics = Subtopic.find({userId: req.params.id}, '-_id -__v')
+      const Subcategory = transformation.getEducationStatusModel('subcategory');
+      const Topic = transformation.getEducationStatusModel('topic');
+      const Subtopic = transformation.getEducationStatusModel('subtopic');
+      let subcategories = Subcategory.find(
+        { userId: req.params.id },
+        '-_id -__v'
+      );
+      let topics = Topic.find({ userId: req.params.id }, '-_id -__v');
+      let subtopics = Subtopic.find({ userId: req.params.id }, '-_id -__v');
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
 
-      res.json({subcategories,topics,subtopics})
+      res.json({ subcategories, topics, subtopics });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-  async getUserAccess(req,res,next, user) {
+  async getUserAccess(req, res, next, user) {
     try {
-      const User = transformation.getModel("user");
-      const AccessModel = transformation.getModel("accessgroup")
+      const User = transformation.getModel('user');
+      const AccessModel = transformation.getModel('accessgroup');
       const userData = User.findById(user);
-      const accessGroups = AccessModel.find({creator: user, users: {$in: req.user._id}})
-      console.log(req.user.id)
-      console.log(accessGroups)
+      const accessGroups = AccessModel.find({
+        creator: user,
+        users: { $in: req.user._id }
+      });
+      console.log(req.user.id);
+      console.log(accessGroups);
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
   async createTask(req, res, next) {
     try {
-      const Task = transformation.getModel("task")
-      const newTask = new Task(transformation.getObject(req, "task"));
+      const Task = transformation.getModel('task');
+      const newTask = new Task(transformation.getObject(req, 'task'));
       const task = await newTask.save();
       res.status(200).json(task);
     } catch (error) {
       next(error);
     }
   },
-  async getMyTasks(req,res,next) {
+  async getMyTasks(req, res, next) {
     try {
-      const Task = transformation.getModel("task")
-      const tasks = await Task.find({creator: req.user.id}).populate("user item","name username")
-      res.json(tasks)
+      const Task = transformation.getModel('task');
+      const tasks = await Task.find({ creator: req.user.id }).populate(
+        'user item',
+        'name username'
+      );
+      res.json(tasks);
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-  async getTasksForMe(req,res,next) {
+  async getTasksForMe(req, res, next) {
     try {
-      const Task = transformation.getModel("task")
-      const tasks = await Task.find({user: req.user.id}).populate("creator item", "name username")
-      res.json(tasks)
+      const Task = transformation.getModel('task');
+      const tasks = await Task.find({ user: req.user.id }).populate(
+        'creator item',
+        'name username'
+      );
+      res.json(tasks);
     } catch (error) {
-      next(error)
+      next(error);
+    }
+  },
+  async updateTaskStatus(req, res, next) {
+    try {
+      const Task = transformation.getModel('task');
+      const task = await Task.findById(req.params.id);
+      
+      if(!task) {
+        throw new Error('No such task');
+      }
+      else if (
+        task.creator.toString() == req.user.id.toString() ||
+        task.user.toString() == req.user.id.toString()
+      ) {
+        Task.updateOne({ _id: req.params.id }, { status: req.body.status || task.status }).exec();
+      } else {
+        throw new Error('Not authorized');
+      }
+      res.json("success");
+    } catch (error) {
+      next(error);
+    }
+  },
+  async updateTaskArchive(req, res, next) {
+    try {
+      const Task = transformation.getModel('task');
+      const task = await Task.findById(req.params.id);
+      if(!task) {
+        throw new Error('No such task');
+      }
+      else if (
+        task.creator.toString() == req.user.id.toString() ||
+        task.user.toString() == req.user.id.toString()
+      ) {
+        Task.updateOne({ _id: req.params.id }, { archived: req.body.archived || task.archived }).exec();
+      } else {
+        throw new Error('Not authorized');
+      }
+      res.json("success");
+    } catch (error) {
+      next(error);
     }
   }
 };
