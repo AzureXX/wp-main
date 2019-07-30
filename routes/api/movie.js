@@ -57,7 +57,7 @@ router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
   await requests.getItem(req, res, next, 'movies');
 });
 
-//@route   POST api/course/rate
+//@route   POST api/movie/rate
 //@desc    Rates movie
 //@access  Private
 router.post(
@@ -94,7 +94,8 @@ router.post(
         img: {
           us: 'https://image.tmdb.org/t/p/original/' + response.data.poster_path
         },
-        released: response.data.release_date
+        released: response.data.release_date,
+        genres: response.data.genres.map(genre => genre.name.toLowerCase())
       });
       const movie = await newMovie.save();
       res.json(movie)
