@@ -259,24 +259,28 @@ module.exports = {
   getAccessGroupObject(req) {
     let { name, users, showEmail, showPhone, showName, showDOB } = req.body;
     if (!users) users = [];
-    console.log(req.body);
-
     return {
       creator: this.mongooseId(req.user._id),
       name: name,
       users: this.strToArr(users.join(','), true),
       options: {
-        showEmail: showEmail || false,
-        showPhone: showPhone || false,
-        showName: showName || false,
-        showDOB: showDOB || false
+        showEmail: !!showEmail,
+        showPhone: !!showPhone, 
+        showName: !!showName, 
+        showDOB: !!showDOB,
+        showBookStatus: !!req.body.showBookStatus,
+        showBookRating: !!req.body.showBookRating,
+        showMovieStatus: !!req.body.showMovieStatus,
+        showMovieRating: !!req.body.showMovieRating,
+        showCourseStatus: !!req.body.showCourseStatus,
+        showCourseRating: !!req.body.showCourseRating,
+        showEducationStatus: !!req.body.showEducationStatus,
+        giveTasks: !!req.body.giveTasks
       }
     };
   },
   getTaskObject(req) {
-    const {
-      user,type,item,level,comment,deadline,status
-    } = req.body;
+    const { user, type, item, level, comment, deadline, status } = req.body;
 
     return {
       creator: this.mongooseId(req.user._id),
@@ -410,5 +414,13 @@ module.exports = {
       default:
         return null;
     }
+  },
+  async getAccessOptions(user, viewer) {
+    console.log();
+    const { generalAccessOptions } = await User.findById(
+      user,
+      'generalAccessOptions'
+    );
+    console.log(generalAccessOptions);
   }
 };

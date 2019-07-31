@@ -207,14 +207,14 @@ router.put(
                     showPhone: !!req.body.showPhone,
                     showName: !!req.body.showName,
                     showDOB: !!req.body.showDOB,
-                    showDOB: !!req.body.showBookStatus,
-                    showDOB: !!req.body.showBookRating,
-                    showDOB: !!req.body.showMovieStatus,
-                    showDOB: !!req.body.showMovieRating,
-                    showDOB: !!req.body.showCourseStatus,
-                    showDOB: !!req.body.showCourseRating,
-                    showDOB: !!req.body.showEducationStatus,
-                    showDOB: !!req.body.giveTasks
+                    showBookStatus: !!req.body.showBookStatus,
+                    showBookRating: !!req.body.showBookRating,
+                    showMovieStatus: !!req.body.showMovieStatus,
+                    showMovieRating: !!req.body.showMovieRating,
+                    showCourseStatus: !!req.body.showCourseStatus,
+                    showCourseRating: !!req.body.showCourseRating,
+                    showEducationStatus: !!req.body.showEducationStatus,
+                    giveTasks: !!req.body.giveTasks
                 }
             }, {new: true});
             res.json(user);

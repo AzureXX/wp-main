@@ -141,7 +141,8 @@ module.exports = {
   async getItem(req, res, next, name) {
     try {
       //const access = await this.getUserAccess(req,res,next,req.user.id);
-
+      //await transformation.getAccessOptions("5c70f92aaf6ed806320334f5")
+      
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
@@ -183,6 +184,7 @@ module.exports = {
         if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
+      console.log(transformation.getObject(req, name))
       const saved = await model.findByIdAndUpdate(
         id,
         transformation.getObject(req, name)
@@ -195,6 +197,7 @@ module.exports = {
   async createItem(req, res, next, model, name) {
     try {
       const newItem = new model(transformation.getObject(req, name));
+      console.log(newItem)
       const item = await newItem.save();
       res.status(200).json(item);
     } catch (error) {
