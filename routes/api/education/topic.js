@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
 const EducationTopic = require('../../../models/Education/EducationTopic');
-const EducationTopicRating = require('../../../models/Ratings/Education/EducationTopicRating');
+
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/topic/add

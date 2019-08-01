@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
 const Movie = require('../../models/Movie');
-const MovieRating = require('../../models/Ratings/MovieRating');
 const axios = require('axios');
 const requests = require('../../utils/requests');
 

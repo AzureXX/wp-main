@@ -4,7 +4,7 @@ const passport = require('passport');
 const roles = require('../../../utils/roles');
 
 const EducationSubcategory = require("../../../models/Education/EducationSubcategory")
-const EducationSubcategoryRating = require('../../../models/Ratings/Education/EducationSubcategoryRating')
+
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/subcategory/add

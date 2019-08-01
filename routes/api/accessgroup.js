@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const roles = require('../../utils/roles');
 
 const AccessGroup = require("../../models/AccessGroup");
 const requests = require('../../utils/requests');

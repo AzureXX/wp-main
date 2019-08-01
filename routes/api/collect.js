@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const roles = require('../../utils/roles');
 const Book = require('../../models/Book');
 const BookRating = require('../../models/Ratings/BookRating');
 const Movie = require('../../models/Movie');

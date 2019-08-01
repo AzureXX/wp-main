@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
-
 const EducationCategory = require("../../../models/Education/EducationCategory")
-const EducationCategoryRating = require('../../../models/Ratings/Education/EducationCategoryRating')
+
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/category/add

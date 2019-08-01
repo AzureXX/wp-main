@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
 const Book = require('../../models/Book');
-const BookRating = require('../../models/Ratings/BookRating');
 const axios = require('axios');
 const requests = require('../../utils/requests');
 //@route   POST api/book/add

@@ -6,7 +6,7 @@ const CourseRatingSchema = new Schema({
     courses: [{
         _id: false,
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-        status: String,
+        status: Number,
         rating: Number,
         date: {
             type: Date,
