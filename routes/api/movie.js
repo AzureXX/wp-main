@@ -45,14 +45,14 @@ router.delete(
 //@route   GET api/movie/get/all/:page
 //@desc    Get all movies by page
 //@access  Public
-router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
+router.get('/get/all/:page?',  async (req, res, next) => {
   await requests.getAllItems(req, res, next, 'movies', 20);
 });
 
 //@route   GET api/movie/get/id/:id
 //@desc    Get movie by id
 //@access  Public
-router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
+router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'movies');
 });
 

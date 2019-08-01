@@ -43,14 +43,14 @@ router.delete(
 //@route   GET api/education/category/get/all/:page
 //@desc    Get all education categories by page
 //@access  Public
-router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
+router.get('/get/all/:page?',  async (req, res, next) => {
   await requests.getAllItems(req, res, next, 'categories', 1000);
 });
 
 //@route   GET api/education/category/get/id/:id
 //@desc    Get education category by id
 //@access  Public
-router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
+router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'categories');
 });
 

@@ -42,14 +42,14 @@ router.delete(
 //@route   GET api/question/get/all/:page
 //@desc    Get all questions by page
 //@access  Public
-router.get('/get/all/:page?', roles.isUser, async (req, res, next) => {
+router.get('/get/all/:page?',  async (req, res, next) => {
   await requests.getAllItems(req, res, next, 'questions', 20);
 });
 
 //@route   GET api/question/get/id/:id
 //@desc    Get question by id
 //@access  Public
-router.get('/get/id/:id', roles.isUser, async (req, res, next) => {
+router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'questions');
 });
 
