@@ -14,7 +14,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, Movie, 'movie');
+    await requests.createItem(req, res, next, 'movie');
   }
 );
 
@@ -26,7 +26,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, Movie, 'movie');
+    await requests.editItem(req, res, next, 'movie');
   }
 );
 

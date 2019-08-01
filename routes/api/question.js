@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
-const Question = require('../../models/Question');
-
 const requests = require('../../utils/requests');
 //@route   POST api/question/add
 //@desc    Adds new question to database
@@ -13,7 +11,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, Question, 'question');
+    await requests.createItem(req, res, next, 'question');
   }
 );
 
@@ -25,7 +23,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, Question, 'question');
+    await requests.editItem(req, res, next, 'question');
   }
 );
 

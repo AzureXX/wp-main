@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
-const EducationCategory = require("../../../models/Education/EducationCategory")
-
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/category/add
@@ -14,7 +12,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, EducationCategory, 'educationCategory');
+    await requests.createItem(req, res, next, 'educationCategory');
   }
 );
 
@@ -26,7 +24,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, EducationCategory, 'educationCategory');
+    await requests.editItem(req, res, next, 'educationCategory');
   }
 );
 

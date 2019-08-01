@@ -175,17 +175,18 @@ module.exports = {
       next(error);
     }
   },
-  async editItem(req, res, next, model, name, check) {
+  async editItem(req, res, next, name, check) {
     try {
+      const Model = transformation.getModel("name")
       const id = transformation.mongooseId(req.params.id);
-      const item = await model.findById(id);
+      const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
       if (check) {
         if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
       console.log(transformation.getObject(req, name))
-      const saved = await model.findByIdAndUpdate(
+      const saved = await Model.findByIdAndUpdate(
         id,
         transformation.getObject(req, name)
       );
@@ -194,10 +195,10 @@ module.exports = {
       next(error);
     }
   },
-  async createItem(req, res, next, model, name) {
+  async createItem(req, res, next, name) {
     try {
-      const newItem = new model(transformation.getObject(req, name));
-      console.log(newItem)
+      const Model = transformation.getModel("name")
+      const newItem = new Model(transformation.getObject(req, name));
       const item = await newItem.save();
       res.status(200).json(item);
     } catch (error) {

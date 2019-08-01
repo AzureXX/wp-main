@@ -3,8 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
 
-const EducationSubcategory = require("../../../models/Education/EducationSubcategory")
-
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/subcategory/add
@@ -15,7 +13,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, EducationSubcategory, 'educationSubcategory');
+    await requests.createItem(req, res, next, 'educationSubcategory');
   }
 );
 
@@ -27,7 +25,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, EducationSubcategory, 'educationSubcategory');
+    await requests.editItem(req, res, next, 'educationSubcategory');
   }
 );
 

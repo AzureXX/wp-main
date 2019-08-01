@@ -13,7 +13,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isBusiness,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, Vacancy, 'vacancy');
+    await requests.createItem(req, res, next, 'vacancy');
   }
 );
 
@@ -25,7 +25,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isBusiness,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, Vacancy, 'vacancy', true);
+    await requests.editItem(req, res, next, 'vacancy', true);
   }
 );
 

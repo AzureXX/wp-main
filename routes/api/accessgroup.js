@@ -12,7 +12,7 @@ router.post(
   '/add',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.createItem(req, res, next, AccessGroup, 'accessgroup');
+    await requests.createItem(req, res, next, 'accessgroup');
   }
 );
 
@@ -23,7 +23,7 @@ router.put(
   '/edit/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    await requests.editItem(req, res, next, AccessGroup, 'accessgroup', true);
+    await requests.editItem(req, res, next, 'accessgroup', true);
   }
 );
 
