@@ -179,7 +179,7 @@ module.exports = {
   },
   async editItem(req, res, next, name, check) {
     try {
-      const Model = transformation.getModel("name")
+      const Model = transformation.getModel(name)
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
