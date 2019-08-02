@@ -147,10 +147,12 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
+      const deep = req.query.deeppopulate || 'categories subcategories topics subtopics courses'
+      console.log("populate", populate)
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
-        populate: { path: 'categories subcategories topics subtopics' }
+        populate: { path: deep } 
       });
       if (!item) throw new Error(`No such ${name} exist`);
 
