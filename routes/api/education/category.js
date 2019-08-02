@@ -12,7 +12,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.createItem(req, res, next, 'educationCategory');
+    await requests.createItem(req, res, next, 'category');
   }
 );
 
@@ -24,7 +24,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.editItem(req, res, next, 'educationCategory');
+    await requests.editItem(req, res, next, 'category');
   }
 );
 
