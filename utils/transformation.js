@@ -84,7 +84,7 @@ module.exports = {
         return this.getEducationCategoryObject(req.body);
       case 'subcategory':
         return this.getEducationSubcategoryObject(req.body);
-      case 'subtopic':
+      case 'topic':
         return this.getEducationTopicObject(req.body);
       case 'subtopic':
         return this.getEducationSubtopicObject(req.body);
