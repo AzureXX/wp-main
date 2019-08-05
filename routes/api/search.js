@@ -4,14 +4,15 @@ const Book = require('../../models/Book');
 const Course = require('../../models/Course');
 const Movie = require('../../models/Movie');
 const Person = require('../../models/Person');
-const {getModel} = require("../../utils/transformation")
+const User = require("../../models/User")
+const { getModel } = require('../../utils/transformation');
 
-const searchOptions = (regex) => ([
+const searchOptions = regex => [
   { 'name.us': regex },
   { 'name.ru': regex },
   { 'name.az': regex }
-])
-router.get('/',  async (req, res, next) => {
+];
+router.get('/', async (req, res, next) => {
   try {
     const regex = new RegExp(req.query.search, 'i');
     console.log(regex);
@@ -23,6 +24,27 @@ router.get('/',  async (req, res, next) => {
       { 'description.ru': regex },
       { 'description.az': regex }
     ];
+    const Category = getModel("categories");
+      const Subcategory = getModel("subcategories");
+      const Topic = getModel("topics");
+      const Subtopic = getModel("subtopics");
+      let categories =  Category.find({
+        $or: search
+      },
+      'name').limit(20)
+      let subcategories =  Subcategory.find({
+        $or: search
+      },
+      'name').limit(20)
+      let topics =  Topic.find({
+        $or: search
+      },
+      'name').limit(20)
+      let subtopics =  Subtopic.find({
+        $or: search
+      },
+      'name').limit(20)
+      
     let books = Book.find({
       $or: search
     }).limit(20);
@@ -35,34 +57,85 @@ router.get('/',  async (req, res, next) => {
     let people = Person.find({
       $or: search
     }).limit(20);
-
+    categories = await categories;
+    subcategories = await subcategories;
+    topics = await topics;
+    subtopics = await subtopics;
     books = await books;
     movies = await movies;
     courses = await courses;
     people = await people;
 
     res.json({
-      books: books,
-      movies: movies,
-      courses: courses,
-      people: people
+      books,movies,courses,people,categories,subcategories,topics,subtopics
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get('/:type',  async (req, res, next) => {
+router.get('/:type', async (req, res, next) => {
   try {
-    const types = ["books", "movies", "courses", "people","categories", "subcategories", "topics", "subtopics"]
-    if(!types.includes(req.params.type)) throw new Error("Invalid search type")
+    const types = [
+      'books',
+      'movies',
+      'courses',
+      'people',
+      'categories',
+      'subcategories',
+      'topics',
+      'subtopics',
+      'users',
+      'education'
+    ];
+    
+    if (!types.includes(req.params.type))
+      throw new Error('Invalid search type');
+    
     const regex = new RegExp(req.query.search, 'i');
     const search = searchOptions(regex);
-    const Model = getModel(req.params.type)
-    let items = await Model.find({
-      $or: search
-    }, "name").limit(20);
-    res.json(items);
+
+    if (req.params.type === 'users') {
+      const users = await User.find({username: regex}, "username")
+      res.json(users)
+    } else if(req.params.type === 'education') {
+      const Category = getModel("categories");
+      const Subcategory = getModel("subcategories");
+      const Topic = getModel("topics");
+      const Subtopic = getModel("subtopics");
+      let categories =  Category.find({
+        $or: search
+      },
+      'name').limit(20)
+      let subcategories =  Subcategory.find({
+        $or: search
+      },
+      'name').limit(20)
+      let topics =  Topic.find({
+        $or: search
+      },
+      'name').limit(20)
+      let subtopics =  Subtopic.find({
+        $or: search
+      },
+      'name').limit(20)
+      categories = await categories;
+      subcategories = await subcategories;
+      topics = await topics;
+      subtopics = await subtopics;
+      res.json({categories,subcategories,topics,subtopics})
+    }
+    else {
+      
+      const Model = getModel(req.params.type);
+      let items = await Model.find(
+        {
+          $or: search
+        },
+        'name'
+      ).limit(20);
+      res.json(items);
+    }
   } catch (error) {
     next(error);
   }
