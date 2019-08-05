@@ -4,7 +4,7 @@ const Book = require('../../models/Book');
 const Course = require('../../models/Course');
 const Movie = require('../../models/Movie');
 const Person = require('../../models/Person');
-const User = require("../../models/User")
+const User = require('../../models/User');
 const { getModel } = require('../../utils/transformation');
 
 const searchOptions = regex => [
@@ -24,27 +24,35 @@ router.get('/', async (req, res, next) => {
       { 'description.ru': regex },
       { 'description.az': regex }
     ];
-    const Category = getModel("categories");
-      const Subcategory = getModel("subcategories");
-      const Topic = getModel("topics");
-      const Subtopic = getModel("subtopics");
-      let categories =  Category.find({
+    const Category = getModel('categories');
+    const Subcategory = getModel('subcategories');
+    const Topic = getModel('topics');
+    const Subtopic = getModel('subtopics');
+    let categories = Category.find(
+      {
         $or: search
       },
-      'name').limit(20)
-      let subcategories =  Subcategory.find({
+      'name'
+    ).limit(20);
+    let subcategories = Subcategory.find(
+      {
         $or: search
       },
-      'name').limit(20)
-      let topics =  Topic.find({
+      'name'
+    ).limit(20);
+    let topics = Topic.find(
+      {
         $or: search
       },
-      'name').limit(20)
-      let subtopics =  Subtopic.find({
+      'name'
+    ).limit(20);
+    let subtopics = Subtopic.find(
+      {
         $or: search
       },
-      'name').limit(20)
-      
+      'name'
+    ).limit(20);
+
     let books = Book.find({
       $or: search
     }).limit(20);
@@ -67,7 +75,14 @@ router.get('/', async (req, res, next) => {
     people = await people;
 
     res.json({
-      books,movies,courses,people,categories,subcategories,topics,subtopics
+      books,
+      movies,
+      courses,
+      people,
+      categories,
+      subcategories,
+      topics,
+      subtopics
     });
   } catch (error) {
     next(error);
@@ -88,45 +103,51 @@ router.get('/:type', async (req, res, next) => {
       'users',
       'education'
     ];
-    
+
     if (!types.includes(req.params.type))
       throw new Error('Invalid search type');
-    
+
     const regex = new RegExp(req.query.search, 'i');
     const search = searchOptions(regex);
 
     if (req.params.type === 'users') {
-      const users = await User.find({username: regex}, "username")
-      res.json(users)
-    } else if(req.params.type === 'education') {
-      const Category = getModel("categories");
-      const Subcategory = getModel("subcategories");
-      const Topic = getModel("topics");
-      const Subtopic = getModel("subtopics");
-      let categories =  Category.find({
-        $or: search
-      },
-      'name').limit(20)
-      let subcategories =  Subcategory.find({
-        $or: search
-      },
-      'name').limit(20)
-      let topics =  Topic.find({
-        $or: search
-      },
-      'name').limit(20)
-      let subtopics =  Subtopic.find({
-        $or: search
-      },
-      'name').limit(20)
+      const users = await User.find({ username: regex }, 'username');
+      res.json(users);
+    } else if (req.params.type === 'education') {
+      const Category = getModel('categories');
+      const Subcategory = getModel('subcategories');
+      const Topic = getModel('topics');
+      const Subtopic = getModel('subtopics');
+      let categories = Category.find(
+        {
+          $or: search
+        },
+        'name'
+      ).limit(20);
+      let subcategories = Subcategory.find(
+        {
+          $or: search
+        },
+        'name'
+      ).limit(20);
+      let topics = Topic.find(
+        {
+          $or: search
+        },
+        'name'
+      ).limit(20);
+      let subtopics = Subtopic.find(
+        {
+          $or: search
+        },
+        'name'
+      ).limit(20);
       categories = await categories;
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
-      res.json({categories,subcategories,topics,subtopics})
-    }
-    else {
-      
+      res.json({ categories, subcategories, topics, subtopics });
+    } else {
       const Model = getModel(req.params.type);
       let items = await Model.find(
         {
