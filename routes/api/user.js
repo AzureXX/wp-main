@@ -245,7 +245,7 @@ router.put(
 //@route   POST api/user/emote
 //@desc    Changes emotion for user
 //@access  Private
-router.post(
+router.put(
   '/emote',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
