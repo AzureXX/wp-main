@@ -187,7 +187,6 @@ module.exports = {
         if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
-      console.log(transformation.getObject(req, name))
       const saved = await Model.findByIdAndUpdate(
         id,
         transformation.getObject(req, name)

@@ -41,6 +41,7 @@ const UserSchema = new Schema({
         type: String,
         default: "user"
     },
+    emotion: {type: String, default: "neutral"},
     tags: [{_id: false, name:String, level: Number}],
     generalAccessOptions: {
         showEmail: {
