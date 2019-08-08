@@ -63,7 +63,6 @@ app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/book", bookRoute);
 app.use("/api/music", musicRoute);
-
 app.use("/api/course", courseRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/person", personRoute);

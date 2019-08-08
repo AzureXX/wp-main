@@ -142,17 +142,19 @@ module.exports = {
     try {
       //const access = await this.getUserAccess(req,res,next,req.user.id);
       //await transformation.getAccessOptions("5c70f92aaf6ed806320334f5")
-      
+
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       const select = req.query.select ? req.query.select : '';
-      const deep = req.query.deeppopulate || 'categories subcategories topics subtopics courses'
-      console.log("populate", populate)
+      const deep =
+        req.query.deeppopulate ||
+        'categories subcategories topics subtopics courses';
+      console.log('populate', populate);
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
-        populate: { path: deep } 
+        populate: { path: deep }
       });
       if (!item) throw new Error(`No such ${name} exist`);
 
@@ -179,7 +181,7 @@ module.exports = {
   },
   async editItem(req, res, next, name, check) {
     try {
-      const Model = transformation.getModel(name)
+      const Model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
@@ -198,7 +200,7 @@ module.exports = {
   },
   async createItem(req, res, next, name) {
     try {
-      const Model = transformation.getModel("name")
+      const Model = transformation.getModel(name);
       const newItem = new Model(transformation.getObject(req, name));
       const item = await newItem.save();
       res.status(200).json(item);
@@ -403,19 +405,21 @@ module.exports = {
     try {
       const Task = transformation.getModel('task');
       const task = await Task.findById(req.params.id);
-      
-      if(!task) {
+
+      if (!task) {
         throw new Error('No such task');
-      }
-      else if (
+      } else if (
         task.creator.toString() == req.user.id.toString() ||
         task.user.toString() == req.user.id.toString()
       ) {
-        Task.updateOne({ _id: req.params.id }, { status: req.body.status || task.status }).exec();
+        Task.updateOne(
+          { _id: req.params.id },
+          { status: req.body.status || task.status }
+        ).exec();
       } else {
         throw new Error('Not authorized');
       }
-      res.json("success");
+      res.json('success');
     } catch (error) {
       next(error);
     }
@@ -424,18 +428,20 @@ module.exports = {
     try {
       const Task = transformation.getModel('task');
       const task = await Task.findById(req.params.id);
-      if(!task) {
+      if (!task) {
         throw new Error('No such task');
-      }
-      else if (
+      } else if (
         task.creator.toString() == req.user.id.toString() ||
         task.user.toString() == req.user.id.toString()
       ) {
-        Task.updateOne({ _id: req.params.id }, { archived: req.body.archived || task.archived }).exec();
+        Task.updateOne(
+          { _id: req.params.id },
+          { archived: req.body.archived || task.archived }
+        ).exec();
       } else {
         throw new Error('Not authorized');
       }
-      res.json("success");
+      res.json('success');
     } catch (error) {
       next(error);
     }
