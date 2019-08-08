@@ -7,13 +7,14 @@ const BookRating = require('../models/Ratings/BookRating');
 const MovieRating = require('../models/Ratings/MovieRating');
 const CourseRating = require('../models/Ratings/CourseRating');
 const PersonRating = require('../models/Ratings/PersonRating');
+const MusicRating = require('../models/Ratings/MusicRating');
 
 // CONTENT MODELS
 const Book = require('../models/Book');
 const Movie = require('../models/Movie');
 const Course = require('../models/Course');
 const Person = require('../models/Person');
-
+const Music = require('../models/Music');
 // EDUCATION MODELS
 const EducationCategory = require('../models/Education/EducationCategory');
 const EducationSubcategory = require('../models/Education/EducationSubcategory');
@@ -31,6 +32,7 @@ const BookRecommendation = require('../models/Recommendations/BookRecommendation
 const MovieRecommendation = require('../models/Recommendations/MovieRecommendation');
 const CourseRecommendation = require('../models/Recommendations/CourseRecommendation');
 const PersonRecommendation = require('../models/Recommendations/PersonRecommendation');
+const MusicRecommendation = require('../models/Recommendations/MusicRecommendation');
 
 //Questions Models
 const Question = require('../models/Question');
@@ -76,6 +78,8 @@ module.exports = {
         return this.getBookObject(req.body);
       case 'movie':
         return this.getMovieObject(req.body);
+      case 'music':
+        return this.getMusicObject(req.body);
       case 'course':
         return this.getCourseObject(req.body);
       case 'person':
@@ -134,6 +138,30 @@ module.exports = {
             id: this.mongooseId(item.id.trim())
           }))
         : null,
+      released: released
+    };
+  },
+  getMusicObject(body) {
+    const {
+      singers,
+      genres,
+      released,
+      duration,
+      name,
+      img,
+      video,
+      audio,
+      tags
+    } = body;
+    return {
+      name: name,
+      duration: duration,
+      img: img,
+      video: video,
+      audio: audio,
+      tags: tags,
+      singers: this.strToArr(singers, true),
+      genres: this.strToArr(genres),
       released: released
     };
   },
@@ -265,8 +293,8 @@ module.exports = {
       users: this.strToArr(users.join(','), true),
       options: {
         showEmail: !!showEmail,
-        showPhone: !!showPhone, 
-        showName: !!showName, 
+        showPhone: !!showPhone,
+        showName: !!showName,
         showDOB: !!showDOB,
         showBookStatus: !!req.body.showBookStatus,
         showBookRating: !!req.body.showBookRating,
@@ -310,6 +338,8 @@ module.exports = {
       case 'movie':
       case 'movies':
         return Movie;
+      case 'music':
+        return Music;
       case 'course':
       case 'courses':
         return Course;
@@ -355,6 +385,8 @@ module.exports = {
       case 'movies':
       case 'movie':
         return MovieRating;
+      case 'music':
+        return MusicRating;
       case 'courses':
       case 'course':
         return CourseRating;
@@ -376,6 +408,8 @@ module.exports = {
       case 'courses':
       case 'course':
         return CourseRecommendation;
+      case 'music':
+        return MusicRecommendation;
       case 'people':
       case 'person':
         return PersonRecommendation;
@@ -411,6 +445,8 @@ module.exports = {
         return 'courses';
       case 'person':
         return 'people';
+      case 'music':
+        return 'music';
       default:
         return null;
     }
