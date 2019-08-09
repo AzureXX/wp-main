@@ -255,7 +255,7 @@ module.exports = {
         books: bookRating ? bookRating.books : [],
         movies: movieRating ? movieRating.movies : [],
         courses: courseRating ? courseRating.courses : [],
-        music: musicRating ? musicRating.courses : []
+        music: musicRating ? musicRating.music : []
       });
     } catch (error) {
       next(error);
