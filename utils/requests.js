@@ -225,7 +225,7 @@ module.exports = {
       const BookRating = transformation.getRatingModel('books');
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
-      const CourseRating = transformation.getRatingModel('music');
+      const MusicRating = transformation.getRatingModel('music');
       let bookRating = BookRating.findOne({ userId: req.params.id }).populate({
         path: !req.query.populate ? 'books' + '.id' : '',
         select: 'name'
@@ -251,6 +251,7 @@ module.exports = {
       movieRating = await movieRating;
       musicRating = await musicRating;
       courseRating = await courseRating;
+      console.log("hello")
       res.json({
         books: bookRating ? bookRating.books : [],
         movies: movieRating ? movieRating.movies : [],
