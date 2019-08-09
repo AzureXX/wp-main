@@ -28,6 +28,7 @@ router.get('/', async (req, res, next) => {
     const Subcategory = getModel('subcategories');
     const Topic = getModel('topics');
     const Subtopic = getModel('subtopics');
+    const Music = getModel('music');
     let categories = Category.find(
       {
         $or: search
@@ -65,18 +66,23 @@ router.get('/', async (req, res, next) => {
     let people = Person.find({
       $or: search
     }).limit(20);
+    let music = Music.find({
+      name: regex
+    }).limit(20);
     categories = await categories;
     subcategories = await subcategories;
     topics = await topics;
     subtopics = await subtopics;
     books = await books;
     movies = await movies;
+    music = await music;
     courses = await courses;
     people = await people;
 
     res.json({
       books,
       movies,
+      music,
       courses,
       people,
       categories,
@@ -101,7 +107,8 @@ router.get('/:type', async (req, res, next) => {
       'topics',
       'subtopics',
       'users',
-      'education'
+      'education',
+      "music"
     ];
 
     if (!types.includes(req.params.type))
@@ -147,7 +154,17 @@ router.get('/:type', async (req, res, next) => {
       topics = await topics;
       subtopics = await subtopics;
       res.json({ categories, subcategories, topics, subtopics });
-    } else {
+    } else if (req.params.type === 'music') {
+      const Music = getModel("music");
+      let  music = await Music.find(
+        {
+          name: regex
+        },
+        'name'
+      ).limit(20);
+      res.json(music);
+    }
+    else {
       const Model = getModel(req.params.type);
       let items = await Model.find(
         {
