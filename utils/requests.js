@@ -225,7 +225,7 @@ module.exports = {
       const BookRating = transformation.getRatingModel('books');
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
-
+      const CourseRating = transformation.getRatingModel('music');
       let bookRating = BookRating.findOne({ userId: req.params.id }).populate({
         path: !req.query.populate ? 'books' + '.id' : '',
         select: 'name'
@@ -237,6 +237,10 @@ module.exports = {
         path: !req.query.populate ? 'movies' + '.id' : '',
         select: 'name'
       });
+      let musicRating = MusicRating.findOne({ userId: req.params.id }).populate({
+        path: !req.query.populate ? 'music' + '.id' : '',
+        select: 'name'
+      });
       let courseRating = CourseRating.findOne({
         userId: req.params.id
       }).populate({
@@ -245,11 +249,13 @@ module.exports = {
       });
       bookRating = await bookRating;
       movieRating = await movieRating;
+      musicRating = await musicRating;
       courseRating = await courseRating;
       res.json({
         books: bookRating ? bookRating.books : [],
         movies: movieRating ? movieRating.movies : [],
-        courses: courseRating ? courseRating.courses : []
+        courses: courseRating ? courseRating.courses : [],
+        music: musicRating ? musicRating.courses : []
       });
     } catch (error) {
       next(error);
