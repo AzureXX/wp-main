@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const MusicRatingSchema = new Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Music' },
+  music: { type: mongoose.Schema.Types.ObjectId, ref: 'Music' },
   status: Number,
   rating: Number,
   date: {
