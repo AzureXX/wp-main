@@ -44,7 +44,7 @@ router.post(
           { upsert: true }
         );
       }
-      const response = await RatingModel.find({userId: req.user.id})
+      const response = await RatingModel.find({userId: req.user.id}).populate({path: singular, select:"name"})
       res.json(response)
     } catch (error) {
       console.log(error)

@@ -148,10 +148,10 @@ module.exports = {
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
 
-      let bookRating = BookRating.find({ userId: req.params.id });
-      let movieRating = MovieRating.find({ userId: req.params.id });
-      let musicRating = MusicRating.find({ userId: req.params.id });
-      let courseRating = CourseRating.find({ userId: req.params.id });
+      let bookRating = BookRating.find({ userId: req.params.id }).populate({path: "book", select:"name"});
+      let movieRating = MovieRating.find({ userId: req.params.id }).populate({path: "movie", select:"name"});
+      let musicRating = MusicRating.find({ userId: req.params.id }).populate({path: "music", select:"name"});
+      let courseRating = CourseRating.find({ userId: req.params.id }).populate({path: "course", select:"name"});
 
       bookRating = await bookRating;
       movieRating = await movieRating;
