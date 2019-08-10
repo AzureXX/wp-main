@@ -451,6 +451,22 @@ module.exports = {
         return null;
     }
   },
+  getSingular(name) {
+    switch (name) {
+      case 'books':
+        return 'book';
+      case 'movies':
+        return 'movie';
+      case 'courses':
+        return 'course';
+      case 'people':
+        return 'person';
+      case 'music':
+        return 'music';
+      default:
+        return null;
+    }
+  },
   async getAccessOptions(user, viewer) {
     console.log();
     const { generalAccessOptions } = await User.findById(

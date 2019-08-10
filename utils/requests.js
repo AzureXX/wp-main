@@ -2,85 +2,6 @@ const validation = require('./validation');
 const transformation = require('./transformation');
 
 module.exports = {
-  async setRating(req, res, next, item) {
-    try {
-      let { rating, status, id } = req.body;
-      const recModel = transformation.getRecommendationModel(item);
-      const model = transformation.getRatingModel(item);
-      recModel
-        .updateOne({ userId: req.user.id }, { $pull: { [item]: { data: id } } })
-        .exec();
-
-      const dollarStr = item + '.$';
-      const idStr = item + '.id';
-
-      const ratings = await model.findOne({ userId: req.user.id, [idStr]: id });
-
-      if (status === 2 && ratings) {
-        const response = await model
-          .findOneAndUpdate(
-            { userId: req.user.id, [idStr]: id },
-            {
-              $pull: {
-                [item]: { id }
-              }
-            },
-            { upsert: true, returnOriginal: false, new: true }
-          )
-          .populate({
-            path: idStr,
-            select: 'name'
-          });
-        console.log(response);
-        return res.json(response);
-      }
-
-      if (rating) status = 0;
-      else if (status) rating = 0;
-
-      //gets current ratings of user
-
-      let response;
-      if (!ratings) {
-        // if item is not rated by this user yet
-        response = await model
-          .findOneAndUpdate(
-            { userId: req.user.id },
-            {
-              userId: req.user.id,
-              $push: {
-                [item]: { id, rating, status }
-              }
-            },
-            { upsert: true, returnOriginal: false, new: true }
-          )
-          .populate({
-            path: idStr,
-            select: 'name'
-          });
-      } else {
-        // if item already rated by this user
-        response = await model
-          .findOneAndUpdate(
-            { userId: req.user.id, [idStr]: id },
-            {
-              $set: {
-                [dollarStr]: { id, rating, status }
-              }
-            },
-            { upsert: true, returnOriginal: false, new: true }
-          )
-          .populate({
-            path: idStr,
-            select: 'name'
-          });
-      }
-
-      res.json(response);
-    } catch (error) {
-      next(error);
-    }
-  },
   //Get array of items from DB by page
   async getAllItems(req, res, next, name, size) {
     try {
@@ -226,37 +147,22 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
-      let bookRating = BookRating.findOne({ userId: req.params.id }).populate({
-        path: !req.query.populate ? 'books' + '.id' : '',
-        select: 'name'
-      });
 
-      let movieRating = MovieRating.findOne({
-        userId: req.params.id
-      }).populate({
-        path: !req.query.populate ? 'movies' + '.id' : '',
-        select: 'name'
-      });
-      let musicRating = MusicRating.findOne({ userId: req.params.id }).populate({
-        path: !req.query.populate ? 'music' + '.id' : '',
-        select: 'name'
-      });
-      let courseRating = CourseRating.findOne({
-        userId: req.params.id
-      }).populate({
-        path: !req.query.populate ? 'courses' + '.id' : '',
-        select: 'name'
-      });
+      let bookRating = BookRating.find({ userId: req.params.id });
+      let movieRating = MovieRating.find({ userId: req.params.id });
+      let musicRating = MusicRating.find({ userId: req.params.id });
+      let courseRating = CourseRating.find({ userId: req.params.id });
+
       bookRating = await bookRating;
       movieRating = await movieRating;
       musicRating = await musicRating;
       courseRating = await courseRating;
-      console.log("hello")
+
       res.json({
-        books: bookRating ? bookRating.books : [],
-        movies: movieRating ? movieRating.movies : [],
-        courses: courseRating ? courseRating.courses : [],
-        music: musicRating ? musicRating.music : []
+        books: bookRating,
+        movies: movieRating ,
+        courses: courseRating,
+        music: musicRating
       });
     } catch (error) {
       next(error);
