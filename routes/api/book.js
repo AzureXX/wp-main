@@ -55,17 +55,6 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'books');
 });
 
-//@route   POST api/book/rate
-//@desc    Rates book
-//@access  Private
-router.post(
-  '/rate',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    await requests.setRating(req, res, next, 'books');
-  }
-);
-
 router.post(
   '/google',
   passport.authenticate('jwt', { session: false }),

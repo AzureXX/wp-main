@@ -26,6 +26,8 @@ app.use(passport.initialize());
 //Passport Config
 require("./config/passport.js")(passport);
 
+//Actions route
+const actionsRoute = require("./routes/api/actions")
 //Require routes
 const authRoute = require("./routes/api/auth");
 const userRoute = require("./routes/api/user");
@@ -63,6 +65,7 @@ app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/actions", actionsRoute);
 app.use("/api/book", bookRoute);
 app.use("/api/music", musicRoute);
 app.use("/api/course", courseRoute);

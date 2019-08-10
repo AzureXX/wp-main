@@ -56,16 +56,7 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'movies');
 });
 
-//@route   POST api/movie/rate
-//@desc    Rates movie
-//@access  Private
-router.post(
-  '/rate',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    await requests.setRating(req, res, next, 'movies');
-  }
-);
+
 
 router.post(
   '/tmdb',

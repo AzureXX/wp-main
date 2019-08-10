@@ -54,16 +54,7 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'subtopic');
 });
 
-//@route   POST api/education/subtopic/rate
-//@desc    Rates education subtopic
-//@access  Private
-router.post(
-  '/rate',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    await requests.setRating(req, res, next, 'subtopic');
-  }
-);
+
 
 //@route   POST api/education/subtopic/setstatus
 //@desc    Sets status for education subtopic

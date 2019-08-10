@@ -54,14 +54,5 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'people');
 });
 
-//@route   POST api/person/rate
-//@desc    Rates person
-//@access  Private
-router.post(
-  '/rate',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    await requests.setRating(req, res, next, 'people');
-  }
-);
+
 module.exports = router;

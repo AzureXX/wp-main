@@ -15,7 +15,6 @@ const searchOptions = regex => [
 router.get('/', async (req, res, next) => {
   try {
     const regex = new RegExp(req.query.search, 'i');
-    console.log(regex);
     const search = [
       { 'name.us': regex },
       { 'name.ru': regex },
