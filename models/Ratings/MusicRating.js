@@ -8,7 +8,7 @@ const MusicRatingSchema = new Schema({
   rating: Number,
   date: {
     type: Date,
-    default: new Date()
+    default: Date.now
   }
 });
 
