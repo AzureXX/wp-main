@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const PersonRatingSchema = new Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
+  person: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
   status: Number,
   rating: Number,
   date: {
