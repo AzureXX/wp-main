@@ -148,10 +148,22 @@ module.exports = {
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
 
-      let bookRating = BookRating.find({ userId: req.params.id }).populate({path: "book", select:"name"});
-      let movieRating = MovieRating.find({ userId: req.params.id }).populate({path: "movie", select:"name"});
-      let musicRating = MusicRating.find({ userId: req.params.id }).populate({path: "music", select:"name"});
-      let courseRating = CourseRating.find({ userId: req.params.id }).populate({path: "course", select:"name"});
+      let bookRating = BookRating.find({ userId: req.params.id }).populate({
+        path: 'book',
+        select: 'name'
+      });
+      let movieRating = MovieRating.find({ userId: req.params.id }).populate({
+        path: 'movie',
+        select: 'name'
+      });
+      let musicRating = MusicRating.find({ userId: req.params.id }).populate({
+        path: 'music',
+        select: 'name'
+      });
+      let courseRating = CourseRating.find({ userId: req.params.id }).populate({
+        path: 'course',
+        select: 'name'
+      });
 
       bookRating = await bookRating;
       movieRating = await movieRating;
@@ -160,7 +172,7 @@ module.exports = {
 
       res.json({
         books: bookRating,
-        movies: movieRating ,
+        movies: movieRating,
         courses: courseRating,
         music: musicRating
       });
@@ -253,9 +265,15 @@ module.exports = {
       let subcategories = Subcategory.find(
         { userId: req.params.id },
         '-_id -__v'
-      );
-      let topics = Topic.find({ userId: req.params.id }, '-_id -__v');
-      let subtopics = Subtopic.find({ userId: req.params.id }, '-_id -__v');
+      ).populate({ path: 'subcategory', select: 'name' });
+      let topics = Topic.find({ userId: req.params.id }, '-_id -__v').populate({
+        path: 'topic',
+        select: 'name'
+      });
+      let subtopics = Subtopic.find(
+        { userId: req.params.id },
+        '-_id -__v'
+      ).populate({ path: 'subtopic', select: 'name' });
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
