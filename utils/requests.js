@@ -177,10 +177,10 @@ module.exports = {
       );
       const plural = transformation.getPlural(name);
 
-      const ratings = await itemRatingModel.findOne({ userId: req.user._id });
+      const ratings = await itemRatingModel.find({ userId: req.user._id });
       let rated = [];
       if (ratings) {
-        rated = ratings[plural].map(item => item.id);
+        rated = ratings.map(item => item[name]);
       }
 
       const items = await itemModel.find({ _id: { $nin: rated } });

@@ -18,13 +18,14 @@ router.post(
       let { rating, status, id } = req.body;
       const RecommendationModel = transformation.getRecommendationModel(type);
       const RatingModel = transformation.getRatingModel(type);
-      RecommendationModel.updateOne(
-        { userId: req.user.id },
-        { $pull: { [type]: { data: id } } }
-      ).exec();
-
+      
       const singular = transformation.getSingular(type);
-
+      if ((status !== 2 && status) || rating) {
+        RecommendationModel.updateOne(
+          { userId: req.user.id },
+          { $pull: { [type]: { data: id } } }
+        ).exec();
+      }
       if (status === 2) {
         await RatingModel.deleteOne({
           userId: req.user.id,
@@ -33,21 +34,33 @@ router.post(
       } else {
         if (rating) status = 0;
         else if (status) rating = 0;
-        await RatingModel.updateOne(
-          { userId: req.user.id, [singular]: id },
-          {
-            userId: req.user.id,
-            [singular]: id,
-            rating: parseInt(rating),
-            status: parseInt(status)
-          },
-          { upsert: true }
-        );
+        if(status == 0 && !rating) {
+          await RatingModel.updateOne(
+            { userId: req.user.id, [singular]: id },
+            {
+              userId: req.user.id,
+              [singular]: id,
+              status: parseInt(status, 10)
+            },
+            { upsert: true }
+          );
+        } else {
+          await RatingModel.updateOne(
+            { userId: req.user.id, [singular]: id },
+            {
+              userId: req.user.id,
+              [singular]: id,
+              rating: parseInt(rating, 10),
+              status: parseInt(status, 10)
+            },
+            { upsert: true }
+          );
+        }
+        
       }
       const response = await RatingModel.find({userId: req.user.id}).populate({path: singular, select:"name"})
       res.json(response)
     } catch (error) {
-      console.log(error)
       next(error);
     }
   }
