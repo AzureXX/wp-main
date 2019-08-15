@@ -61,7 +61,6 @@ router.post(
   roles.isAdmin,
   async (req, res, next) => {
     try {
-      console.log(req.body)
       if(!req.body.id) throw new Error("You need ID")
       const response = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/'+ req.body.id

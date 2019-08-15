@@ -10,7 +10,6 @@ module.exports = {
       const select = req.query.select ? req.query.select : '';
       const only = req.query.only ? req.query.only : '';
       const filter = {};
-      console.log(req.query.filter);
       if (req.query.filter) {
         filterJSON = JSON.parse(req.query.filter);
 
@@ -36,8 +35,6 @@ module.exports = {
             })
           : null;
       }
-
-      console.log(filter);
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
         .find(filter, only)
@@ -71,7 +68,6 @@ module.exports = {
       const deep =
         req.query.deeppopulate ||
         'categories subcategories topics subtopics courses';
-      console.log('populate', populate);
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
@@ -132,6 +128,11 @@ module.exports = {
   async getUserRatingList(req, res, next, type) {
     try {
       const Model = transformation.getRatingModel(type);
+      if(!validation.mongooseId(req.params.id)) {
+        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
+        if(!user) throw new Error("No such user")
+        req.params.id = user._id;
+      }
       const ratings = await Model.findOne({ userId: req.params.id }).populate({
         path: !req.query.populate ? type + '.id' : '',
         select: 'name'
@@ -147,7 +148,12 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
-
+    
+      if(!validation.mongooseId(req.params.id)) {
+        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
+        if(!user) throw new Error("No such user")
+        req.params.id = user._id;
+      }
       let bookRating = BookRating.find({ userId: req.params.id }).populate({
         path: 'book',
         select: 'name'
@@ -249,6 +255,11 @@ module.exports = {
   async getUserEducationStatus(req, res, next, type) {
     try {
       const EducationStatusModel = transformation.getEducationStatusModel(type);
+      if(!validation.mongooseId(req.params.id)) {
+        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
+        if(!user) throw new Error("No such user")
+        req.params.id = user._id;
+      }
       const statuses = await EducationStatusModel.find({
         userId: req.params.id
       });
@@ -262,6 +273,12 @@ module.exports = {
       const Subcategory = transformation.getEducationStatusModel('subcategory');
       const Topic = transformation.getEducationStatusModel('topic');
       const Subtopic = transformation.getEducationStatusModel('subtopic');
+      if(!validation.mongooseId(req.params.id)) {
+        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
+        if(!user) throw new Error("No such user")
+        req.params.id = user._id;
+      }
+
       let subcategories = Subcategory.find(
         { userId: req.params.id },
         '-_id -__v'
@@ -292,8 +309,7 @@ module.exports = {
         creator: user,
         users: { $in: req.user._id }
       });
-      console.log(req.user.id);
-      console.log(accessGroups);
+      
     } catch (error) {
       next(error);
     }

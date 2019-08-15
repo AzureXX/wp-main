@@ -468,11 +468,9 @@ module.exports = {
     }
   },
   async getAccessOptions(user, viewer) {
-    console.log();
     const { generalAccessOptions } = await User.findById(
       user,
       'generalAccessOptions'
     );
-    console.log(generalAccessOptions);
   }
 };
