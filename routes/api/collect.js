@@ -10,17 +10,18 @@ router.get(
   '/initial',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    let bookRatings = BookRating.findOne({ userId: req.user.id });
-    let movieRatings = MovieRating.findOne({ userId: req.user.id });
+    let bookRatings = BookRating.find({ userId: req.user.id });
+    let movieRatings = MovieRating.find({ userId: req.user.id });
     bookRatings = await bookRatings;
     movieRatings = await movieRatings;
+    
     let ratedBooks = [];
     if (bookRatings) {
-      ratedBooks = bookRatings['books'].map(item => item.id);
+      ratedBooks = bookRatings.map(item => item.book);
     }
     let ratedMovies = [];
     if (movieRatings) {
-      ratedMovies = movieRatings['movies'].map(item => item.id);
+      ratedMovies = movieRatings.map(item => item.movie);
     }
 
     let books = Book.find({ _id: { $nin: ratedBooks } }).limit(5);
