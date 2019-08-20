@@ -130,7 +130,7 @@ router.put(
             : req.user.phoneNumber
         }
       );
-      return res.status(200).json(user);
+      return res.status(200).json("success");
     } catch (error) {
       return next(error);
     }
