@@ -1,9 +1,7 @@
 const express = require("express");
-const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
 const passport = require("passport");
-const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
@@ -60,7 +58,6 @@ const searchRoute = require("./routes/api/search");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth", authRoute);

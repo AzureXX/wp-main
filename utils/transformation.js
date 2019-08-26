@@ -42,7 +42,8 @@ const Questionnaire = require('../models/Questionnaire');
 const Vacancy = require('../models/Vacancy');
 
 const AccessGroup = require('../models/AccessGroup');
-
+const Message = require("../models/Message");
+const Notification = require("../models/Notification");
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -102,6 +103,10 @@ module.exports = {
         return this.getAccessGroupObject(req);
       case 'task':
         return this.getTaskObject(req);
+      case 'message':
+        return this.getMessageObject(req.body);
+      case 'notification':
+        return this.getNotificationObject(req.body);     
     }
   },
   getBookObject(body) {
@@ -321,6 +326,22 @@ module.exports = {
       status: status
     };
   },
+  getMessageObject(body) {
+    const { to, text } = body;
+    return {
+      text: this.multi(text),
+      to: this.strToArr(to, true),
+      date: Date.now()
+    };
+  },
+  getNotificationObject(body) {
+    const { to, text } = body;
+    return {
+      text: this.multi(text),
+      to: this.strToArr(to, true),
+      date: Date.now()
+    };
+  },
   getOffset(page, size) {
     page = parseInt(page);
     if (isNaN(page)) page = 1;
@@ -373,6 +394,12 @@ module.exports = {
       case 'task':
       case 'tasks':
         return Task;
+      case 'message':
+      case 'messages':
+        return Message;
+      case 'notification':
+      case 'notifications':
+        return Message;      
       default:
         return null;
     }
