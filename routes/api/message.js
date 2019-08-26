@@ -44,7 +44,7 @@ router.delete(
 //@desc    Get all message by page
 //@access  Public
 router.get('/get/all/:page?',  async (req, res, next) => {
-  await requests.getAllItems(req, res, next, 'message', 20);
+  await requests.getAllItems(req, res, next, 'messages', 20);
 });
 
 //@route   GET api/message/get/id/:id
