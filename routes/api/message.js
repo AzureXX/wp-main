@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
 const requests = require('../../utils/requests');
-
+const Message = require("../../models/Message")
 //@route   POST api/message/add
 //@desc    Adds new message to database
 //@access  Private/Moderator
@@ -57,6 +57,13 @@ router.get('/get/id/:id',  async (req, res, next) => {
 //@route   GET api/message/get/current
 //@desc    Get messages for current user
 //@access  Public
-
+router.get("/get/current", passport.authenticate('jwt', { session: false }), async (req,res,next) => {
+  try {
+    const messages = await Message.find({$or : [{all: true}, {to: req.user.id}]})
+    res.json(messages)
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = router;
