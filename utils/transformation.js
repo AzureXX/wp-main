@@ -327,11 +327,12 @@ module.exports = {
     };
   },
   getMessageObject(body) {
-    const { to, text } = body;
+    const { to, text, all } = body;
     return {
       text: this.multi(text),
-      to: this.strToArr(to, true),
-      date: Date.now()
+      to: all ? null : this.strToArr(to, true),
+      date: Date.now(),
+      all: !!all
     };
   },
   getNotificationObject(body) {

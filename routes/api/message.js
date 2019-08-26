@@ -54,8 +54,8 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'messages');
 });
 
-//@route   GET api/course/get/id/:id
-//@desc    Get course by id
+//@route   GET api/message/get/current
+//@desc    Get messages for current user
 //@access  Public
 
 

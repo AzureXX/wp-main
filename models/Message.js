@@ -9,7 +9,8 @@ const MessageSchema = new Schema({
     ru: String,
     az: String
   },
-  date: Date
+  date: Date,
+  all: Boolean
 });
 
 const Message = mongoose.model('Message', MessageSchema);

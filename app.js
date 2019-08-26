@@ -55,6 +55,9 @@ const recommendationsPersonRoute = require("./routes/api/recommendations/person"
 
 const collectRoute = require('./routes/api/collect')
 const searchRoute = require("./routes/api/search");
+
+const messageRoute = require("./routes/api/message");
+const notificationRoute = require("./routes/api/notification");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -91,7 +94,8 @@ app.use("/api/collect", collectRoute);
 
 
 app.use("/api/search", searchRoute);
-
+app.use("/api/message", messageRoute);
+app.use("/api/notification", notificationRoute);
 app.use("/api/files", require("./routes/api/files"));
 app.use((err, req, res, next) => {
     res.status(500);
