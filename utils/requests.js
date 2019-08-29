@@ -42,7 +42,7 @@ module.exports = {
         .limit(size)
         .populate({
           path: populate,
-          select: select,
+          select: select + " -password",
           populate: {
             path: 'categories subcategories topics subtopics courses'
           }
@@ -70,7 +70,7 @@ module.exports = {
         'categories subcategories topics subtopics courses';
       const item = await model.findById(id).populate({
         path: populate,
-        select: select,
+        select: select + " -password",
         populate: { path: deep }
       });
       if (!item) throw new Error(`No such ${name} exist`);
