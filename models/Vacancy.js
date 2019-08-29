@@ -12,7 +12,10 @@ const VacancySchema = new Schema({
   workInfo:String,
   companyName: String,
   contactPerson: String,
-  topics:[mongoose.Schema.Types.ObjectId],
+  topics: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EducationTopic'
+  }],
   experience: String,
   salary: String,
   city: String,
