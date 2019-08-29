@@ -7,7 +7,8 @@ module.exports = {
     try {
       const model = transformation.getModel(name);
       const populate = req.query.populate ? req.query.populate : '';
-      const select = req.query.select ? req.query.select : '';
+      let select = req.query.select ? req.query.select : '';
+      if(select.match(/password/i)) select = "_id"
       const only = req.query.only ? req.query.only : '';
       const filter = {};
       if (req.query.filter) {
@@ -42,7 +43,7 @@ module.exports = {
         .limit(size)
         .populate({
           path: populate,
-          select: select + " -password",
+          select: select,
           populate: {
             path: 'categories subcategories topics subtopics courses'
           }
@@ -64,13 +65,14 @@ module.exports = {
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
-      const select = req.query.select ? req.query.select : '';
+      let select = req.query.select ? req.query.select : '';
+      if(select.match(/password/i)) select = "_id"
       const deep =
         req.query.deeppopulate ||
         'categories subcategories topics subtopics courses';
       const item = await model.findById(id).populate({
         path: populate,
-        select: select + " -password",
+        select: select,
         populate: { path: deep }
       });
       if (!item) throw new Error(`No such ${name} exist`);

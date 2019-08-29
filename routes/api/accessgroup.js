@@ -64,7 +64,7 @@ router.get(
     try {
       const response = await AccessGroup.findOne({ creator: req.user.id, _id: req.params.id }).populate({
         path: "users",
-        select: "-password"
+        select: "username"
       });
       res.json(response);
     } catch (error) {
