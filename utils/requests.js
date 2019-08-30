@@ -87,9 +87,9 @@ module.exports = {
       const model = transformation.getModel(name);
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
-      if (check) {
+      if (check && req.user.role !=="admin") {
         const item = await model.findById(req.params.id);
-        if (item.creator.toString() !== req.user.id && req.user.role !=="admin")
+        if (item.creator.toString() !== req.user.id )
           throw new Error('Not authorized');
       }
       await model.findByIdAndDelete(req.params.id);
@@ -104,8 +104,8 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
-      if (check) {
-        if (item.creator.toString() !== req.user.id || req.user.role !== "admin")
+      if (check && req.user.role !== "admin") {
+        if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
       const saved = await Model.findByIdAndUpdate(
