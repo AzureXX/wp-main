@@ -105,7 +105,7 @@ module.exports = {
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
       if (check) {
-        if (item.creator.toString() !== req.user.id)
+        if (item.creator.toString() !== req.user.id || req.user.role !== "admin")
           throw new Error('Not authorized');
       }
       const saved = await Model.findByIdAndUpdate(
