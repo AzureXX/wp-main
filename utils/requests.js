@@ -89,7 +89,7 @@ module.exports = {
         throw new Error('ID is not valid');
       if (check) {
         const item = await model.findById(req.params.id);
-        if (item.creator.toString() !== req.user.id)
+        if (item.creator.toString() !== req.user.id && req.user.role !=="admin")
           throw new Error('Not authorized');
       }
       await model.findByIdAndDelete(req.params.id);
