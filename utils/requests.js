@@ -11,13 +11,14 @@ module.exports = {
       if(select.match(/password/i)) select = "_id"
       const only = req.query.only ? req.query.only : '';
       const filter = {};
+      console.log(req.query.filter)
       if (req.query.filter) {
         filterJSON = JSON.parse(req.query.filter);
 
         filterJSON.genres && filterJSON.genres.length > 0
           ? (filter.genres = { $all: filterJSON.genres })
           : null;
-
+        
         filterJSON.published &&
         filterJSON.published.start != null &&
         filterJSON.published.end != null
@@ -35,6 +36,14 @@ module.exports = {
               $lt: new Date(filterJSON.released.end + 1, 0, 1)
             })
           : null;
+
+        filterJSON.category
+        ? (filter.category = filterJSON.category)
+        : null;
+        
+        filterJSON.city
+        ? (filter.city = filterJSON.city)
+        : null;  
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
