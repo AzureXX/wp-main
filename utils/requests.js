@@ -11,7 +11,6 @@ module.exports = {
       if(select.match(/password/i)) select = "_id"
       const only = req.query.only ? req.query.only : '';
       const filter = {};
-      console.log(req.query.filter)
       if (req.query.filter) {
         filterJSON = JSON.parse(req.query.filter);
 
@@ -100,6 +99,14 @@ module.exports = {
         const item = await model.findById(req.params.id);
         if (item.creator.toString() !== req.user.id )
           throw new Error('Not authorized');
+      }
+      if(["book", "movie", "course", "person", "music"].includes(name)) {
+        const Rating = transformation.getRatingModel(name);
+        Rating.deleteMany({[name]: req.params.id}).exec();
+      }
+      if(["category", "subcategory", "topic", "subtopic"].includes(name)) {
+        const Status = transformation.getEducationStatusModel(name);
+        Status.deleteMany({[name]: req.params.id}).exec();
       }
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
