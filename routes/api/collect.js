@@ -5,16 +5,19 @@ const Book = require('../../models/Book');
 const BookRating = require('../../models/Ratings/BookRating');
 const Movie = require('../../models/Movie');
 const MovieRating = require('../../models/Ratings/MovieRating');
-
+const Question = require("../../models/Question");
+const QuestionAnswer = require("../../models/QuestionAnswer");
 router.get(
   '/initial',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     let bookRatings = BookRating.find({ userId: req.user.id });
     let movieRatings = MovieRating.find({ userId: req.user.id });
+    let questionAnswers = QuestionAnswer.find({ userId: req.user.id });
     bookRatings = await bookRatings;
     movieRatings = await movieRatings;
-    
+    questionAnswers = await questionAnswers;
+
     let ratedBooks = [];
     if (bookRatings) {
       ratedBooks = bookRatings.map(item => item.book);
@@ -23,13 +26,18 @@ router.get(
     if (movieRatings) {
       ratedMovies = movieRatings.map(item => item.movie);
     }
+    let answeredQuestion = [];
+    if (questionAnswers) {
+      answeredQuestion = questionAnswers.map(item => item.question);
+    }
 
     let books = Book.find({ _id: { $nin: ratedBooks } }).limit(5);
     let movies = Movie.find({ _id: { $nin: ratedMovies } }).limit(5);
+    let questions = Question.find({ _id: { $nin: answeredQuestion } }).limit(5);
     books = await books;
     movies = await movies;
-    
-    res.json({books,movies})
+    questions = await questions
+    res.json({books,movies, questions})
   }
 );
 module.exports = router;

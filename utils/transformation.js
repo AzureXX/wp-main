@@ -276,7 +276,7 @@ module.exports = {
   getQuestionObject(body) {
     const { multiple, text, answers, tags } = body;
     return {
-      multiple,
+      multiple: !!multiple,
       text: this.multi(text),
       answers,
       tags

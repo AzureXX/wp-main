@@ -3,6 +3,9 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
 const requests = require('../../utils/requests');
+const transformation = require('../../utils/transformation');
+const Question = require("../../models/Question");
+const QuestionAnswer = require("../../models/QuestionAnswer");
 //@route   POST api/question/add
 //@desc    Adds new question to database
 //@access  Private/Moderator
@@ -35,22 +38,54 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, "question");
+    await requests.deleteItem(req, res, next, 'question');
   }
 );
 
 //@route   GET api/question/get/all/:page
 //@desc    Get all questions by page
 //@access  Public
-router.get('/get/all/:page?',  async (req, res, next) => {
+router.get('/get/all/:page?', async (req, res, next) => {
   await requests.getAllItems(req, res, next, 'questions', 20);
 });
 
 //@route   GET api/question/get/id/:id
 //@desc    Get question by id
 //@access  Public
-router.get('/get/id/:id',  async (req, res, next) => {
+router.get('/get/id/:id', async (req, res, next) => {
   await requests.getItem(req, res, next, 'questions');
 });
 
+//@route   POST api/question/answer
+//@desc    Answer to question
+//@access  Private
+router.post(
+  '/answer',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    try {
+      let { answers, question } = req.body
+      question = transformation.mongooseId(question);
+      console.log(question)
+      if(question == '000000000000000000000000') throw Error("Invalid question ID")
+      if(!answers) throw Error("No answer selected");
+      if(typeof answer === 'number' ) answer = [answer]
+      else if(typeof answer === 'string' && !isNaN(answer) ) answer = [parseInt(answer)]
+
+      if( answers.length === 0) {
+        await QuestionAnswer.deleteOne({userId: req.user.id, _id: question})
+      } else {
+        await QuestionAnswer.updateOne({ userId: req.user.id, question: question }, {
+          userId: req.user.id,
+          question: question,
+          answers: answers
+        },
+        { upsert: true })
+      }
+      res.json("success");
+    } catch (error) {
+      next(error)
+    }
+  }
+);
 module.exports = router;
