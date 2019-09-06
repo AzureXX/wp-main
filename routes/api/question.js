@@ -66,11 +66,11 @@ router.post(
     try {
       let { answers, question } = req.body
       question = transformation.mongooseId(question);
-      console.log(question)
       if(question == '000000000000000000000000') throw Error("Invalid question ID")
       if(!answers) throw Error("No answer selected");
-      if(typeof answer === 'number' ) answer = [answer]
-      else if(typeof answer === 'string' && !isNaN(answer) ) answer = [parseInt(answer)]
+      if(typeof answers === 'number' ) answer = [answers]
+      else if(typeof answers === 'string' && !isNaN(answers) ) answer = [parseInt(answers)]
+      else if (typeof answers === 'string' && !isNaN(answers)) throw Error("Invalid answer")
 
       if( answers.length === 0) {
         await QuestionAnswer.deleteOne({userId: req.user.id, _id: question})
