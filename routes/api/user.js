@@ -5,6 +5,7 @@ const User = require('../../models/User');
 const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcryptjs');
 const requests = require('../../utils/requests.js');
+const roles = require('../../utils/roles');
 
 //@route   GET api/user/current
 //@desc    Return current user's email and id
@@ -39,31 +40,33 @@ router.get(
 //@route   GET api/user/get/:username
 //@desc    Return user by username or id
 //@access  Public
-router.get('/get/:username', async (req, res, next) => {
+router.get('/get/:username', roles.isUser, async (req, res, next) => {
   try {
     const objId = new ObjectId(
       ObjectId.isValid(req.params.username)
         ? req.params.username
         : '123456789012'
     );
+
     const user = await User.findOne({
       $or: [{ username: req.params.username }, { _id: objId }]
     });
-
+    
     if (!user) throw new Error('No user found');
+    const access = await requests.getUserAccess(req,res,next,user);
     res.json({
-      email: user.email,
+      email: access.showEmail ? user.email : "No access",
       username: user.username,
       id: user.id,
       role: user.role,
       type: user.accountType,
-      firstname: user.firstname,
-      lastname: user.lastname,
+      firstname: access.showName ? user.firstname : "No ",
+      lastname: access.showName ? user.lastname : "access",
       description: user.description,
       country: user.country,
       city: user.city,
-      dob: user.dob,
-      phoneNumber: user.phoneNumber
+      dob:access.showDOB ?  user.dob : "No access",
+      phoneNumber: access.showPhone ?user.phoneNumber : "No access"
     });
   } catch (error) {
     return next(error);

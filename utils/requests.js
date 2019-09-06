@@ -322,12 +322,41 @@ module.exports = {
     try {
       const User = transformation.getModel('user');
       const AccessModel = transformation.getModel('accessgroup');
-      const userData = User.findById(user);
-      const accessGroups = AccessModel.find({
+      if(!req.user) return user.generalAccessOptions;
+      const accessGroups = await AccessModel.find({
         creator: user,
         users: { $in: req.user._id }
       });
+      if(accessGroups.length === 0) return user.generalAccessOptions;
+      return accessGroups.reduce((a,b) => ({
+          showEmail: a.showEmail || b.options.showEmail,
+          showPhone: a.showPhone || b.options.showPhone,
+          showName: a.showName || b.options.showName,
+          showDOB: a.showDOB || b.options.showDOB,
+          showBookStatus: a.showBookStatus || b.options.showBookStatus,
+          showBookRating: a.showBookRating || b.options.showBookRating,
+          showMovieStatus: a.showMovieStatus || b.options.showMovieStatus,
+          showMovieRating: a.showMovieRating || b.options.showMovieRating,
+          showCourseStatus: a.showCourseStatus || b.options.showCourseStatus,
+          showCourseRating: a.showCourseRating || b.options.showCourseRating,
+          showEducationStatus: a.showEducationStatus || b.options.showEducationStatus,
+          giveTasks: a.giveTasks || b.options.giveTasks
+        }), {
+          showEmail: false,
+          showPhone: false,
+          showName: false,
+          showDOB: false,
+          showBookStatus: false,
+          showBookRating: false,
+          showMovieStatus: false,
+          showMovieRating: false,
+          showCourseStatus: false,
+          showCourseRating: false,
+          showEducationStatus: false,
+          giveTasks: false
+        });
       
+
     } catch (error) {
       next(error);
     }
