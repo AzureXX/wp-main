@@ -82,7 +82,7 @@ router.post(
         },
         duration: response.data.runtime,
         img: {
-          us: 'https://image.tmdb.org/t/p/original/' + response.data.poster_path
+          us: 'https://image.tmdb.org/t/p/w300/' + response.data.poster_path
         },
         released: response.data.release_date,
         genres: response.data.genres.map(genre => genre.name.toLowerCase())
