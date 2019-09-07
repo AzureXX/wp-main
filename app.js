@@ -6,8 +6,9 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const app = express();
+const compression = require('compression');
 
-
+app.use(compression())
 app.use(helmet())
 mongoose
     .connect(process.env.MONGO_URI, {
