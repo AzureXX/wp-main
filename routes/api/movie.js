@@ -85,7 +85,8 @@ router.post(
           us: 'https://image.tmdb.org/t/p/w300/' + response.data.poster_path
         },
         released: response.data.release_date,
-        genres: response.data.genres.map(genre => genre.name.toLowerCase())
+        genres: response.data.genres.map(genre => genre.name.toLowerCase()),
+        tags: response.data.genres.map(genre => ({name: genre.name.toLowerCase(), level: 1}))
       });
       const movie = await newMovie.save();
       res.json(movie)
