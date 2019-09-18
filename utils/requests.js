@@ -8,7 +8,7 @@ module.exports = {
       const model = transformation.getModel(name);
       const populate = req.query.populate ? req.query.populate : '';
       let select = req.query.select ? req.query.select : '';
-      if(select.match(/password/i)) select = "_id"
+      if (select.match(/password/i)) select = '_id';
       const only = req.query.only ? req.query.only : '';
       const filter = {};
       if (req.query.filter) {
@@ -17,7 +17,7 @@ module.exports = {
         filterJSON.genres && filterJSON.genres.length > 0
           ? (filter.genres = { $all: filterJSON.genres })
           : null;
-        
+
         filterJSON.published &&
         filterJSON.published.start != null &&
         filterJSON.published.end != null
@@ -36,13 +36,9 @@ module.exports = {
             })
           : null;
 
-        filterJSON.category
-        ? (filter.category = filterJSON.category)
-        : null;
-        
-        filterJSON.city
-        ? (filter.city = filterJSON.city)
-        : null;  
+        filterJSON.category ? (filter.category = filterJSON.category) : null;
+
+        filterJSON.city ? (filter.city = filterJSON.city) : null;
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
@@ -74,7 +70,7 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       let select = req.query.select ? req.query.select : '';
-      if(select.match(/password/i)) select = "_id"
+      if (select.match(/password/i)) select = '_id';
       const deep =
         req.query.deeppopulate ||
         'categories subcategories topics subtopics courses';
@@ -95,18 +91,18 @@ module.exports = {
       const model = transformation.getModel(name);
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
-      if (check && req.user.role !=="admin") {
+      if (check && req.user.role !== 'admin') {
         const item = await model.findById(req.params.id);
-        if (item.creator.toString() !== req.user.id )
+        if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
-      if(["book", "movie", "course", "person", "music"].includes(name)) {
+      if (['book', 'movie', 'course', 'person', 'music'].includes(name)) {
         const Rating = transformation.getRatingModel(name);
-        Rating.deleteMany({[name]: req.params.id}).exec();
+        Rating.deleteMany({ [name]: req.params.id }).exec();
       }
-      if(["category", "subcategory", "topic", "subtopic"].includes(name)) {
+      if (['category', 'subcategory', 'topic', 'subtopic'].includes(name)) {
         const Status = transformation.getEducationStatusModel(name);
-        Status.deleteMany({[name]: req.params.id}).exec();
+        Status.deleteMany({ [name]: req.params.id }).exec();
       }
       await model.findByIdAndDelete(req.params.id);
       res.json('Success');
@@ -120,7 +116,7 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
-      if (check && req.user.role !== "admin") {
+      if (check && req.user.role !== 'admin') {
         if (item.creator.toString() !== req.user.id)
           throw new Error('Not authorized');
       }
@@ -146,9 +142,11 @@ module.exports = {
   async getUserRatingList(req, res, next, type) {
     try {
       const Model = transformation.getRatingModel(type);
-      if(!validation.mongooseId(req.params.id)) {
-        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
-        if(!user) throw new Error("No such user")
+      if (!validation.mongooseId(req.params.id)) {
+        const user = await transformation
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id');
+        if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
       const ratings = await Model.findOne({ userId: req.params.id }).populate({
@@ -166,10 +164,12 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
-    
-      if(!validation.mongooseId(req.params.id)) {
-        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
-        if(!user) throw new Error("No such user")
+
+      if (!validation.mongooseId(req.params.id)) {
+        const user = await transformation
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id');
+        if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
       let bookRating = BookRating.find({ userId: req.params.id }).populate({
@@ -240,17 +240,38 @@ module.exports = {
   },
   async updateVacancyRecommendations(req, res, next) {
     try {
-      res.json('Hello')
-     } catch (error) {
-       next(error)
-     }
+      res.json('Hello');
+    } catch (error) {
+      next(error);
+    }
   },
   async updateEducationRecommendations(req, res, next) {
-   try {
-    res.json('Hello')
-   } catch (error) {
-     next(error)
-   }
+    try {
+      const Education = transformation.getRecommendationModel('education');
+      const Category = transformation.getModel('category');
+      const Subcategory = transformation.getModel('subcategory');
+      const Topic = transformation.getModel('topic');
+      const Subtopic = transformation.getModel('subtopic');
+
+      const [categories, subcategories, topics, subtopics] = await Promise.all([
+        Category.find(),
+        Subcategory.find(),
+        Topic.find(),
+        Subtopic.find()
+      ]);
+      const recs = await Education.findOneAndUpdate(
+        { userId: req.user.id },
+        { userId: req.user._id, categories, subcategories, topics, subtopics },
+        {
+          upsert: true,
+          returnOriginal: false,
+          new: true
+        }
+      );
+      res.json(recs);
+    } catch (error) {
+      next(error);
+    }
   },
   async getItemRecommendations(req, res, next, name) {
     try {
@@ -258,18 +279,19 @@ module.exports = {
         name
       );
       const plural = transformation.getPlural(name);
-      if(name === "education") {
+      if (name === 'education') {
         const recs = await itemRecommendationModel
-        .findOne({ userId: req.user.id })
-        .populate('categories.data subcategories.data topics.data subtopics.data');
+          .findOne({ userId: req.user.id })
+          .populate(
+            'categories.data subcategories.data topics.data subtopics.data'
+          );
         res.json(recs);
       } else {
         const recs = await itemRecommendationModel
-        .findOne({ userId: req.user.id })
-        .populate(plural + '.data');
+          .findOne({ userId: req.user.id })
+          .populate(plural + '.data');
         res.json(recs);
       }
-      
     } catch (error) {
       next(error);
     }
@@ -294,9 +316,11 @@ module.exports = {
   async getUserEducationStatus(req, res, next, type) {
     try {
       const EducationStatusModel = transformation.getEducationStatusModel(type);
-      if(!validation.mongooseId(req.params.id)) {
-        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
-        if(!user) throw new Error("No such user")
+      if (!validation.mongooseId(req.params.id)) {
+        const user = await transformation
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id');
+        if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
       const statuses = await EducationStatusModel.find({
@@ -312,9 +336,11 @@ module.exports = {
       const Subcategory = transformation.getEducationStatusModel('subcategory');
       const Topic = transformation.getEducationStatusModel('topic');
       const Subtopic = transformation.getEducationStatusModel('subtopic');
-      if(!validation.mongooseId(req.params.id)) {
-        const user = await transformation.getModel('user').findOne({username: req.params.id}, "_id")
-        if(!user) throw new Error("No such user")
+      if (!validation.mongooseId(req.params.id)) {
+        const user = await transformation
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id');
+        if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
 
@@ -343,13 +369,14 @@ module.exports = {
     try {
       const User = transformation.getModel('user');
       const AccessModel = transformation.getModel('accessgroup');
-      if(!req.user) return user.generalAccessOptions;
+      if (!req.user) return user.generalAccessOptions;
       const accessGroups = await AccessModel.find({
         creator: user,
         users: { $in: req.user._id }
       });
-      if(accessGroups.length === 0) return user.generalAccessOptions;
-      return accessGroups.reduce((a,b) => ({
+      if (accessGroups.length === 0) return user.generalAccessOptions;
+      return accessGroups.reduce(
+        (a, b) => ({
           showEmail: a.showEmail || b.options.showEmail,
           showPhone: a.showPhone || b.options.showPhone,
           showName: a.showName || b.options.showName,
@@ -360,9 +387,11 @@ module.exports = {
           showMovieRating: a.showMovieRating || b.options.showMovieRating,
           showCourseStatus: a.showCourseStatus || b.options.showCourseStatus,
           showCourseRating: a.showCourseRating || b.options.showCourseRating,
-          showEducationStatus: a.showEducationStatus || b.options.showEducationStatus,
+          showEducationStatus:
+            a.showEducationStatus || b.options.showEducationStatus,
           giveTasks: a.giveTasks || b.options.giveTasks
-        }), {
+        }),
+        {
           showEmail: false,
           showPhone: false,
           showName: false,
@@ -375,9 +404,8 @@ module.exports = {
           showCourseRating: false,
           showEducationStatus: false,
           giveTasks: false
-        });
-      
-
+        }
+      );
     } catch (error) {
       next(error);
     }
@@ -461,5 +489,4 @@ module.exports = {
       next(error);
     }
   }
-
 };
