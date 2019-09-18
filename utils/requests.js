@@ -281,9 +281,9 @@ module.exports = {
       const plural = transformation.getPlural(name);
       if (name === 'education') {
         const recs = await itemRecommendationModel
-          .findOne({ userId: req.user.id })
+          .findOne({ userId: req.user.id }, "categories subcategories topics subtopics")
           .populate(
-            'categories.data subcategories.data topics.data subtopics.data'
+            'categories.data subcategories.data topics.data subtopics.data '
           );
         res.json(recs);
       } else {
