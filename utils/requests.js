@@ -253,12 +253,16 @@ module.exports = {
       const Topic = transformation.getModel('topic');
       const Subtopic = transformation.getModel('subtopic');
 
-      const [categories, subcategories, topics, subtopics] = await Promise.all([
+      let [categories, subcategories, topics, subtopics] = await Promise.all([
         Category.find(),
         Subcategory.find(),
         Topic.find(),
         Subtopic.find()
       ]);
+      categories = categories.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      subcategories = subcategories.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      topics = topics.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      subtopics = subtopics.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
       const recs = await Education.findOneAndUpdate(
         { userId: req.user.id },
         { userId: req.user._id, categories, subcategories, topics, subtopics },
@@ -281,15 +285,18 @@ module.exports = {
       const plural = transformation.getPlural(name);
       if (name === 'education') {
         const recs = await itemRecommendationModel
-          .findOne({ userId: req.user.id }, "categories subcategories topics subtopics")
-          .populate(
-            'categories.data subcategories.data topics.data subtopics.data '
+          .findOne({ userId: req.user.id })
+          .populate({
+            path: 'categories.data subcategories.data topics.data subtopics.data',
+            select: "name icon"
+          }
+            
           );
         res.json(recs);
       } else {
         const recs = await itemRecommendationModel
           .findOne({ userId: req.user.id })
-          .populate(plural + '.data');
+          .populate({path:plural + '.data', select: "name description img"});
         res.json(recs);
       }
     } catch (error) {
