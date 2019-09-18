@@ -53,6 +53,8 @@ const recommendationsMusicRoute = require("./routes/api/recommendations/music");
 
 const recommendationsCourseRoute = require("./routes/api/recommendations/course");
 const recommendationsPersonRoute = require("./routes/api/recommendations/person");
+const recommendationsEducationRoute = require("./routes/api/recommendations/education");
+const recommendationsVacancyRoute = require("./routes/api/recommendations/vacancy");
 
 const collectRoute = require('./routes/api/collect')
 const searchRoute = require("./routes/api/search");
@@ -89,7 +91,8 @@ app.use("/api/recommendations/music", recommendationsMusicRoute);
 
 app.use("/api/recommendations/course", recommendationsCourseRoute);
 app.use("/api/recommendations/person", recommendationsPersonRoute);
-
+app.use("/api/recommendations/education", recommendationsEducationRoute);
+app.use("/api/recommendations/vacancy", recommendationsVacancyRoute);
 
 app.use("/api/collect", collectRoute);
 

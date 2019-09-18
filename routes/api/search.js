@@ -32,42 +32,42 @@ router.get('/', async (req, res, next) => {
       {
         $or: search
       },
-      'name'
+      'name img'
     ).limit(20);
     let subcategories = Subcategory.find(
       {
         $or: search
       },
-      'name'
+      'name img'
     ).limit(20);
     let topics = Topic.find(
       {
         $or: search
       },
-      'name'
+      'name img'
     ).limit(20);
     let subtopics = Subtopic.find(
       {
         $or: search
       },
-      'name'
+      'name img'
     ).limit(20);
 
     let books = Book.find({
       $or: search
-    }).limit(20);
+    },'name img description').limit(20);
     let movies = Movie.find({
       $or: search
-    }).limit(20);
+    },'name img description').limit(20);
     let courses = Course.find({
       $or: search
-    }).limit(20);
+    }, 'name img description').limit(20);
     let people = Person.find({
       $or: search
-    }).limit(20);
+    }, 'name img description').limit(20);
     let music = Music.find({
       name: regex
-    }).limit(20);
+    },'name img').limit(20);
     categories = await categories;
     subcategories = await subcategories;
     topics = await topics;
