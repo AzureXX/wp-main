@@ -6,28 +6,28 @@ const EducationRecommendationSchema = new Schema({
   categories: [
     {
       _id: false,
-      data: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationCategory' },
       points: Number
     }
   ],
   subcategories: [
     {
       _id: false,
-      data: { type: mongoose.Schema.Types.ObjectId, ref: 'Subcategory' },
+      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubcategory' },
       points: Number
     }
   ],
   topics: [
     {
       _id: false,
-      data: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic' },
+      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationTopic' },
       points: Number
     }
   ],
   subbtopics: [
     {
       _id: false,
-      data: { type: mongoose.Schema.Types.ObjectId, ref: 'Subtopic' },
+      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubtopic' },
       points: Number
     }
   ]
