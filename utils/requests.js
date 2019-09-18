@@ -240,7 +240,20 @@ module.exports = {
   },
   async updateVacancyRecommendations(req, res, next) {
     try {
-      res.json('Hello');
+      const VacancyRecommendation = transformation.getRecommendationModel('vacancy');
+      const Vacancy = transformation.getModel('vacancy');
+      let vacancies = await Vacancy.find();
+      vacancies = vacancies.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      const recs = await VacancyRecommendation.findOneAndUpdate(
+        { userId: req.user.id },
+        { userId: req.user._id, vacancies },
+        {
+          upsert: true,
+          returnOriginal: false,
+          new: true
+        }
+      );
+      res.json(recs)
     } catch (error) {
       next(error);
     }
