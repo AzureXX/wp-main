@@ -33,6 +33,8 @@ const MovieRecommendation = require('../models/Recommendations/MovieRecommendati
 const CourseRecommendation = require('../models/Recommendations/CourseRecommendation');
 const PersonRecommendation = require('../models/Recommendations/PersonRecommendation');
 const MusicRecommendation = require('../models/Recommendations/MusicRecommendation');
+const EducationRecommendation = require('../models/Recommendations/EducationRecommendation');
+const VacancyRecommendation = require('../models/Recommendations/VacancyRecommendation');
 
 //Questions Models
 const Question = require('../models/Question');
@@ -42,8 +44,8 @@ const Questionnaire = require('../models/Questionnaire');
 const Vacancy = require('../models/Vacancy');
 
 const AccessGroup = require('../models/AccessGroup');
-const Message = require("../models/Message");
-const Notification = require("../models/Notification");
+const Message = require('../models/Message');
+const Notification = require('../models/Notification');
 module.exports = {
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
@@ -106,7 +108,7 @@ module.exports = {
       case 'message':
         return this.getMessageObject(req.body);
       case 'notification':
-        return this.getNotificationObject(req.body);     
+        return this.getNotificationObject(req.body);
     }
   },
   getBookObject(body) {
@@ -400,7 +402,7 @@ module.exports = {
         return Message;
       case 'notification':
       case 'notifications':
-        return Message;      
+        return Message;
       default:
         return null;
     }
@@ -441,6 +443,11 @@ module.exports = {
       case 'people':
       case 'person':
         return PersonRecommendation;
+      case 'education':
+        return EducationRecommendation;
+      case 'vacancy':
+      case 'vacancies':
+        return VacancyRecommendation;
       default:
         return null;
     }
@@ -475,6 +482,10 @@ module.exports = {
         return 'people';
       case 'music':
         return 'music';
+      case 'vacancy':
+        return 'vacancies';
+      case 'education':
+        return 'education';
       default:
         return null;
     }

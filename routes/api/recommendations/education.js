@@ -10,7 +10,7 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    res.json("Hello")
+    await requests.getItemRecommendations(req,res,next, "education")
   }
 );
 
@@ -21,7 +21,7 @@ router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    res.json("Hello")
+    await requests.updateEducationRecommendations(req,res,next)
   }
 );
 

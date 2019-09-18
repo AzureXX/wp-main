@@ -238,17 +238,38 @@ module.exports = {
       next(error);
     }
   },
+  async updateVacancyRecommendations(req, res, next) {
+    try {
+      res.json('Hello')
+     } catch (error) {
+       next(error)
+     }
+  },
+  async updateEducationRecommendations(req, res, next) {
+   try {
+    res.json('Hello')
+   } catch (error) {
+     next(error)
+   }
+  },
   async getItemRecommendations(req, res, next, name) {
     try {
       const itemRecommendationModel = transformation.getRecommendationModel(
         name
       );
       const plural = transformation.getPlural(name);
-
-      const recs = await itemRecommendationModel
+      if(name === "education") {
+        const recs = await itemRecommendationModel
+        .findOne({ userId: req.user.id })
+        .populate('categories.data subcategories.data topics.data subtopics.data');
+        res.json(recs);
+      } else {
+        const recs = await itemRecommendationModel
         .findOne({ userId: req.user.id })
         .populate(plural + '.data');
-      res.json(recs);
+        res.json(recs);
+      }
+      
     } catch (error) {
       next(error);
     }
@@ -440,4 +461,5 @@ module.exports = {
       next(error);
     }
   }
+
 };
