@@ -252,7 +252,7 @@ module.exports = {
           returnOriginal: false,
           new: true
         }
-      );
+      ).populate('vacancies.data');
       res.json(recs)
     } catch (error) {
       next(error);
@@ -284,7 +284,10 @@ module.exports = {
           returnOriginal: false,
           new: true
         }
-      );
+      ).populate({
+        path: 'categories.data subcategories.data topics.data subtopics.data',
+        select: "name icon"
+      })
       res.json(recs);
     } catch (error) {
       next(error);
