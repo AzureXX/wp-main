@@ -309,7 +309,7 @@ module.exports = {
       } else {
         const recs = await itemRecommendationModel
           .findOne({ userId: req.user.id })
-          .populate({path:plural + '.data', select: "name description img position companyName"});
+          .populate({path:plural + '.data', select: "name description img position companyName salary"});
         res.json(recs);
       }
     } catch (error) {
