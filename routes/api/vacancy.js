@@ -58,7 +58,7 @@ router.get(
   async (req, res, next) => {
     try {
       const response = await Vacancy.find({ creator: req.user.id });
-      res.json(response);
+      return res.json(response);
     } catch (error) {
       next(error);
     }

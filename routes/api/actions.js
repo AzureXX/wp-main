@@ -59,7 +59,7 @@ router.post(
         
       }
       const response = await RatingModel.find({userId: req.user.id}).populate({path: singular, select:"name"})
-      res.json(response)
+      return res.json(response)
     } catch (error) {
       next(error);
     }

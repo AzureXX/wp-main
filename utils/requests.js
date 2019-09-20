@@ -53,7 +53,7 @@ module.exports = {
           }
         });
 
-      res.json({
+      return res.json({
         lastPage: items.length < size,
         [name]: items
       });
@@ -63,9 +63,6 @@ module.exports = {
   },
   async getItem(req, res, next, name) {
     try {
-      //const access = await this.getUserAccess(req,res,next,req.user.id);
-      //await transformation.getAccessOptions("5c70f92aaf6ed806320334f5")
-
       const model = transformation.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
@@ -81,7 +78,7 @@ module.exports = {
       });
       if (!item) throw new Error(`No such ${name} exist`);
 
-      res.json(item);
+      return res.json(item);
     } catch (error) {
       next(error);
     }
@@ -105,7 +102,7 @@ module.exports = {
         Status.deleteMany({ [name]: req.params.id }).exec();
       }
       await model.findByIdAndDelete(req.params.id);
-      res.json('Success');
+      return res.json('Success');
     } catch (error) {
       next(error);
     }
@@ -142,6 +139,7 @@ module.exports = {
   async getUserRatingList(req, res, next, type) {
     try {
       const Model = transformation.getRatingModel(type);
+      
       if (!validation.mongooseId(req.params.id)) {
         const user = await transformation
           .getModel('user')
@@ -149,11 +147,18 @@ module.exports = {
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
+
+      const access = await this.getUserAccess(req,res,next, req.params.id);
+      if(type === "book" && !access.showBookInfo) return res.json({ratings: []})
+      if(type === "movie" && !access.showMovieInfo) return res.json({ratings: []})
+      if(type === "music" && !access.showMusicInfo) return res.json({ratings: []})
+      if(type === "course" && !access.showCourseInfo) return res.json({ratings: []})
+
       const ratings = await Model.findOne({ userId: req.params.id }).populate({
         path: !req.query.populate ? type + '.id' : '',
         select: 'name'
       });
-      res.json(ratings);
+      return res.json(ratings);
     } catch (error) {
       next(error);
     }
@@ -164,7 +169,7 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
-      
+
       if (!validation.mongooseId(req.params.id)) {
         const user = await transformation
           .getModel('user')
@@ -173,31 +178,38 @@ module.exports = {
         req.params.id = user._id;
       }
 
-      const access = await this.getUserAccess(req,res,next, req.params.id)
-      
-      
-      let bookRating = (access.showBookRating || access.showBookStatus) && BookRating.find({ userId: req.params.id }).populate({
-        path: 'book',
-        select: 'name'
-      });
-      let movieRating = (access.showMovieRating || access.showMovieStatus) && MovieRating.find({ userId: req.params.id }).populate({
-        path: 'movie',
-        select: 'name'
-      });
-      let musicRating =  MusicRating.find({ userId: req.params.id }).populate({
-        path: 'music',
-        select: 'name'
-      });
-      let courseRating = (access.showCourseRating || access.showCourseStatus) && CourseRating.find({ userId: req.params.id }).populate({
-        path: 'course',
-        select: 'name'
-      });
+      const access = await this.getUserAccess(req, res, next, req.params.id);
+
+      let bookRating =
+        access.showBookInfo &&
+        BookRating.find({ userId: req.params.id }).populate({
+          path: 'book',
+          select: 'name'
+        });
+      let movieRating =
+        access.showMovieInfo &&
+        MovieRating.find({ userId: req.params.id }).populate({
+          path: 'movie',
+          select: 'name'
+        });
+      let musicRating =
+        access.showMusicInfo &&
+        MusicRating.find({ userId: req.params.id }).populate({
+          path: 'music',
+          select: 'name'
+        });
+      let courseRating =
+        access.showCourseInfo &&
+        CourseRating.find({ userId: req.params.id }).populate({
+          path: 'course',
+          select: 'name'
+        });
 
       bookRating = await bookRating;
       movieRating = await movieRating;
       musicRating = await musicRating;
       courseRating = await courseRating;
-      res.json({
+      return res.json({
         books: bookRating || [],
         movies: movieRating || [],
         courses: courseRating || [],
@@ -236,17 +248,24 @@ module.exports = {
           new: true
         })
         .populate(plural + '.data');
-      res.json(recs);
+      return res.json(recs);
     } catch (error) {
       next(error);
     }
   },
   async updateVacancyRecommendations(req, res, next) {
     try {
-      const VacancyRecommendation = transformation.getRecommendationModel('vacancy');
+      const VacancyRecommendation = transformation.getRecommendationModel(
+        'vacancy'
+      );
       const Vacancy = transformation.getModel('vacancy');
       let vacancies = await Vacancy.find();
-      vacancies = vacancies.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      vacancies = vacancies
+        .map(item => ({
+          data: item._id,
+          points: Math.floor(Math.random() * 10000)
+        }))
+        .sort((a, b) => b.points - a.points);
       const recs = await VacancyRecommendation.findOneAndUpdate(
         { userId: req.user.id },
         { userId: req.user._id, vacancies },
@@ -256,7 +275,7 @@ module.exports = {
           new: true
         }
       ).populate('vacancies.data');
-      res.json(recs)
+      return res.json(recs);
     } catch (error) {
       next(error);
     }
@@ -275,10 +294,30 @@ module.exports = {
         Topic.find(),
         Subtopic.find()
       ]);
-      categories = categories.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
-      subcategories = subcategories.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
-      topics = topics.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
-      subtopics = subtopics.map(item => ({data: item._id, points: Math.floor(Math.random() * 10000)})).sort((a, b) => b.points - a.points)
+      categories = categories
+        .map(item => ({
+          data: item._id,
+          points: Math.floor(Math.random() * 10000)
+        }))
+        .sort((a, b) => b.points - a.points);
+      subcategories = subcategories
+        .map(item => ({
+          data: item._id,
+          points: Math.floor(Math.random() * 10000)
+        }))
+        .sort((a, b) => b.points - a.points);
+      topics = topics
+        .map(item => ({
+          data: item._id,
+          points: Math.floor(Math.random() * 10000)
+        }))
+        .sort((a, b) => b.points - a.points);
+      subtopics = subtopics
+        .map(item => ({
+          data: item._id,
+          points: Math.floor(Math.random() * 10000)
+        }))
+        .sort((a, b) => b.points - a.points);
       const recs = await Education.findOneAndUpdate(
         { userId: req.user.id },
         { userId: req.user._id, categories, subcategories, topics, subtopics },
@@ -289,9 +328,9 @@ module.exports = {
         }
       ).populate({
         path: 'categories.data subcategories.data topics.data subtopics.data',
-        select: "name icon"
-      })
-      res.json(recs);
+        select: 'name icon'
+      });
+      return res.json(recs);
     } catch (error) {
       next(error);
     }
@@ -306,17 +345,19 @@ module.exports = {
         const recs = await itemRecommendationModel
           .findOne({ userId: req.user.id })
           .populate({
-            path: 'categories.data subcategories.data topics.data subtopics.data',
-            select: "name icon"
-          }
-            
-          );
-        res.json(recs);
+            path:
+              'categories.data subcategories.data topics.data subtopics.data',
+            select: 'name icon'
+          });
+        return res.json(recs);
       } else {
         const recs = await itemRecommendationModel
           .findOne({ userId: req.user.id })
-          .populate({path:plural + '.data', select: "name description img position companyName salary"});
-        res.json(recs);
+          .populate({
+            path: plural + '.data',
+            select: 'name description img position companyName salary'
+          });
+        return res.json(recs);
       }
     } catch (error) {
       next(error);
@@ -334,7 +375,7 @@ module.exports = {
         },
         { upsert: true }
       );
-      res.json('success');
+      return res.json('success');
     } catch (error) {
       next(error);
     }
@@ -342,6 +383,7 @@ module.exports = {
   async getUserEducationStatus(req, res, next, type) {
     try {
       const EducationStatusModel = transformation.getEducationStatusModel(type);
+      
       if (!validation.mongooseId(req.params.id)) {
         const user = await transformation
           .getModel('user')
@@ -349,10 +391,12 @@ module.exports = {
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
+      const access = await this.getUserAccess(req,res,next, req.params.id);
+      if(!access.showEducationInfo) return res.json({ stasuses: [] });
       const statuses = await EducationStatusModel.find({
         userId: req.params.id
       });
-      res.json(statuses);
+      return res.json(statuses);
     } catch (error) {
       next(error);
     }
@@ -362,6 +406,7 @@ module.exports = {
       const Subcategory = transformation.getEducationStatusModel('subcategory');
       const Topic = transformation.getEducationStatusModel('topic');
       const Subtopic = transformation.getEducationStatusModel('subtopic');
+      
       if (!validation.mongooseId(req.params.id)) {
         const user = await transformation
           .getModel('user')
@@ -369,6 +414,9 @@ module.exports = {
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
+
+      const access = await this.getUserAccess(req,res,next, req.params.id);
+      if(!access.showEducationInfo) return res.json({ subcategories: [], topics: [], subtopics: [] });
 
       let subcategories = Subcategory.find(
         { userId: req.params.id },
@@ -386,50 +434,51 @@ module.exports = {
       topics = await topics;
       subtopics = await subtopics;
 
-      res.json({ subcategories, topics, subtopics });
+      return res.json({ subcategories, topics, subtopics });
     } catch (error) {
       next(error);
     }
   },
   async getUserAccess(req, res, next, user) {
     try {
-      const User = transformation.getModel('user');
-      
+      const User = transformation.getModel("user")
       const AccessModel = transformation.getModel('accessgroup');
-      if (!req.user) return user.generalAccessOptions;
-      if(req.user._id.toString() === user.toString()) return {
-        showEmail: true,
-        showPhone: true,
-        showName: true,
-        showDOB: true,
-        showBookStatus: true,
-        showBookRating: true,
-        showMovieStatus: true,
-        showMovieRating: true,
-        showCourseStatus: true,
-        showCourseRating: true,
-        showEducationStatus: true,
-        giveTasks: true
+      if (!req.user) {
+        const data = await User.findById(user)
+        return data.generalAccessOptions;
       }
+      if (req.user._id.toString() === user.toString())
+        return {
+          showEmail: true,
+          showPhone: true,
+          showName: true,
+          showDOB: true,
+          showBookInfo: true,
+          showMovieInfo: true,
+          showMusicInfo: true,
+          showCourseInfo: true,
+          showEducationInfo: true,
+          giveTasks: true
+        };
       const accessGroups = await AccessModel.find({
         creator: user,
         users: { $in: req.user._id }
       });
-      if (accessGroups.length === 0) return user.generalAccessOptions;
+      if (accessGroups.length === 0) {
+        const data = await User.findById(user)
+        return data.generalAccessOptions;
+      }
       return accessGroups.reduce(
         (a, b) => ({
           showEmail: a.showEmail || b.options.showEmail,
           showPhone: a.showPhone || b.options.showPhone,
           showName: a.showName || b.options.showName,
           showDOB: a.showDOB || b.options.showDOB,
-          showBookStatus: a.showBookStatus || b.options.showBookStatus,
-          showBookRating: a.showBookRating || b.options.showBookRating,
-          showMovieStatus: a.showMovieStatus || b.options.showMovieStatus,
-          showMovieRating: a.showMovieRating || b.options.showMovieRating,
-          showCourseStatus: a.showCourseStatus || b.options.showCourseStatus,
-          showCourseRating: a.showCourseRating || b.options.showCourseRating,
-          showEducationStatus:
-            a.showEducationStatus || b.options.showEducationStatus,
+          showBookInfo: a.showBookInfo || b.options.showBookInfo,
+          showMovieInfo: a.showMovieInfo || b.options.showMovieInfo,
+          showMusicInfo: a.showMusicInfo || b.options.showMusicInfo,
+          showCourseInfo: a.showCourseInfo || b.options.showCourseInfo,
+          showEducationInfo: a.showEducationInfo || b.options.showEducationInfo,
           giveTasks: a.giveTasks || b.options.giveTasks
         }),
         {}
@@ -455,7 +504,7 @@ module.exports = {
         'user item',
         'name username'
       );
-      res.json(tasks);
+      return res.json(tasks);
     } catch (error) {
       next(error);
     }
@@ -467,7 +516,7 @@ module.exports = {
         'creator item',
         'name username'
       );
-      res.json(tasks);
+      return res.json(tasks);
     } catch (error) {
       next(error);
     }
@@ -490,7 +539,7 @@ module.exports = {
       } else {
         throw new Error('Not authorized');
       }
-      res.json('success');
+      return res.json('success');
     } catch (error) {
       next(error);
     }
@@ -512,7 +561,7 @@ module.exports = {
       } else {
         throw new Error('Not authorized');
       }
-      res.json('success');
+      return res.json('success');
     } catch (error) {
       next(error);
     }

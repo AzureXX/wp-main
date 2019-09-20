@@ -46,52 +46,44 @@ const UserSchema = new Schema({
     tags: [{_id: false, name:String, level: Number}],
     generalAccessOptions: {
         showEmail: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false
         },
         showPhone: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false
         },
         showName: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false
         },
         showDOB: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false
         },
-        showBookStatus: {
-            type: Boolean,
-            default: false
+        showBookInfo: {
+          type: Boolean,
+          default: false
         },
-        showBookRating: {
-            type: Boolean,
-            default: false
+        showMovieInfo: {
+          type: Boolean,
+          default: false
         },
-        showMovieStatus: {
+        showMusicInfo: {
             type: Boolean,
             default: false
+          },
+        showCourseInfo: {
+          type: Boolean,
+          default: false
         },
-        showMovieRating: {
-            type: Boolean,
-            default: false
-        },
-        showCourseStatus: {
-            type: Boolean,
-            default: false
-        },
-        showCourseRating: {
-            type: Boolean,
-            default: false
-        },
-        showEducationStatus: {
-            type: Boolean,
-            default: false
+        showEducationInfo: {
+          type: Boolean,
+          default: false
         },
         giveTasks: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false
         }
     }
 })

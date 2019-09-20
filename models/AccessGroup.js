@@ -21,31 +21,24 @@ const AccessGroupSchema = new Schema({
       type: Boolean,
       default: false
     },
-    showBookStatus: {
+    showBookInfo: {
       type: Boolean,
       default: false
     },
-    showBookRating: {
+    showMovieInfo: {
       type: Boolean,
       default: false
     },
-    showMovieStatus: {
+    showMusicInfo: {
       type: Boolean,
       default: false
     },
-    showMovieRating: {
+    showCourseInfo: {
       type: Boolean,
       default: false
     },
-    showCourseStatus: {
-      type: Boolean,
-      default: false
-    },
-    showCourseRating: {
-      type: Boolean,
-      default: false
-    },
-    showEducationStatus: {
+    
+    showEducationInfo: {
       type: Boolean,
       default: false
     },

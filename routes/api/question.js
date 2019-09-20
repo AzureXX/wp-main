@@ -82,7 +82,7 @@ router.post(
         },
         { upsert: true })
       }
-      res.json("success");
+      return res.json("success");
     } catch (error) {
       next(error)
     }

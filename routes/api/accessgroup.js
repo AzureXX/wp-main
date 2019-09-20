@@ -47,7 +47,7 @@ router.get(
   async (req, res, next) => {
     try {
       const response = await AccessGroup.find({ creator: req.user.id });
-      res.json(response);
+      return res.json(response);
     } catch (error) {
       next(error);
     }
@@ -66,7 +66,7 @@ router.get(
         path: "users",
         select: "username"
       });
-      res.json(response);
+      return res.json(response);
     } catch (error) {
       next(error);
     }

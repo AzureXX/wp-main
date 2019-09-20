@@ -12,7 +12,7 @@ const Notification = require("../../models/Notification")
 router.get("/get/current", passport.authenticate('jwt', { session: false }), async (req,res,next) => {
   try {
     const notifications = await Notification.find({$or : [{all: true}, {to: req.user.id}]})
-    res.json(notifications)
+    return res.json(notifications)
   } catch (error) {
     next(error)
   }

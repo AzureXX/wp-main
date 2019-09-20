@@ -299,17 +299,15 @@ module.exports = {
       name: name,
       users: this.strToArr(users.join(','), true),
       options: {
-        showEmail: !!showEmail,
-        showPhone: !!showPhone,
-        showName: !!showName,
-        showDOB: !!showDOB,
-        showBookStatus: !!req.body.showBookStatus,
-        showBookRating: !!req.body.showBookRating,
-        showMovieStatus: !!req.body.showMovieStatus,
-        showMovieRating: !!req.body.showMovieRating,
-        showCourseStatus: !!req.body.showCourseStatus,
-        showCourseRating: !!req.body.showCourseRating,
-        showEducationStatus: !!req.body.showEducationStatus,
+        showEmail: !!req.body.showEmail,
+        showPhone: !!req.body.showPhone,
+        showName: !!req.body.showName,
+        showDOB: !!req.body.showDOB,
+        showBookInfo: !!req.body.showBookInfo,
+        showMovieInfo: !!req.body.showMovieInfo,
+        showMusicInfo: !!req.body.showCourseInfo,
+        showCourseInfo: !!req.body.showCourseInfo,
+        showEducationInfo: !!req.body.showEducationInfo,
         giveTasks: !!req.body.giveTasks
       }
     };

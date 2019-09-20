@@ -89,7 +89,7 @@ router.post(
         tags: response.data.genres.map(genre => ({name: genre.name.toLowerCase(), level: 1}))
       });
       const movie = await newMovie.save();
-      res.json(movie)
+      return res.json(movie)
     } catch (error) {
       next(error);
     }

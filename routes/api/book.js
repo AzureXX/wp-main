@@ -81,7 +81,7 @@ router.post(
         }
       })
       const book = await newBook.save();
-      res.json(book)
+      return res.json(book)
     } catch (error) {
       next(error);
     }

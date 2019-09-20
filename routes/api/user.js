@@ -15,7 +15,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
-      res.json({
+      return res.json({
         email: req.user.email,
         username: req.user.username,
         id: req.user.id,
@@ -53,8 +53,8 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
     });
     
     if (!user) throw new Error('No user found');
-    const access = await requests.getUserAccess(req,res,next,user);
-    res.json({
+    const access = await requests.getUserAccess(req,res,next,user._id);
+    return res.json({
       email: access.showEmail ? user.email : "No access",
       username: user.username,
       id: user.id,
@@ -156,7 +156,7 @@ router.put(
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
         await User.findByIdAndUpdate(req.user.id, { password: hash });
-        res.json('Password was succesfully changed');
+        return res.json('Password was succesfully changed');
       } else {
         throw new Error('Old password is incorrect');
       }
@@ -202,7 +202,7 @@ router.get('/getrating/:type/:id',roles.isUser, async (req, res, next) => {
 //@route   GET api/user/getrating/:type/:id
 //@desc    Return user by username or id
 //@access  Public
-router.get('/getedustatus/:type/:id', async (req, res, next) => {
+router.get('/getedustatus/:type/:id',roles.isUser, async (req, res, next) => {
   if (req.params.type === 'all') {
     await requests.getUserEducationStatusAll(req, res, next);
   } else {
@@ -226,19 +226,17 @@ router.put(
             showPhone: !!req.body.showPhone,
             showName: !!req.body.showName,
             showDOB: !!req.body.showDOB,
-            showBookStatus: !!req.body.showBookStatus,
-            showBookRating: !!req.body.showBookRating,
-            showMovieStatus: !!req.body.showMovieStatus,
-            showMovieRating: !!req.body.showMovieRating,
-            showCourseStatus: !!req.body.showCourseStatus,
-            showCourseRating: !!req.body.showCourseRating,
-            showEducationStatus: !!req.body.showEducationStatus,
+            showBookInfo: !!req.body.showBookInfo,
+            showMovieInfo: !!req.body.showMovieInfo,
+            showMusicInfo: !!req.body.showCourseInfo,
+            showCourseInfo: !!req.body.showCourseInfo,
+            showEducationInfo: !!req.body.showEducationInfo,
             giveTasks: !!req.body.giveTasks
           }
         },
         { new: true }
       );
-      res.json(user);
+      return res.json(user);
     } catch (error) {
       next(error);
     }
@@ -254,7 +252,7 @@ router.put(
   async (req, res, next) => {
       try {
           await User.update({_id: req.user.id}, {emotion: req.body.emotion || "neutral"})
-          res.json("success")
+          return res.json("success")
       } catch (error) {
           next(error)
       }

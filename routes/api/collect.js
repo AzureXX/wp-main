@@ -37,7 +37,7 @@ router.get(
     books = await books;
     movies = await movies;
     questions = await questions
-    res.json({books,movies, questions})
+    return res.json({books,movies, questions})
   }
 );
 module.exports = router;

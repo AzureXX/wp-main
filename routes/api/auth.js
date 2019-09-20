@@ -40,7 +40,7 @@ router.post('/signup', async (req, res, next) => {
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });
-    res.json({ success: true, token: 'Bearer ' + token });
+    return res.json({ success: true, token: 'Bearer ' + token });
   } catch (error) {
     return next(error);
   }
@@ -108,7 +108,7 @@ router.post('/signin', async (req, res, next) => {
       const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 360000
       });
-      res.json({ success: true, token: 'Bearer ' + token });
+      return res.json({ success: true, token: 'Bearer ' + token });
     } else {
       throw new Error('Password is incorrect');
     }

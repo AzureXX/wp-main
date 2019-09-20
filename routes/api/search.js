@@ -78,7 +78,7 @@ router.get('/', async (req, res, next) => {
     courses = await courses;
     people = await people;
 
-    res.json({
+    return res.json({
       books,
       movies,
       music,
@@ -118,7 +118,7 @@ router.get('/:type', async (req, res, next) => {
 
     if (req.params.type === 'users') {
       const users = await User.find({ username: regex }, 'username');
-      res.json(users);
+      return res.json(users);
     } else if (req.params.type === 'education') {
       const Category = getModel('categories');
       const Subcategory = getModel('subcategories');
@@ -152,7 +152,7 @@ router.get('/:type', async (req, res, next) => {
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
-      res.json({ categories, subcategories, topics, subtopics });
+      return res.json({ categories, subcategories, topics, subtopics });
     } else if (req.params.type === 'music') {
       const Music = getModel("music");
       let  music = await Music.find(
@@ -161,7 +161,7 @@ router.get('/:type', async (req, res, next) => {
         },
         'name'
       ).limit(20);
-      res.json(music);
+      return res.json(music);
     }
     else {
       const Model = getModel(req.params.type);
@@ -171,7 +171,7 @@ router.get('/:type', async (req, res, next) => {
         },
         'name'
       ).limit(20);
-      res.json(items);
+      return res.json(items);
     }
   } catch (error) {
     next(error);

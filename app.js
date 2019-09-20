@@ -103,7 +103,7 @@ app.use("/api/notification", notificationRoute);
 app.use("/api/files", require("./routes/api/files"));
 app.use((err, req, res, next) => {
     res.status(500);
-    res.json({ message: err.message });
+    return res.json({ message: err.message });
 });
 
 module.exports = app;
