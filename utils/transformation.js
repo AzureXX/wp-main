@@ -305,7 +305,7 @@ module.exports = {
         showDOB: !!req.body.showDOB,
         showBookInfo: !!req.body.showBookInfo,
         showMovieInfo: !!req.body.showMovieInfo,
-        showMusicInfo: !!req.body.showCourseInfo,
+        showMusicInfo: !!req.body.showMusicInfo,
         showCourseInfo: !!req.body.showCourseInfo,
         showEducationInfo: !!req.body.showEducationInfo,
         giveTasks: !!req.body.giveTasks
