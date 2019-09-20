@@ -164,7 +164,7 @@ module.exports = {
       const MovieRating = transformation.getRatingModel('movies');
       const CourseRating = transformation.getRatingModel('courses');
       const MusicRating = transformation.getRatingModel('music');
-
+      
       if (!validation.mongooseId(req.params.id)) {
         const user = await transformation
           .getModel('user')
@@ -172,19 +172,23 @@ module.exports = {
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
-      let bookRating = BookRating.find({ userId: req.params.id }).populate({
+
+      const access = await this.getUserAccess(req,res,next, req.params.id)
+      
+      
+      let bookRating = (access.showBookRating || access.showBookStatus) && BookRating.find({ userId: req.params.id }).populate({
         path: 'book',
         select: 'name'
       });
-      let movieRating = MovieRating.find({ userId: req.params.id }).populate({
+      let movieRating = (access.showMovieRating || access.showMovieStatus) && MovieRating.find({ userId: req.params.id }).populate({
         path: 'movie',
         select: 'name'
       });
-      let musicRating = MusicRating.find({ userId: req.params.id }).populate({
+      let musicRating =  MusicRating.find({ userId: req.params.id }).populate({
         path: 'music',
         select: 'name'
       });
-      let courseRating = CourseRating.find({ userId: req.params.id }).populate({
+      let courseRating = (access.showCourseRating || access.showCourseStatus) && CourseRating.find({ userId: req.params.id }).populate({
         path: 'course',
         select: 'name'
       });
@@ -193,12 +197,11 @@ module.exports = {
       movieRating = await movieRating;
       musicRating = await musicRating;
       courseRating = await courseRating;
-
       res.json({
-        books: bookRating,
-        movies: movieRating,
-        courses: courseRating,
-        music: musicRating
+        books: bookRating || [],
+        movies: movieRating || [],
+        courses: courseRating || [],
+        music: musicRating || []
       });
     } catch (error) {
       next(error);
@@ -391,8 +394,23 @@ module.exports = {
   async getUserAccess(req, res, next, user) {
     try {
       const User = transformation.getModel('user');
+      
       const AccessModel = transformation.getModel('accessgroup');
       if (!req.user) return user.generalAccessOptions;
+      if(req.user._id.toString() === user.toString()) return {
+        showEmail: true,
+        showPhone: true,
+        showName: true,
+        showDOB: true,
+        showBookStatus: true,
+        showBookRating: true,
+        showMovieStatus: true,
+        showMovieRating: true,
+        showCourseStatus: true,
+        showCourseRating: true,
+        showEducationStatus: true,
+        giveTasks: true
+      }
       const accessGroups = await AccessModel.find({
         creator: user,
         users: { $in: req.user._id }
@@ -414,20 +432,7 @@ module.exports = {
             a.showEducationStatus || b.options.showEducationStatus,
           giveTasks: a.giveTasks || b.options.giveTasks
         }),
-        {
-          showEmail: false,
-          showPhone: false,
-          showName: false,
-          showDOB: false,
-          showBookStatus: false,
-          showBookRating: false,
-          showMovieStatus: false,
-          showMovieRating: false,
-          showCourseStatus: false,
-          showCourseRating: false,
-          showEducationStatus: false,
-          giveTasks: false
-        }
+        {}
       );
     } catch (error) {
       next(error);
