@@ -24,7 +24,7 @@ const EducationRecommendationSchema = new Schema({
       points: Number
     }
   ],
-  subbtopics: [
+  subtopics: [
     {
       _id: false,
       data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubtopic' },
