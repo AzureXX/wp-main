@@ -237,7 +237,7 @@ module.exports = {
       const items = await itemModel.find({ _id: { $nin: rated } });
       const pointedItems = items.map(item => ({
         data: item._id,
-        points: Math.floor(Math.random() * 10000)
+        points: (item.description && item.description.us && item.description.us.length) || Math.floor(Math.random() * 1000)
       }));
       pointedItems.sort((a, b) => b.points - a.points);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
