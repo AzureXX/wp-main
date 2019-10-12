@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const models = require('../../utils/models');
+
 const transformation = require('../../utils/transformation');
 
 //@route   POST api/actions/rate/:type
@@ -16,8 +18,8 @@ router.post(
       if (!types.includes(type)) 
         throw new Error('Invalid type');
       let { rating, status, id } = req.body;
-      const RecommendationModel = transformation.getRecommendationModel(type);
-      const RatingModel = transformation.getRatingModel(type);
+      const RecommendationModel = models.getRecommendationModel(type);
+      const RatingModel = models.getRatingModel(type);
       
       const singular = transformation.getSingular(type);
       if ((status !== 2 && status) || rating) {

@@ -5,7 +5,7 @@ const Course = require('../../models/Course');
 const Movie = require('../../models/Movie');
 const Person = require('../../models/Person');
 const User = require('../../models/User');
-const { getModel } = require('../../utils/transformation');
+const { getModel } = require('../../utils/models');
 
 const searchOptions = regex => [
   { 'name.us': regex },

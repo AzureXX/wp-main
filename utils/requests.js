@@ -1,11 +1,12 @@
 const validation = require('./validation');
+const models = require('./models');
 const transformation = require('./transformation');
 
 module.exports = {
   //Get array of items from DB by page
   async getAllItems(req, res, next, name, size) {
     try {
-      const model = transformation.getModel(name);
+      const model = models.getModel(name);
       const populate = req.query.populate ? req.query.populate : '';
       let select = req.query.select ? req.query.select : '';
       if (select.match(/password/i)) select = '_id';
@@ -63,7 +64,7 @@ module.exports = {
   },
   async getItem(req, res, next, name) {
     try {
-      const model = transformation.getModel(name);
+      const model = models.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const populate = req.query.populate ? req.query.populate : '';
       let select = req.query.select ? req.query.select : '';
@@ -85,7 +86,7 @@ module.exports = {
   },
   async deleteItem(req, res, next, name, check) {
     try {
-      const model = transformation.getModel(name);
+      const model = models.getModel(name);
       if (!validation.mongooseId(req.params.id))
         throw new Error('ID is not valid');
       if (check && req.user.role !== 'admin') {
@@ -94,11 +95,11 @@ module.exports = {
           throw new Error('Not authorized');
       }
       if (['book', 'movie', 'course', 'person', 'music'].includes(name)) {
-        const Rating = transformation.getRatingModel(name);
+        const Rating = models.getRatingModel(name);
         Rating.deleteMany({ [name]: req.params.id }).exec();
       }
       if (['category', 'subcategory', 'topic', 'subtopic'].includes(name)) {
-        const Status = transformation.getEducationStatusModel(name);
+        const Status = models.getEducationStatusModel(name);
         Status.deleteMany({ [name]: req.params.id }).exec();
       }
       await model.findByIdAndDelete(req.params.id);
@@ -109,7 +110,7 @@ module.exports = {
   },
   async editItem(req, res, next, name, check) {
     try {
-      const Model = transformation.getModel(name);
+      const Model = models.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`No such ${name} exist`);
@@ -128,7 +129,7 @@ module.exports = {
   },
   async createItem(req, res, next, name) {
     try {
-      const Model = transformation.getModel(name);
+      const Model = models.getModel(name);
       const newItem = new Model(transformation.getObject(req, name));
       const item = await newItem.save();
       res.status(200).json(item);
@@ -138,21 +139,25 @@ module.exports = {
   },
   async getUserRatingList(req, res, next, type) {
     try {
-      const Model = transformation.getRatingModel(type);
-      
+      const Model = models.getRatingModel(type);
+
       if (!validation.mongooseId(req.params.id)) {
-        const user = await transformation
+        const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id');
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
 
-      const access = await this.getUserAccess(req,res,next, req.params.id);
-      if(type === "book" && !access.showBookInfo) return res.json({ratings: []})
-      if(type === "movie" && !access.showMovieInfo) return res.json({ratings: []})
-      if(type === "music" && !access.showMusicInfo) return res.json({ratings: []})
-      if(type === "course" && !access.showCourseInfo) return res.json({ratings: []})
+      const access = await this.getUserAccess(req, res, next, req.params.id);
+      if (type === 'book' && !access.showBookInfo)
+        return res.json({ ratings: [] });
+      if (type === 'movie' && !access.showMovieInfo)
+        return res.json({ ratings: [] });
+      if (type === 'music' && !access.showMusicInfo)
+        return res.json({ ratings: [] });
+      if (type === 'course' && !access.showCourseInfo)
+        return res.json({ ratings: [] });
 
       const ratings = await Model.findOne({ userId: req.params.id }).populate({
         path: !req.query.populate ? type + '.id' : '',
@@ -165,13 +170,13 @@ module.exports = {
   },
   async getUserRatingListAll(req, res, next) {
     try {
-      const BookRating = transformation.getRatingModel('books');
-      const MovieRating = transformation.getRatingModel('movies');
-      const CourseRating = transformation.getRatingModel('courses');
-      const MusicRating = transformation.getRatingModel('music');
+      const BookRating = models.getRatingModel('books');
+      const MovieRating = models.getRatingModel('movies');
+      const CourseRating = models.getRatingModel('courses');
+      const MusicRating = models.getRatingModel('music');
 
       if (!validation.mongooseId(req.params.id)) {
-        const user = await transformation
+        const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id');
         if (!user) throw new Error('No such user');
@@ -221,11 +226,9 @@ module.exports = {
   },
   async updateItemRecommendations(req, res, next, name) {
     try {
-      const itemRatingModel = transformation.getRatingModel(name);
-      const itemModel = transformation.getModel(name);
-      const itemRecommendationModel = transformation.getRecommendationModel(
-        name
-      );
+      const itemRatingModel = models.getRatingModel(name);
+      const itemModel = models.getModel(name);
+      const itemRecommendationModel = models.getRecommendationModel(name);
       const plural = transformation.getPlural(name);
 
       const ratings = await itemRatingModel.find({ userId: req.user._id });
@@ -237,7 +240,11 @@ module.exports = {
       const items = await itemModel.find({ _id: { $nin: rated } });
       const pointedItems = items.map(item => ({
         data: item._id,
-        points: (item.description && item.description.us && item.description.us.length) || Math.floor(Math.random() * 1000)
+        points:
+          (item.description &&
+            item.description.us &&
+            item.description.us.length) ||
+          Math.floor(Math.random() * 1000)
       }));
       pointedItems.sort((a, b) => b.points - a.points);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
@@ -255,10 +262,8 @@ module.exports = {
   },
   async updateVacancyRecommendations(req, res, next) {
     try {
-      const VacancyRecommendation = transformation.getRecommendationModel(
-        'vacancy'
-      );
-      const Vacancy = transformation.getModel('vacancy');
+      const VacancyRecommendation = models.getRecommendationModel('vacancy');
+      const Vacancy = models.getModel('vacancy');
       let vacancies = await Vacancy.find();
       vacancies = vacancies
         .map(item => ({
@@ -282,11 +287,11 @@ module.exports = {
   },
   async updateEducationRecommendations(req, res, next) {
     try {
-      const Education = transformation.getRecommendationModel('education');
-      const Category = transformation.getModel('category');
-      const Subcategory = transformation.getModel('subcategory');
-      const Topic = transformation.getModel('topic');
-      const Subtopic = transformation.getModel('subtopic');
+      const Education = models.getRecommendationModel('education');
+      const Category = models.getModel('category');
+      const Subcategory = models.getModel('subcategory');
+      const Topic = models.getModel('topic');
+      const Subtopic = models.getModel('subtopic');
 
       let [categories, subcategories, topics, subtopics] = await Promise.all([
         Category.find(),
@@ -337,9 +342,7 @@ module.exports = {
   },
   async getItemRecommendations(req, res, next, name) {
     try {
-      const itemRecommendationModel = transformation.getRecommendationModel(
-        name
-      );
+      const itemRecommendationModel = models.getRecommendationModel(name);
       const plural = transformation.getPlural(name);
       if (name === 'education') {
         const recs = await itemRecommendationModel
@@ -365,7 +368,7 @@ module.exports = {
   },
   async setEducationStatus(req, res, next, type) {
     try {
-      const EducationStatusModel = transformation.getEducationStatusModel(type);
+      const EducationStatusModel = models.getEducationStatusModel(type);
       const status = await EducationStatusModel.updateOne(
         { userId: req.user.id, [type]: req.body.id },
         {
@@ -382,17 +385,17 @@ module.exports = {
   },
   async getUserEducationStatus(req, res, next, type) {
     try {
-      const EducationStatusModel = transformation.getEducationStatusModel(type);
-      
+      const EducationStatusModel = models.getEducationStatusModel(type);
+
       if (!validation.mongooseId(req.params.id)) {
-        const user = await transformation
+        const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id');
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
-      const access = await this.getUserAccess(req,res,next, req.params.id);
-      if(!access.showEducationInfo) return res.json({ stasuses: [] });
+      const access = await this.getUserAccess(req, res, next, req.params.id);
+      if (!access.showEducationInfo) return res.json({ stasuses: [] });
       const statuses = await EducationStatusModel.find({
         userId: req.params.id
       });
@@ -403,20 +406,21 @@ module.exports = {
   },
   async getUserEducationStatusAll(req, res, next) {
     try {
-      const Subcategory = transformation.getEducationStatusModel('subcategory');
-      const Topic = transformation.getEducationStatusModel('topic');
-      const Subtopic = transformation.getEducationStatusModel('subtopic');
-      
+      const Subcategory = models.getEducationStatusModel('subcategory');
+      const Topic = models.getEducationStatusModel('topic');
+      const Subtopic = models.getEducationStatusModel('subtopic');
+
       if (!validation.mongooseId(req.params.id)) {
-        const user = await transformation
+        const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id');
         if (!user) throw new Error('No such user');
         req.params.id = user._id;
       }
 
-      const access = await this.getUserAccess(req,res,next, req.params.id);
-      if(!access.showEducationInfo) return res.json({ subcategories: [], topics: [], subtopics: [] });
+      const access = await this.getUserAccess(req, res, next, req.params.id);
+      if (!access.showEducationInfo)
+        return res.json({ subcategories: [], topics: [], subtopics: [] });
 
       let subcategories = Subcategory.find(
         { userId: req.params.id },
@@ -441,10 +445,10 @@ module.exports = {
   },
   async getUserAccess(req, res, next, user) {
     try {
-      const User = transformation.getModel("user")
-      const AccessModel = transformation.getModel('accessgroup');
+      const User = models.getModel('user');
+      const AccessModel = models.getModel('accessgroup');
       if (!req.user) {
-        const data = await User.findById(user)
+        const data = await User.findById(user);
         return data.generalAccessOptions;
       }
       if (req.user._id.toString() === user.toString())
@@ -465,7 +469,7 @@ module.exports = {
         users: { $in: req.user._id }
       });
       if (accessGroups.length === 0) {
-        const data = await User.findById(user)
+        const data = await User.findById(user);
         return data.generalAccessOptions;
       }
       return accessGroups.reduce(
@@ -489,9 +493,9 @@ module.exports = {
   },
   async createTask(req, res, next) {
     try {
-      const Task = transformation.getModel('task');
-      const access = await this.getUserAccess(req,res,next,req.body.user)
-      if(!access.giveTasks) throw new Error("No access")
+      const Task = models.getModel('task');
+      const access = await this.getUserAccess(req, res, next, req.body.user);
+      if (!access.giveTasks) throw new Error('No access');
       const newTask = new Task(transformation.getObject(req, 'task'));
       const task = await newTask.save();
       res.status(200).json(task);
@@ -501,7 +505,7 @@ module.exports = {
   },
   async getMyTasks(req, res, next) {
     try {
-      const Task = transformation.getModel('task');
+      const Task = models.getModel('task');
       const tasks = await Task.find({ creator: req.user.id }).populate(
         'user item',
         'name username'
@@ -513,7 +517,7 @@ module.exports = {
   },
   async getTasksForMe(req, res, next) {
     try {
-      const Task = transformation.getModel('task');
+      const Task = models.getModel('task');
       const tasks = await Task.find({ user: req.user.id }).populate(
         'creator item',
         'name username'
@@ -525,7 +529,7 @@ module.exports = {
   },
   async updateTaskStatus(req, res, next) {
     try {
-      const Task = transformation.getModel('task');
+      const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
 
       if (!task) {
@@ -548,7 +552,7 @@ module.exports = {
   },
   async updateTaskArchive(req, res, next) {
     try {
-      const Task = transformation.getModel('task');
+      const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
       if (!task) {
         throw new Error('No such task');
