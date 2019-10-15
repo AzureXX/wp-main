@@ -1,6 +1,48 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = {
+  getOffset(page, size) {
+    page = parseInt(page);
+    if (isNaN(page)) page = 1;
+    const offset = (page - 1) * size;
+    return offset;
+  },
+  getPlural(name) {
+    switch (name) {
+      case 'book':
+        return 'books';
+      case 'movie':
+        return 'movies';
+      case 'course':
+        return 'courses';
+      case 'person':
+        return 'people';
+      case 'music':
+        return 'music';
+      case 'vacancy':
+        return 'vacancies';
+      case 'education':
+        return 'education';
+      default:
+        return null;
+    }
+  },
+  getSingular(name) {
+    switch (name) {
+      case 'books':
+        return 'book';
+      case 'movies':
+        return 'movie';
+      case 'courses':
+        return 'course';
+      case 'people':
+        return 'person';
+      case 'music':
+        return 'music';
+      default:
+        return null;
+    }
+  },
   mongooseId(id) {
     return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
   },
@@ -20,9 +62,9 @@ module.exports = {
     };
   },
   strToArr(item, isID) {
-    if (!item) return null
-    if (isID) return item.split(',').map(i => this.mongooseId(i.trim()))
-    return item.split(',').map(i => i.trim())
+    if (!item) return null;
+    if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
+    return item.split(',').map(i => i.trim());
   },
 
   getObject(req, type) {
@@ -62,278 +104,181 @@ module.exports = {
     }
   },
   getBookObject(body) {
-    const {
-      authors,
-      genres,
-      isbn,
-      published,
-      publisher,
-      wikipediaLink,
-      website
-    } = body;
-
     return {
       ...this.common(body),
-      authors: this.strToArr(authors, true),
-      genres: this.strToArr(genres),
-      ISBN: isbn,
-      published: published,
-      publisher: this.strToArr(publisher, true),
-      wikipediaLink: this.multi(wikipediaLink),
-      website: this.multi(website)
+      authors: this.strToArr(body.authors, true),
+      genres: this.strToArr(body.genres),
+      ISBN: body.isbn,
+      published: body.published,
+      publisher: this.strToArr(body.publisher, true),
+      wikipediaLink: this.multi(body.wikipediaLink),
+      website: this.multi(body.website)
     };
   },
   getMovieObject(body) {
-    const { actors, genres, crew, released } = body;
     return {
       ...this.common(body),
-      actors: this.strToArr(actors, true),
-      genres: this.strToArr(genres),
-      crew: crew
-        ? crew.map(item => ({
+      actors: this.strToArr(body.actors, true),
+      genres: this.strToArr(body.genres),
+      crew: body.crew
+        ? body.crew.map(item => ({
             role: item.role,
             id: this.mongooseId(item.id.trim())
           }))
         : null,
-      released: released
+      released: body.released
     };
   },
   getMusicObject(body) {
-    const {
-      singers,
-      genres,
-      released,
-      duration,
-      name,
-      img,
-      video,
-      audio,
-      tags
-    } = body;
     return {
-      name: name,
-      duration: duration,
-      img: img,
-      video: video,
-      audio: audio,
-      tags: tags,
-      singers: this.strToArr(singers, true),
-      genres: this.strToArr(genres),
-      released: released
+      name: body.name,
+      duration: body.duration,
+      img: body.img,
+      video: body.video,
+      audio: body.audio,
+      tags: body.tags,
+      singers: this.strToArr(body.singers, true),
+      genres: this.strToArr(body.genres),
+      released: body.released
     };
   },
   getCourseObject(body) {
-    const {
-      authors,
-      genres,
-      published,
-      publisher,
-      website,
-      video,
-      link
-    } = body;
     return {
       ...this.common(body),
-      authors: this.strToArr(authors, true),
-      genres: genres ? genres.split(',').map(item => item.trim()) : null,
-      published: published,
-      publisher: this.strToArr(publisher, true),
-      website: this.multi(website),
-      video: this.multi(video),
-      link: this.multi(link)
+      authors: this.strToArr(body.authors, true),
+      genres: body.genres
+        ? body.genres.split(',').map(item => item.trim())
+        : null,
+      published: body.published,
+      publisher: this.strToArr(body.publisher, true),
+      website: this.multi(body.website),
+      video: this.multi(body.video),
+      link: this.multi(body.link)
     };
   },
   getPersonObject(body) {
-    const { wikipediaLink } = body;
     return {
       ...this.common(body),
-      wikipediaLink: this.multi(wikipediaLink)
+      wikipediaLink: this.multi(body.wikipediaLink)
     };
   },
   getEducationCategoryObject(body) {
-    const { subcategories, icon, courses } = body;
     return {
       ...this.common(body),
-      subcategories: this.strToArr(subcategories, true),
-      icon,
-      courses: this.strToArr(courses, true)
+      subcategories: this.strToArr(body.subcategories, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationSubcategoryObject(body) {
-    const { categories, topics, icon, courses } = body;
     return {
       ...this.common(body),
-      categories: this.strToArr(categories, true),
-      topics: this.strToArr(topics, true),
-      icon,
-      courses: this.strToArr(courses, true)
+      categories: this.strToArr(body.categories, true),
+      topics: this.strToArr(body.topics, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationTopicObject(body) {
-    const { subcategories, subtopics, icon, courses } = body;
     return {
       ...this.common(body),
-      subcategories: this.strToArr(subcategories, true),
-      subtopics: this.strToArr(subtopics, true),
-      icon,
-      courses: this.strToArr(courses, true)
+      subcategories: this.strToArr(body.subcategories, true),
+      subtopics: this.strToArr(body.subtopics, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationSubtopicObject(body) {
-    const { topics, icon, courses } = body;
     return {
       ...this.common(body),
-      topics: this.strToArr(topics, true),
-      icon,
-      courses: this.strToArr(courses, true)
+      topics: this.strToArr(body.topics, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getVacancyObject(req) {
-    const {
-      education,
-      position,
-      email,
-      phone,
-      ageMin,
-      ageMax,
-      requirements,
-      workInfo,
-      companyName,
-      contactPerson,
-      topics,
-      experience,
-      salary,
-      city,
-      category
-    } = req.body;
+    const { body } = req;
     return {
       creator: this.mongooseId(req.user._id),
-      education: education,
-      position: position,
-      email: email,
-      phone: phone,
-      ageMin: ageMin,
-      ageMax: ageMax,
-      requirements: requirements,
-      workInfo: workInfo,
-      companyName: companyName,
-      contactPerson: contactPerson,
-      topics: topics,
-      experience: experience,
-      salary: salary,
-      city: city,
-      category: category
+      education: body.education,
+      position: body.position,
+      email: body.email,
+      phone: body.phone,
+      ageMin: body.ageMin,
+      ageMax: body.ageMax,
+      requirements: body.requirements,
+      workInfo: body.workInfo,
+      companyName: body.companyName,
+      contactPerson: body.contactPerson,
+      topics: body.topics,
+      experience: body.experience,
+      salary: body.salary,
+      city: body.city,
+      category: body.category
     };
   },
   getQuestionObject(body) {
-    const { multiple, text, answers, tags } = body;
     return {
-      multiple: !!multiple,
-      text: this.multi(text),
-      answers,
-      tags
+      multiple: !!body.multiple,
+      text: this.multi(body.text),
+      answers: body.answers,
+      tags: body.tags
     };
   },
   getQuestionnaireObject(body) {
-    const { questions, tags } = body;
     return {
-      questions: this.strToArr(questions, true),
-      tags
+      questions: this.strToArr(body.questions, true),
+      tags: body.tags
     };
   },
   getAccessGroupObject(req) {
-    let { name, users, showEmail, showPhone, showName, showDOB } = req.body;
-    if (!users) users = [];
+    let { body } = req;
+    if (!body.users) body.users = [];
     return {
       creator: this.mongooseId(req.user._id),
-      name: name,
-      users: this.strToArr(users.join(','), true),
+      name: body.name,
+      users: this.strToArr(body.users.join(','), true),
       options: {
-        showEmail: !!req.body.showEmail,
-        showPhone: !!req.body.showPhone,
-        showName: !!req.body.showName,
-        showDOB: !!req.body.showDOB,
-        showBookInfo: !!req.body.showBookInfo,
-        showMovieInfo: !!req.body.showMovieInfo,
-        showMusicInfo: !!req.body.showMusicInfo,
-        showCourseInfo: !!req.body.showCourseInfo,
-        showEducationInfo: !!req.body.showEducationInfo,
-        giveTasks: !!req.body.giveTasks
+        showEmail: !!body.showEmail,
+        showPhone: !!body.showPhone,
+        showName: !!body.showName,
+        showDOB: !!body.showDOB,
+        showBookInfo: !!body.showBookInfo,
+        showMovieInfo: !!body.showMovieInfo,
+        showMusicInfo: !!body.showMusicInfo,
+        showCourseInfo: !!body.showCourseInfo,
+        showEducationInfo: !!body.showEducationInfo,
+        giveTasks: !!body.giveTasks
       }
     };
   },
   getTaskObject(req) {
-    const { user, type, item, level, comment, deadline, status } = req.body;
+    const { body } = req;
 
     return {
       creator: this.mongooseId(req.user._id),
-      user: this.mongooseId(user),
-      type: type,
-      item: this.mongooseId(item),
-      level: level,
-      comment: comment,
-      deadline: deadline,
-      status: status
+      user: this.mongooseId(body.user),
+      type: body.type,
+      item: this.mongooseId(body.item),
+      level: body.level,
+      comment: body.comment,
+      deadline: body.deadline,
+      status: body.status
     };
   },
   getMessageObject(body) {
-    const { to, text, all } = body;
     return {
-      text: this.multi(text),
-      to: all ? null : this.strToArr(to, true),
+      text: this.multi(body.text),
+      to: body.all ? null : this.strToArr(body.to, true),
       date: Date.now(),
-      all: !!all
+      all: !!body.all
     };
   },
   getNotificationObject(body) {
-    const { to, text } = body;
     return {
-      text: this.multi(text),
-      to: this.strToArr(to, true),
+      text: this.multi(body.text),
+      to: this.strToArr(body.to, true),
       date: Date.now()
     };
-  },
-  getOffset(page, size) {
-    page = parseInt(page);
-    if (isNaN(page)) page = 1;
-    const offset = (page - 1) * size;
-    return offset;
-  },
-  
-  getPlural(name) {
-    switch (name) {
-      case 'book':
-        return 'books';
-      case 'movie':
-        return 'movies';
-      case 'course':
-        return 'courses';
-      case 'person':
-        return 'people';
-      case 'music':
-        return 'music';
-      case 'vacancy':
-        return 'vacancies';
-      case 'education':
-        return 'education';
-      default:
-        return null;
-    }
-  },
-  getSingular(name) {
-    switch (name) {
-      case 'books':
-        return 'book';
-      case 'movies':
-        return 'movie';
-      case 'courses':
-        return 'course';
-      case 'people':
-        return 'person';
-      case 'music':
-        return 'music';
-      default:
-        return null;
-    }
   }
 };
