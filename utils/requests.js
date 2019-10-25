@@ -247,14 +247,11 @@ module.exports = {
         rated = ratings.map(item => item[name]);
       }
 
-      const items = await itemModel.find({ _id: { $nin: rated } }, "description tags");
+      const items = await itemModel.find({ _id: { $nin: rated } }, "tags");
+      await this.calculateUserTags(req,res,next)
       const pointedItems = items.map(item => ({
         data: item._id,
-        points:
-          (item.description &&
-            item.description.us &&
-            item.description.us.length) ||
-          Math.floor(Math.random() * 1000)
+        points: transformation.calculatePoints(item.tags, req.user.tags)
       }));
       pointedItems.sort((a, b) => b.points - a.points);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
@@ -309,28 +306,30 @@ module.exports = {
         Topic.find(),
         Subtopic.find()
       ]);
+      await this.calculateUserTags(req,res,next)
+
       categories = categories
         .map(item => ({
           data: item._id,
-          points: Math.floor(Math.random() * 10000)
+          points: transformation.calculatePoints(item.tags, req.user.tags)
         }))
         .sort((a, b) => b.points - a.points);
       subcategories = subcategories
         .map(item => ({
           data: item._id,
-          points: Math.floor(Math.random() * 10000)
+          points: transformation.calculatePoints(item.tags, req.user.tags)
         }))
         .sort((a, b) => b.points - a.points);
       topics = topics
         .map(item => ({
           data: item._id,
-          points: Math.floor(Math.random() * 10000)
+          points: transformation.calculatePoints(item.tags, req.user.tags)
         }))
         .sort((a, b) => b.points - a.points);
       subtopics = subtopics
         .map(item => ({
           data: item._id,
-          points: Math.floor(Math.random() * 10000)
+          points: transformation.calculatePoints(item.tags, req.user.tags)
         }))
         .sort((a, b) => b.points - a.points);
       const recs = await Education.findOneAndUpdate(
@@ -442,15 +441,13 @@ module.exports = {
 
       const total = transformation.calculateTotal(calculatedBooks,calculatedMovies,calculatedMusic,calculatedCourses,calculatedSubcategory,calculatedTopic,calculatedSubtopic)
 
-      const tags = transformation.totalToTags(total);
       const user = await User.findOneAndUpdate(
         { _id: req.user._id },
         {
-          tags: tags
+          tags: total
         },
         { upsert: true, returnOriginal: false, new: true }
       );
-      return res.json(user);
     } catch (error) {
       next(error);
     }

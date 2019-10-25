@@ -286,23 +286,16 @@ module.exports = {
     let education = false;
     if(type === "subcategory" || type === "topic" || type === "subtopic") education = true
     const calculated = {};
-    init
-      .map(item =>
-        item[type].tags.reduce((a, b) => {
-          
-          a[b.name] = b.level * ((education ? item.status : item.rating) - 3);
-          return a;
-        }, {})
-      )
-      .forEach(el => {
-        for (const prop in el) {
-          if (calculated[prop] !== undefined) {
-            calculated[prop] += el[prop];
-          } else {
-            calculated[prop] = el[prop];
-          }
+    init.forEach(item => {
+      for (const prop in item[type].tags) {
+        const value = item[type].tags[prop] * ((education ? item.status : item.rating) - 3)
+        if (calculated[prop] !== undefined) {
+          calculated[prop] += value
+        } else {
+          calculated[prop] = value
         }
-      });
+      }
+    })
     return calculated;
   },
   calculateTotal(...arr) {
@@ -324,5 +317,13 @@ module.exports = {
       })
     }
     return tags;
+  },
+  calculatePoints(tags, user) {
+    let points = 0;
+    for (const prop in tags) {
+      if(user[prop] === undefined) continue;
+      points += user[prop]
+    }
+    return points;
   }
-};
+}
