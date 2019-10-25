@@ -33,7 +33,7 @@ const BookSchema = new Schema({
         ru: String,
         az: String
     },
-    tags: [{_id: false, name:String, level: Number}]
+    tags: {}
 })
 
 const Book = mongoose.model("Book", BookSchema)

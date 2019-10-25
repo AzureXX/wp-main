@@ -243,7 +243,7 @@ router.put(
   }
 );
 
-//@route   POST api/user/emote
+//@route   PUT api/user/emote
 //@desc    Changes emotion for user
 //@access  Private
 router.put(
@@ -259,4 +259,14 @@ router.put(
   }
 );
 
+//@route   GET api/user/tags
+//@desc    Changes emotion for user
+//@access  Private
+router.get(
+  '/tags',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.calculateUserTags(req,res,next);
+  }
+);
 module.exports = router;

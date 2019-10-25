@@ -3,7 +3,9 @@ const models = require('./models');
 const transformation = require('./transformation');
 
 module.exports = {
-  //Get array of items from DB by page
+  /*****************
+    CRUD FOR ITEMS
+  *****************/
   async getAllItems(req, res, next, name, size) {
     try {
       const model = models.getModel(name);
@@ -137,6 +139,10 @@ module.exports = {
       next(error);
     }
   },
+
+  /**************
+    USER RATING
+  **************/
   async getUserRatingList(req, res, next, type) {
     try {
       const Model = models.getRatingModel(type);
@@ -224,6 +230,10 @@ module.exports = {
       next(error);
     }
   },
+
+  /************************
+    USER RECOMMENDATIONS
+  ************************/
   async updateItemRecommendations(req, res, next, name) {
     try {
       const itemRatingModel = models.getRatingModel(name);
@@ -237,7 +247,7 @@ module.exports = {
         rated = ratings.map(item => item[name]);
       }
 
-      const items = await itemModel.find({ _id: { $nin: rated } });
+      const items = await itemModel.find({ _id: { $nin: rated } }, "description tags");
       const pointedItems = items.map(item => ({
         data: item._id,
         points:
@@ -366,6 +376,89 @@ module.exports = {
       next(error);
     }
   },
+  
+  async calculateUserTags(req, res, next) {
+    try {
+      const userId = req.user.id;
+      const User = models.getModel('user');
+      const BookRating = models.getRatingModel('book');
+      const MovieRating = models.getRatingModel('movie');
+      const MusicRating = models.getRatingModel('music');
+      const CourseRating = models.getRatingModel('course');
+      const SubcategoryStatus = models.getEducationStatusModel('subcategory');
+      const TopicStatus = models.getEducationStatusModel('topic');
+      const SubtopicStatus = models.getEducationStatusModel('subtopic');
+
+      const [
+        books,
+        movies,
+        music,
+        courses,
+        subcategories,
+        topics,
+        subtopics
+      ] = await Promise.all([
+        BookRating.find({ userId })
+          .populate({ path: 'book', select: 'tags' })
+          .lean(),
+        MovieRating.find({ userId })
+          .populate({ path: 'movie', select: 'tags' })
+          .lean(),
+        MusicRating.find({ userId })
+          .populate({ path: 'music', select: 'tags' })
+          .lean(),
+        CourseRating.find({ userId })
+          .populate({ path: 'course', select: 'tags' })
+          .lean(),
+        SubcategoryStatus.find({ userId })
+          .populate({ path: 'subcategory', select: 'tags' })
+          .lean(),
+        TopicStatus.find({ userId })
+          .populate({ path: 'topic', select: 'tags' })
+          .lean(),
+        SubtopicStatus.find({ userId })
+          .populate({ path: 'subtopic', select: 'tags' })
+          .lean()
+      ]);
+      const calculatedBooks = transformation.calculateItemTags(books, 'book');
+      const calculatedMovies = transformation.calculateItemTags(
+        movies,
+        'movie'
+      );
+      const calculatedMusic = transformation.calculateItemTags(music, 'music');
+      const calculatedCourses = transformation.calculateItemTags(
+        courses,
+        'course'
+      );
+      const calculatedSubcategory = transformation.calculateItemTags(
+        subcategories,
+        'subcategory'
+      );
+      const calculatedTopic = transformation.calculateItemTags(topics, 'topic');
+      const calculatedSubtopic = transformation.calculateItemTags(
+        subtopics,
+        'subtopic'
+      );
+
+      const total = transformation.calculateTotal(calculatedBooks,calculatedMovies,calculatedMusic,calculatedCourses,calculatedSubcategory,calculatedTopic,calculatedSubtopic)
+
+      const tags = transformation.totalToTags(total);
+      const user = await User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          tags: tags
+        },
+        { upsert: true, returnOriginal: false, new: true }
+      );
+      return res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+  
+  /************
+    EDU STATUS
+  ************/
   async setEducationStatus(req, res, next, type) {
     try {
       const EducationStatusModel = models.getEducationStatusModel(type);
@@ -443,6 +536,10 @@ module.exports = {
       next(error);
     }
   },
+
+  /************
+    USER ACCESS
+  ************/
   async getUserAccess(req, res, next, user) {
     try {
       const User = models.getModel('user');
@@ -491,6 +588,10 @@ module.exports = {
       next(error);
     }
   },
+
+  /*******
+    TASKS
+  ********/
   async createTask(req, res, next) {
     try {
       const Task = models.getModel('task');

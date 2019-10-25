@@ -10,7 +10,7 @@ const MusicSchema = new Schema({
     img: String,
     video: String,
     audio: String,
-    tags: [{_id: false, name:String, level: Number}]
+    tags: {}
 });
 
 const Music = mongoose.model("Music", MusicSchema);

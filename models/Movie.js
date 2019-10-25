@@ -35,7 +35,7 @@ const MovieSchema = new Schema({
         ru: String,
         az: String
     },
-    tags: [{_id: false, name:String, level: Number}]
+    tags: {}
 });
 
 const Movie = mongoose.model("Movie", MovieSchema);

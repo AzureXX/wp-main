@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const QuestionnaireSchema = new Schema({
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
-  tags: [{_id: false, name:String, level: Number}]
+  tags: {}
 })
 
 const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema)

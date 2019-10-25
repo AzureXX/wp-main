@@ -54,6 +54,7 @@ module.exports = {
     };
   },
   common({ name, description, img, tags }) {
+    console.log(tags)
     return {
       name: this.multi(name),
       description: this.multi(description),
@@ -280,5 +281,48 @@ module.exports = {
       to: this.strToArr(body.to, true),
       date: Date.now()
     };
+  },
+  calculateItemTags(init, type) {
+    let education = false;
+    if(type === "subcategory" || type === "topic" || type === "subtopic") education = true
+    const calculated = {};
+    init
+      .map(item =>
+        item[type].tags.reduce((a, b) => {
+          
+          a[b.name] = b.level * ((education ? item.status : item.rating) - 3);
+          return a;
+        }, {})
+      )
+      .forEach(el => {
+        for (const prop in el) {
+          if (calculated[prop] !== undefined) {
+            calculated[prop] += el[prop];
+          } else {
+            calculated[prop] = el[prop];
+          }
+        }
+      });
+    return calculated;
+  },
+  calculateTotal(...arr) {
+    const total = {}
+    arr.forEach(obj => {
+      for (const prop in obj) {
+        if(total[prop]) total[prop] += obj[prop]
+        else total[prop] = obj[prop]
+      } 
+    })
+    return total;
+  },
+  totalToTags(total) {
+    const tags = [];
+    for (const prop in total) {
+      tags.push({
+        name: prop,
+        level: total[prop]
+      })
+    }
+    return tags;
   }
 };

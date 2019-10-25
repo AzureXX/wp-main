@@ -24,7 +24,7 @@ const QuestionSchema = new Schema({
       ]
     }
   ],
-  tags: [{ _id: false, name: String, level: Number }]
+  tags: {}
 });
 
 const Question = mongoose.model('Question', QuestionSchema);

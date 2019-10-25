@@ -70,6 +70,10 @@ router.post(
           req.body.id +
           '?api_key=ca8f1fea6bfe2ee1300c1465e40444d9'
       );
+      const tags = {}
+      response.data.genres.forEach(genre => {
+        tags[genre.name.toLowerCase()] = 3
+      })
       const newMovie = new Movie({
         name: {
           us: response.data.title
@@ -86,7 +90,7 @@ router.post(
         },
         released: response.data.release_date,
         genres: response.data.genres.map(genre => genre.name.toLowerCase()),
-        tags: response.data.genres.map(genre => ({name: genre.name.toLowerCase(), level: 1}))
+        tags: tags
       });
       const movie = await newMovie.save();
       return res.json(movie)

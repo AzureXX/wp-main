@@ -43,7 +43,7 @@ const UserSchema = new Schema({
         default: "user"
     },
     emotion: {type: String, default: "neutral"},
-    tags: [{_id: false, name:String, level: Number}],
+    tags: {},
     generalAccessOptions: {
         showEmail: {
           type: Boolean,
