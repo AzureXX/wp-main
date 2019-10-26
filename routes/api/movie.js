@@ -72,7 +72,7 @@ router.post(
       );
       const tags = {}
       response.data.genres.forEach(genre => {
-        tags[genre.name.toLowerCase()].split(" ").join("_") = 3
+        tags[genre.name.toLowerCase().split(" ").join("_")] = 3
       })
       const newMovie = new Movie({
         name: {
