@@ -54,7 +54,7 @@ module.exports = {
     };
   },
   common({ name, description, img, tags }) {
-    console.log(tags)
+    console.log(tags);
     return {
       name: this.multi(name),
       description: this.multi(description),
@@ -284,28 +284,31 @@ module.exports = {
   },
   calculateItemTags(init, type) {
     let education = false;
-    if(type === "subcategory" || type === "topic" || type === "subtopic") education = true
+    if (type === 'subcategory' || type === 'topic' || type === 'subtopic')
+      education = true;
     const calculated = {};
     init.forEach(item => {
       for (const prop in item[type].tags) {
-        const value = item[type].tags[prop] * ((education ? item.status : item.rating) - 3)
+        const value =
+          item[type].tags[prop] *
+          (education ? item.status : item.status == 2 ? item.rating - 3 : 0);
         if (calculated[prop] !== undefined) {
-          calculated[prop] += value
+          calculated[prop] += value;
         } else {
-          calculated[prop] = value
+          calculated[prop] = value;
         }
       }
-    })
+    });
     return calculated;
   },
   calculateTotal(...arr) {
-    const total = {}
+    const total = {};
     arr.forEach(obj => {
       for (const prop in obj) {
-        if(total[prop]) total[prop] += obj[prop]
-        else total[prop] = obj[prop]
-      } 
-    })
+        if (total[prop]) total[prop] += obj[prop];
+        else total[prop] = obj[prop];
+      }
+    });
     return total;
   },
   totalToTags(total) {
@@ -314,16 +317,16 @@ module.exports = {
       tags.push({
         name: prop,
         level: total[prop]
-      })
+      });
     }
     return tags;
   },
   calculatePoints(tags, user) {
     let points = 0;
     for (const prop in tags) {
-      if(user[prop] === undefined) continue;
-      points += user[prop]
+      if (user[prop] === undefined) continue;
+      points += user[prop];
     }
     return points;
   }
-}
+};
