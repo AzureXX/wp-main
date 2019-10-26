@@ -248,10 +248,10 @@ module.exports = {
       }
 
       const items = await itemModel.find({ _id: { $nin: rated } }, "tags");
-      await this.calculateUserTags(req,res,next)
+      const tags = await this.calculateUserTags(req,res,next)
       const pointedItems = items.map(item => ({
         data: item._id,
-        points: transformation.calculatePoints(item.tags, req.user.tags)
+        points: transformation.calculatePoints(item.tags, tags)
       }));
       pointedItems.sort((a, b) => b.points - a.points);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
@@ -306,30 +306,30 @@ module.exports = {
         Topic.find(),
         Subtopic.find()
       ]);
-      await this.calculateUserTags(req,res,next)
+      const tags = await this.calculateUserTags(req,res,next)
 
       categories = categories
         .map(item => ({
           data: item._id,
-          points: transformation.calculatePoints(item.tags, req.user.tags)
+          points: transformation.calculatePoints(item.tags, tags)
         }))
         .sort((a, b) => b.points - a.points);
       subcategories = subcategories
         .map(item => ({
           data: item._id,
-          points: transformation.calculatePoints(item.tags, req.user.tags)
+          points: transformation.calculatePoints(item.tags, tags)
         }))
         .sort((a, b) => b.points - a.points);
       topics = topics
         .map(item => ({
           data: item._id,
-          points: transformation.calculatePoints(item.tags, req.user.tags)
+          points: transformation.calculatePoints(item.tags, tags)
         }))
         .sort((a, b) => b.points - a.points);
       subtopics = subtopics
         .map(item => ({
           data: item._id,
-          points: transformation.calculatePoints(item.tags, req.user.tags)
+          points: transformation.calculatePoints(item.tags, tags)
         }))
         .sort((a, b) => b.points - a.points);
       const recs = await Education.findOneAndUpdate(
@@ -448,6 +448,7 @@ module.exports = {
         },
         { upsert: true, returnOriginal: false, new: true }
       );
+      return user.tags
     } catch (error) {
       next(error);
     }

@@ -289,9 +289,8 @@ module.exports = {
     const calculated = {};
     init.forEach(item => {
       for (const prop in item[type].tags) {
-        const value =
-          item[type].tags[prop] *
-          (education ? item.status : item.status == 2 ? item.rating - 3 : 0);
+        const coef = education ? item.status : (item.status == 0 ? (item.rating - 3) : 0);
+        const value = item[type].tags[prop] * coef;
         if (calculated[prop] !== undefined) {
           calculated[prop] += value;
         } else {
@@ -309,18 +308,10 @@ module.exports = {
         else total[prop] = obj[prop];
       }
     });
+    console.log(total);
     return total;
   },
-  totalToTags(total) {
-    const tags = [];
-    for (const prop in total) {
-      tags.push({
-        name: prop,
-        level: total[prop]
-      });
-    }
-    return tags;
-  },
+  
   calculatePoints(tags, user) {
     let points = 0;
     for (const prop in tags) {
