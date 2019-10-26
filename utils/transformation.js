@@ -308,7 +308,6 @@ module.exports = {
         else total[prop] = obj[prop];
       }
     });
-    console.log(total);
     return total;
   },
   

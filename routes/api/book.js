@@ -5,6 +5,7 @@ const roles = require('../../utils/roles');
 const Book = require('../../models/Book');
 const axios = require('axios');
 const requests = require('../../utils/requests');
+const sanitizeHTML = require("sanitize-html");
 //@route   POST api/book/add
 //@desc    Adds new book to database
 //@access  Private/Moderator
@@ -65,12 +66,13 @@ router.post(
       const response = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/'+ req.body.id
       );
+      const description = sanitizeHTML(response.data.volumeInfo.description , {allowedTags: []})
       const newBook = new Book({
         name: {
           us: response.data.volumeInfo.title
         },
         description: {
-          us: response.data.volumeInfo.description
+          us: description
         },
         ISBN: response.data.volumeInfo.industryIdentifiers[1].identifier,
         img: {
