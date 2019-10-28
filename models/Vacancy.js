@@ -14,7 +14,7 @@ const VacancySchema = new Schema({
   contactPerson: String,
   subcategories: [
     {
-      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubcategories' },
+      data: { type: mongoose.Schema.Types.ObjectId, ref: 'EducationSubcategory' },
       status: Number
     }
   ],
