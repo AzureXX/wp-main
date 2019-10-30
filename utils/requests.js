@@ -39,9 +39,9 @@ module.exports = {
             })
           : null;
 
-        filterJSON.category ? (filter.category = filterJSON.category) : null;
+        filterJSON.category && filterJSON.category != "all"? (filter.category = filterJSON.category) : null;
 
-        filterJSON.city ? (filter.city = filterJSON.city) : null;
+        filterJSON.city && filterJSON.city !="all"? (filter.city = filterJSON.city) : null;
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
