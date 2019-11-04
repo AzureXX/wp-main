@@ -5,7 +5,7 @@ const roles = require('../../utils/roles');
 const Book = require('../../models/Book');
 const axios = require('axios');
 const requests = require('../../utils/requests');
-const sanitizeHTML = require("sanitize-html");
+const sanitizeHTML = require('sanitize-html');
 //@route   POST api/book/add
 //@desc    Adds new book to database
 //@access  Private/Moderator
@@ -38,21 +38,21 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   roles.isModerator,
   async (req, res, next) => {
-    await requests.deleteItem(req, res, next, "book");
+    await requests.deleteItem(req, res, next, 'book');
   }
 );
 
 //@route   GET api/book/get/all/:page
 //@desc    Get all books by page
 //@access  Public
-router.get('/get/all/:page?',  async (req, res, next) => {
+router.get('/get/all/:page?', async (req, res, next) => {
   await requests.getAllItems(req, res, next, 'books', 20);
 });
 
 //@route   GET api/book/get/id/:id
 //@desc    Get book by id
 //@access  Public
-router.get('/get/id/:id',  async (req, res, next) => {
+router.get('/get/id/:id', async (req, res, next) => {
   await requests.getItem(req, res, next, 'books');
 });
 
@@ -62,11 +62,23 @@ router.post(
   roles.isAdmin,
   async (req, res, next) => {
     try {
-      if(!req.body.id) throw new Error("You need ID")
+      if (!req.body.id) throw new Error('You need ID');
       const response = await axios.get(
-        'https://www.googleapis.com/books/v1/volumes/'+ req.body.id
+        'https://www.googleapis.com/books/v1/volumes/' + req.body.id
       );
-      const description = sanitizeHTML(response.data.volumeInfo.description , {allowedTags: []})
+      const description = sanitizeHTML(response.data.volumeInfo.description, {
+        allowedTags: []
+      });
+      const genres = req.body.genres
+        ? req.body.genres.split(',').map(i => i.trim())
+        : null;
+      const tags = {}
+      if(genres) {
+        genres.forEach(genre => {
+          tags[genre.toLowerCase().split(" ").join("_")] = 3
+        })
+      }
+      
       const newBook = new Book({
         name: {
           us: response.data.volumeInfo.title
@@ -76,14 +88,20 @@ router.post(
         },
         ISBN: response.data.volumeInfo.industryIdentifiers[1].identifier,
         img: {
-          us:"https://books.google.com/books/content?id="+req.body.id+"&printsec=frontcover&img=1&zoom=1"
+          us:
+            'https://books.google.com/books/content?id=' +
+            req.body.id +
+            '&printsec=frontcover&img=1&zoom=1'
         },
         website: {
-          us: "https://books.google.az/books?id="+req.body.id
-        }
-      })
+          us: 'https://books.google.az/books?id=' + req.body.id
+        },
+        published: req.body.published,
+        genres: genres,
+        tags: tags
+      });
       const book = await newBook.save();
-      return res.json(book)
+      return res.json(book);
     } catch (error) {
       next(error);
     }
