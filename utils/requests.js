@@ -140,6 +140,17 @@ module.exports = {
     }
   },
 
+  async getParent(req, res, next, name) {
+    try {
+      const parent = transformation.getParentName(name)
+      const Model = models.getModel(parent);
+      const items = await Model.find({[name]: req.params.id})
+      return res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  },
+
   /**************
     USER RATING
   **************/

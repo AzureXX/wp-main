@@ -67,4 +67,10 @@ router.post(
   }
 );
 
+//@route   GET api/education/subtopic/get/parent/:id
+//@desc    Get education subcategories of subtopic by id
+//@access  Public
+router.get('/get/parent/:id',  async (req, res, next) => {
+  await requests.getParent(req, res, next, 'topics');
+});
 module.exports = router;

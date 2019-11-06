@@ -66,4 +66,11 @@ router.post(
     await requests.setEducationStatus(req, res, next, 'subtopic');
   }
 );
+
+//@route   GET api/education/subtopic/get/parent/:id
+//@desc    Get education subcategories of subtopic by id
+//@access  Public
+router.get('/get/parent/:id',  async (req, res, next) => {
+  await requests.getParent(req, res, next, 'subtopics');
+});
 module.exports = router;

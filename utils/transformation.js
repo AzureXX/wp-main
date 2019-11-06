@@ -7,6 +7,21 @@ module.exports = {
     const offset = (page - 1) * size;
     return offset;
   },
+  getParentName(name) {
+    switch (name) {
+      case 'subcategories':
+      case 'subcategory':
+        return 'category';
+      case 'topics':
+      case 'topic':
+        return 'subcategory';
+      case 'subtopics':
+      case 'subtopic':
+        return 'topic';
+      default:
+        return null;
+    }
+  },
   getPlural(name) {
     switch (name) {
       case 'book':
@@ -211,7 +226,9 @@ module.exports = {
       workInfo: body.workInfo,
       companyName: body.companyName,
       contactPerson: body.contactPerson,
-      subcategories: body.subcategories.filter(subcategory => subcategory.data.name.us),
+      subcategories: body.subcategories.filter(
+        subcategory => subcategory.data.name.us
+      ),
       topics: body.topics.filter(topic => topic.data.name.us),
       subtopics: body.subtopics.filter(subtopic => subtopic.data.name.us),
       experience: body.experience,
@@ -291,7 +308,11 @@ module.exports = {
     const calculated = {};
     init.forEach(item => {
       for (const prop in item[type].tags) {
-        const coef = education ? item.status : (item.status == 0 ? (item.rating - 3) : 0);
+        const coef = education
+          ? item.status
+          : item.status == 0
+          ? item.rating - 3
+          : 0;
         const value = item[type].tags[prop] * coef;
         if (calculated[prop] !== undefined) {
           calculated[prop] += value;
@@ -312,7 +333,7 @@ module.exports = {
     });
     return total;
   },
-  
+
   calculatePoints(tags, user) {
     let points = 0;
     for (const prop in tags) {

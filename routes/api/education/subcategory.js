@@ -66,4 +66,11 @@ router.post(
     await requests.setEducationStatus(req, res, next, 'subcategory');
   }
 );
+
+//@route   GET api/education/subcategory/get/parent/:id
+//@desc    Get education categories of subcategory by id
+//@access  Public
+router.get('/get/parent/:id',  async (req, res, next) => {
+  await requests.getParent(req, res, next, 'subcategories');
+});
 module.exports = router;
