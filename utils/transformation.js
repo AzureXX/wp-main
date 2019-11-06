@@ -189,7 +189,6 @@ module.exports = {
   getEducationSubcategoryObject(body) {
     return {
       ...this.common(body),
-      categories: this.strToArr(body.categories, true),
       topics: this.strToArr(body.topics, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
@@ -198,7 +197,6 @@ module.exports = {
   getEducationTopicObject(body) {
     return {
       ...this.common(body),
-      subcategories: this.strToArr(body.subcategories, true),
       subtopics: this.strToArr(body.subtopics, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
@@ -207,7 +205,6 @@ module.exports = {
   getEducationSubtopicObject(body) {
     return {
       ...this.common(body),
-      topics: this.strToArr(body.topics, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
     };
