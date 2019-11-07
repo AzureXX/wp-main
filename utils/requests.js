@@ -54,7 +54,7 @@ module.exports = {
           populate: {
             path: 'categories subcategories topics subtopics courses'
           }
-        });
+        }).sort("-released -published");
 
       return res.json({
         lastPage: items.length < size,
