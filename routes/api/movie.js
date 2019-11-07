@@ -65,11 +65,14 @@ router.post(
   async (req, res, next) => {
     try {
       if (!req.body.id) throw new Error('You need Id');
+      
       const response = await axios.get(
         'https://api.themoviedb.org/3/movie/' +
           req.body.id +
           '?api_key=ca8f1fea6bfe2ee1300c1465e40444d9'
       );
+      const exist = await Movie.findOne({"name.us": response.data.title})
+      if(exist) throw new Error("Movie already exists")
       const tags = {}
       response.data.genres.forEach(genre => {
         tags[genre.name.toLowerCase().split(" ").join("_")] = 3
