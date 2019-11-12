@@ -96,7 +96,6 @@ app.use("/api/recommendations/vacancy", recommendationsVacancyRoute);
 
 app.use("/api/collect", collectRoute);
 
-
 app.use("/api/search", searchRoute);
 app.use("/api/message", messageRoute);
 app.use("/api/notification", notificationRoute);

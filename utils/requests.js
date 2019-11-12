@@ -257,7 +257,6 @@ module.exports = {
       if (ratings) {
         rated = ratings.map(item => item[name]);
       }
-
       const items = await itemModel.find({ _id: { $nin: rated } }, "tags");
       const tags = await this.calculateUserTags(req,res,next)
       const pointedItems = items.map(item => ({
@@ -449,9 +448,8 @@ module.exports = {
         subtopics,
         'subtopic'
       );
-
-      const total = transformation.calculateTotal(calculatedBooks,calculatedMovies,calculatedMusic,calculatedCourses,calculatedSubcategory,calculatedTopic,calculatedSubtopic)
-
+      const mood = transformation.convertMoodToTags(req.user.emotion)
+      const total = transformation.calculateTotal(calculatedBooks,calculatedMovies,calculatedMusic,calculatedCourses,calculatedSubcategory,calculatedTopic,calculatedSubtopic, mood)
       const user = await User.findOneAndUpdate(
         { _id: req.user._id },
         {

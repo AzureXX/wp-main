@@ -69,7 +69,6 @@ module.exports = {
     };
   },
   common({ name, description, img, tags }) {
-    console.log(tags);
     return {
       name: this.multi(name),
       description: this.multi(description),
@@ -338,5 +337,15 @@ module.exports = {
       points += user[prop];
     }
     return points;
+  },
+  convertMoodToTags(mood) {
+    switch(mood) {
+      case "sad": 
+        return {
+          comedy: 100
+        }
+      default: 
+        return {}
+    }
   }
 };
