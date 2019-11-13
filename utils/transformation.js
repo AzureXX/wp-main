@@ -81,7 +81,6 @@ module.exports = {
     if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
     return item.split(',').map(i => i.trim());
   },
-
   getObject(req, type) {
     switch (type) {
       case 'book':

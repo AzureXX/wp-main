@@ -100,6 +100,8 @@ app.use("/api/search", searchRoute);
 app.use("/api/message", messageRoute);
 app.use("/api/notification", notificationRoute);
 app.use("/api/files", require("./routes/api/files"));
+
+// error handler
 app.use((err, req, res, next) => {
     res.status(500);
     return res.json({ message: err.message });
