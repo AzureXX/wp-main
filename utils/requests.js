@@ -79,7 +79,7 @@ module.exports = {
         select: select,
         populate: { path: deep }
       });
-      if (!item) throw new Error(`No such ${name} exist`);
+      if (!item) throw new Error(`${name}.notfound`);
 
       return res.json(item);
     } catch (error) {
@@ -90,11 +90,11 @@ module.exports = {
     try {
       const model = models.getModel(name);
       if (!validation.mongooseId(req.params.id))
-        throw new Error('ID is not valid');
+        throw new Error("id.invalid");
       if (check && req.user.role !== 'admin') {
         const item = await model.findById(req.params.id);
         if (item.creator.toString() !== req.user._id)
-          throw new Error('Not authorized');
+          throw new Error("auth.false");
       }
       if (['book', 'movie', 'course', 'person', 'music'].includes(name)) {
         const Rating = models.getRatingModel(name);
@@ -115,10 +115,10 @@ module.exports = {
       const Model = models.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
-      if (!item) throw new Error(`No such ${name} exist`);
+      if (!item) throw new Error(`${name}.notfound`);
       if (check && req.user.role !== 'admin') {
         if (item.creator.toString() !== req.user._id)
-          throw new Error('Not authorized');
+          throw new Error("auth.false");
       }
       const saved = await Model.findByIdAndUpdate(
         id,
@@ -162,7 +162,7 @@ module.exports = {
         const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id').lean();
-        if (!user) throw new Error('No such user');
+        if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
 
@@ -196,7 +196,7 @@ module.exports = {
         const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id').lean();
-        if (!user) throw new Error('No such user');
+        if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
 
@@ -492,7 +492,7 @@ module.exports = {
         const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id').lean();
-        if (!user) throw new Error('No such user');
+        if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
       const access = await this.getUserAccess(req, res, next, req.params.id);
@@ -515,7 +515,7 @@ module.exports = {
         const user = await models
           .getModel('user')
           .findOne({ username: req.params.id }, '_id').lean();
-        if (!user) throw new Error('No such user');
+        if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
 
@@ -604,7 +604,7 @@ module.exports = {
     try {
       const Task = models.getModel('task');
       const access = await this.getUserAccess(req, res, next, req.body.user);
-      if (!access.giveTasks) throw new Error('No access');
+      if (!access.giveTasks) throw new Error("access.false");
       const newTask = new Task(transformation.getObject(req, 'task'));
       const task = await newTask.save();
       res.status(200).json(task);
@@ -642,7 +642,7 @@ module.exports = {
       const task = await Task.findById(req.params.id);
 
       if (!task) {
-        throw new Error('No such task');
+        throw new Error("task.notfound");
       } else if (
         task.creator.toString() == req.user._id.toString() ||
         task.user.toString() == req.user._id.toString()
@@ -652,7 +652,7 @@ module.exports = {
           { status: req.body.status || task.status }
         ).exec();
       } else {
-        throw new Error('Not authorized');
+        throw new Error("auth.false");
       }
       return res.json('success');
     } catch (error) {
@@ -664,7 +664,7 @@ module.exports = {
       const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
       if (!task) {
-        throw new Error('No such task');
+        throw new Error("task.required");
       } else if (
         task.creator.toString() == req.user._id.toString() ||
         task.user.toString() == req.user._id.toString()
@@ -674,7 +674,7 @@ module.exports = {
           { archived: req.body.archived || task.archived }
         ).exec();
       } else {
-        throw new Error('Not authorized');
+        throw new Error("auth.false");
       }
       return res.json('success');
     } catch (error) {

@@ -62,9 +62,9 @@ router.post(
   roles.isAdmin,
   async (req, res, next) => {
     try {
-      if (!req.body.id) throw new Error('You need ID');
+      if (!req.body.id) throw new Error('id.required');
       const exist = await Book.findOne({"website.us": 'https://books.google.az/books?id=' + req.body.id}, "_id").lean()
-      if (exist) throw new Error("Book already exist")
+      if (exist) throw new Error("book.exist")
       const response = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/' + req.body.id
       );

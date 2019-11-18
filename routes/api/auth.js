@@ -11,16 +11,18 @@ router.post('/signup', async (req, res, next) => {
   const { username, email, password, password2, type } = req.body;
 
   try {
-    if (!password) throw new Error('Password is required');
-    if (!email) throw new Error('Email is required');
-    if (password != password2) throw new Error('Passwords do not match');
+
+    if (!password) throw new Error('password.required');
+    if (password.length < 5) throw new Error('password.min');
+    if (!email) throw new Error('email.required');
+    if (password !== password2) throw new Error('password.notmatch');
 
     let exist = await User.findOne({ email: req.body.email }, "_id").lean();
 
-    if (exist) throw new Error('Email already exists');
+    if (exist) throw new Error('email.exist');
     if (username) {
       exist = await User.findOne({ username: username }, "_id").lean();
-      if (exist) throw new Error('Username already exists');
+      if (exist) throw new Error('user.exist');
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -56,50 +58,37 @@ router.post('/signin', async (req, res, next) => {
     const schema = Joi.object().keys({
       email: Joi.string()
         .email()
-        .required()
-        .error(errors => {
-          return errors.map(err => {
-            switch (err.type) {
-              case 'any.required':
-                return { message: 'Email is required' };
-              case 'string.email':
-                return { message: 'Not a valid email' };
-            }
-          });
-        }),
+        .required(),
       password: Joi.string()
         .required()
-        .error(errors => {
-          return errors.map(err => {
-            switch (err.type) {
-              case 'any.required':
-                return {
-                  message: {
-                    en: 'Password is required',
-                    ru: 'Необходимо ввести пароль',
-                    az: 'Parol mütləqdi'
-                  }
-                };
+    });
+
+    let result = schema.validate(req.body,{abortEarly:false})
+
+    if(result.error){
+      throw new Error(result.error.details.map(e=> {
+        switch (e.path[0]) {
+          case "email": {
+            switch (e.type) {
+              case 'string.empty':
+                return 'email.required';
+              case 'string.email':
+                return 'email.notemail';
             }
-          });
-        })
-    });
-
-    Joi.validate(req.body, schema, { abortEarly: false }, (err, value) => {
-      const errors = {};
-      
-      if (err) {
-        err.details.forEach(el => {
-          errors[el.path[0]] = el.message;
-        });
-        throw new Error(JSON.stringify(errors));
-      } 
-    });
-
+          }
+          case "password": {
+            switch (e.type ) {
+              case 'string.empty':
+                return 'password.required'
+            }
+          }
+        }
+        }))
+    }
 
     const user = await User.findOne({ email }, "+password username role").lean();
 
-    if (!user) throw new Error('User Not Found');
+    if (!user) throw new Error('user.notfound');
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       const payload = {
@@ -112,7 +101,7 @@ router.post('/signin', async (req, res, next) => {
       });
       return res.json({ success: true, token: 'Bearer ' + token });
     } else {
-      throw new Error('Password is incorrect');
+      throw new Error('password.invalid');
     }
   } catch (error) {
     return next(error);

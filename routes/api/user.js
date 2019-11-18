@@ -52,7 +52,7 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
       $or: [{ username: req.params.username }, { _id: objId }]
     }).lean();
     
-    if (!user) throw new Error('No user found');
+    if (!user) throw new Error("user.notfound");
     const access = await requests.getUserAccess(req,res,next,user._id);
     return res.json({
       email: access.showEmail ? user.email : "No access",
@@ -84,11 +84,11 @@ router.put(
       let user;
       if (req.body.username && req.user.username !== req.body.username) {
         user = await User.findOne({ username: req.body.username }, "_id").lean();
-        if (user) throw new Error('Username already exist');
+        if (user) throw new Error("user.exist");
       }
       if (req.body.email && req.user.email !== req.body.email) {
         user = await User.findOne({ email: req.body.email }, "_id").lean();
-        if (user) throw new Error('Email already exist');
+        if (user) throw new Error("email.exist");
       }
 
       user = await User.findOneAndUpdate(
@@ -152,13 +152,13 @@ router.put(
       const isMatch = await bcrypt.compare(password, req.user.password);
       if (isMatch) {
         if (newPassword !== newPassword2)
-          throw new Error('Passwords do not match');
+          throw new Error("password.notmatch");
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
         await User.findByIdAndUpdate(req.user._id, { password: hash });
         return res.json('Password was succesfully changed');
       } else {
-        throw new Error('Old password is incorrect');
+        throw new Error("password.oldinvalid");
       }
     } catch (error) {
       next(error);
@@ -180,7 +180,7 @@ router.delete(
         await User.findOneAndDelete({ _id: req.user._id });
         return res.status(200).send('Successully deleted');
       } else {
-        throw new Error('Password is incorrect');
+        throw new Error("password.invalid");
       }
     } catch (error) {
       return next(error);

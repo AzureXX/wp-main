@@ -111,7 +111,7 @@ router.get('/:type', async (req, res, next) => {
     ];
 
     if (!types.includes(req.params.type))
-      throw new Error('Invalid search type');
+      throw new Error("search.invalidtype");
 
     const regex = new RegExp(req.query.search, 'i');
     const search = searchOptions(regex);
