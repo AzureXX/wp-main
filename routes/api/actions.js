@@ -16,7 +16,7 @@ router.post(
       const types = ['books', 'movies', 'courses', 'people', 'music'];
       const { type } = req.params;
       if (!types.includes(type)) 
-        throw new Error('Invalid type');
+        throw new Error('type.invalid');
       let { rating, status, id } = req.body;
       const RecommendationModel = models.getRecommendationModel(type);
       const RatingModel = models.getRatingModel(type);

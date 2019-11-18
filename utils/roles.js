@@ -3,12 +3,12 @@ const passport = require('passport');
 module.exports = {
   isAdmin: (req, res, next) => {
     if (req.user.role !== "admin") 
-      return next(new Error("Not authorised"));
+      return next(new Error("auth.false"));
     next();
   },
   isModerator: (req, res, next) => {
     if (req.user.role !== "admin" && req.user.role !== "moderator")
-      return next(new Error("Not authorised"));
+      return next(new Error("auth.false"));
     next();
   },
   isUser: (req,res,next) => {
@@ -19,7 +19,7 @@ module.exports = {
   },
   isBusiness: (req, res, next) => {
     if (req.user.accountType !== "business")
-      return next(new Error("Not authorised"));
+      return next(new Error("auth.false"));
     next();
   },
 };
