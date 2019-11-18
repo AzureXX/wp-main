@@ -37,7 +37,6 @@ router.post('/signup', async (req, res, next) => {
       username: newUser.username,
       role: newUser.role
     };
-    console.log(payload)
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });

@@ -259,11 +259,11 @@ module.exports = {
       }
       const items = await itemModel.find({ _id: { $nin: rated } }, "tags").lean();
       const tags = await this.calculateUserTags(req,res,next)
-      const pointedItems = items.map(item => ({
+      let pointedItems = items.map(item => ({
         data: item._id,
         points: transformation.calculatePoints(item.tags, tags)
       }));
-      pointedItems.sort((a, b) => b.points - a.points);
+      pointedItems = pointedItems.sort((a, b) => b.points - a.points).slice(0, 200);
       const toSave = { userId: req.user._id, [plural]: pointedItems };
       const recs = await itemRecommendationModel
         .findOneAndUpdate({ userId: req.user._id }, toSave, {
@@ -380,6 +380,7 @@ module.exports = {
             select: 'name description img position companyName salary'
           }).lean();
         return res.json(recs);
+        
       }
     } catch (error) {
       next(error);
