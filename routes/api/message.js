@@ -59,7 +59,7 @@ router.get('/get/id/:id',  async (req, res, next) => {
 //@access  Public
 router.get("/get/current", passport.authenticate('jwt', { session: false }), async (req,res,next) => {
   try {
-    const messages = await Message.find({$or : [{all: true}, {to: req.user.id}]})
+    const messages = await Message.find({$or : [{all: true}, {to: req.user._id}]}).lean()
     return res.json(messages)
   } catch (error) {
     next(error)

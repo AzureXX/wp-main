@@ -73,10 +73,10 @@ router.post(
       else if (typeof answers === 'string' && !isNaN(answers)) throw Error("Invalid answer")
 
       if( answers.length === 0) {
-        await QuestionAnswer.deleteOne({userId: req.user.id, _id: question})
+        await QuestionAnswer.deleteOne({userId: req.user._id, _id: question})
       } else {
-        await QuestionAnswer.updateOne({ userId: req.user.id, question: question }, {
-          userId: req.user.id,
+        await QuestionAnswer.updateOne({ userId: req.user._id, question: question }, {
+          userId: req.user._id,
           question: question,
           answers: answers
         },

@@ -46,7 +46,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
-      const response = await AccessGroup.find({ creator: req.user.id });
+      const response = await AccessGroup.find({ creator: req.user._id }).lean();
       return res.json(response);
     } catch (error) {
       next(error);
@@ -62,10 +62,10 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
-      const response = await AccessGroup.findOne({ creator: req.user.id, _id: req.params.id }).populate({
+      const response = await AccessGroup.findOne({ creator: req.user._id, _id: req.params.id }).populate({
         path: "users",
         select: "username"
-      });
+      }).lean();
       return res.json(response);
     } catch (error) {
       next(error);

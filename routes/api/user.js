@@ -18,7 +18,7 @@ router.get(
       return res.json({
         email: req.user.email,
         username: req.user.username,
-        id: req.user.id,
+        id: req.user._id,
         role: req.user.role,
         type: req.user.accountType,
         firstname: req.user.firstname,
@@ -50,14 +50,14 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
 
     const user = await User.findOne({
       $or: [{ username: req.params.username }, { _id: objId }]
-    });
+    }).lean();
     
     if (!user) throw new Error('No user found');
     const access = await requests.getUserAccess(req,res,next,user._id);
     return res.json({
       email: access.showEmail ? user.email : "No access",
       username: user.username,
-      id: user.id,
+      id: user._id,
       role: user.role,
       type: user.accountType,
       firstname: access.showName ? user.firstname : "No ",
@@ -83,16 +83,16 @@ router.put(
     try {
       let user;
       if (req.body.username && req.user.username !== req.body.username) {
-        user = await User.findOne({ username: req.body.username });
+        user = await User.findOne({ username: req.body.username }, "_id").lean();
         if (user) throw new Error('Username already exist');
       }
       if (req.body.email && req.user.email !== req.body.email) {
-        user = await User.findOne({ email: req.body.email });
+        user = await User.findOne({ email: req.body.email }, "_id").lean();
         if (user) throw new Error('Email already exist');
       }
 
       user = await User.findOneAndUpdate(
-        { _id: req.user.id },
+        { _id: req.user._id },
         {
           username: req.body.username || req.user.username,
           email: req.body.email || req.user.email,
@@ -155,7 +155,7 @@ router.put(
           throw new Error('Passwords do not match');
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
-        await User.findByIdAndUpdate(req.user.id, { password: hash });
+        await User.findByIdAndUpdate(req.user._id, { password: hash });
         return res.json('Password was succesfully changed');
       } else {
         throw new Error('Old password is incorrect');
@@ -177,7 +177,7 @@ router.delete(
       const { password } = req.body;
       const isMatch = await bcrypt.compare(password, req.user.password);
       if (isMatch) {
-        await User.findOneAndDelete({ _id: req.user.id });
+        await User.findOneAndDelete({ _id: req.user._id });
         return res.status(200).send('Successully deleted');
       } else {
         throw new Error('Password is incorrect');
@@ -219,7 +219,7 @@ router.put(
   async (req, res, next) => {
     try {
       const user = await User.findOneAndUpdate(
-        { _id: req.user.id },
+        { _id: req.user._id },
         {
           generalAccessOptions: {
             showEmail: !!req.body.showEmail,
@@ -251,7 +251,7 @@ router.put(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
       try {
-          await User.update({_id: req.user.id}, {emotion: req.body.emotion || "neutral"})
+          await User.update({_id: req.user._id}, {emotion: req.body.emotion || "neutral"})
           return res.json("success")
       } catch (error) {
           next(error)

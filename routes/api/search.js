@@ -33,41 +33,41 @@ router.get('/', async (req, res, next) => {
         $or: search
       },
       'name img'
-    ).limit(20);
+    ).limit(20).lean();
     let subcategories = Subcategory.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20);
+    ).limit(20).lean();
     let topics = Topic.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20);
+    ).limit(20).lean();
     let subtopics = Subtopic.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20);
+    ).limit(20).lean();
 
     let books = Book.find({
       $or: search
-    },'name img description').limit(20);
+    },'name img description').limit(20).lean();
     let movies = Movie.find({
       $or: search
-    },'name img description').limit(20);
+    },'name img description').limit(20).lean();
     let courses = Course.find({
       $or: search
-    }, 'name img description').limit(20);
+    }, 'name img description').limit(20).lean();
     let people = Person.find({
       $or: search
-    }, 'name img description').limit(20);
+    }, 'name img description').limit(20).lean();
     let music = Music.find({
       name: regex
-    },'name img').limit(20);
+    },'name img').limit(20).lean();
     categories = await categories;
     subcategories = await subcategories;
     topics = await topics;
@@ -117,7 +117,7 @@ router.get('/:type', async (req, res, next) => {
     const search = searchOptions(regex);
 
     if (req.params.type === 'users') {
-      const users = await User.find({ username: regex }, 'username');
+      const users = await User.find({ username: regex }, 'username').lean();
       return res.json(users);
     } else if (req.params.type === 'education') {
       const Category = getModel('categories');
@@ -129,25 +129,25 @@ router.get('/:type', async (req, res, next) => {
           $or: search
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       let subcategories = Subcategory.find(
         {
           $or: search
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       let topics = Topic.find(
         {
           $or: search
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       let subtopics = Subtopic.find(
         {
           $or: search
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       categories = await categories;
       subcategories = await subcategories;
       topics = await topics;
@@ -160,7 +160,7 @@ router.get('/:type', async (req, res, next) => {
           name: regex
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       return res.json(music);
     }
     else {
@@ -170,7 +170,7 @@ router.get('/:type', async (req, res, next) => {
           $or: search
         },
         'name'
-      ).limit(20);
+      ).limit(20).lean();
       return res.json(items);
     }
   } catch (error) {
