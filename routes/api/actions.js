@@ -24,13 +24,13 @@ router.post(
       const singular = transformation.getSingular(type);
       if ((status !== 2 && status) || rating) {
         RecommendationModel.updateOne(
-          { userId: req.user.id },
+          { userId: req.user._id },
           { $pull: { [type]: { data: id } } }
         ).exec();
       }
       if (status === 2) {
         await RatingModel.deleteOne({
-          userId: req.user.id,
+          userId: req.user._id,
           [singular]: id
         });
       } else {
@@ -38,9 +38,9 @@ router.post(
         else if (status) rating = 0;
         if(status == 0 && !rating) {
           await RatingModel.updateOne(
-            { userId: req.user.id, [singular]: id },
+            { userId: req.user._id, [singular]: id },
             {
-              userId: req.user.id,
+              userId: req.user._id,
               [singular]: id,
               status: parseInt(status, 10)
             },
@@ -48,9 +48,9 @@ router.post(
           );
         } else {
           await RatingModel.updateOne(
-            { userId: req.user.id, [singular]: id },
+            { userId: req.user._id, [singular]: id },
             {
-              userId: req.user.id,
+              userId: req.user._id,
               [singular]: id,
               rating: parseInt(rating, 10),
               status: parseInt(status, 10)
@@ -60,7 +60,7 @@ router.post(
         }
         
       }
-      const response = await RatingModel.find({userId: req.user.id}).populate({path: singular, select:"name"})
+      const response = await RatingModel.find({userId: req.user._id}).populate({path: singular, select:"name"}).lean()
       return res.json(response)
     } catch (error) {
       next(error);

@@ -71,7 +71,7 @@ router.post(
           req.body.id +
           '?api_key=ca8f1fea6bfe2ee1300c1465e40444d9'
       );
-      const exist = await Movie.findOne({"name.us": response.data.title})
+      const exist = await Movie.findOne({"name.us": response.data.title}, "_id").lean()
       if(exist) throw new Error("Movie already exists")
       const tags = {}
       response.data.genres.forEach(genre => {

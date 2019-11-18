@@ -57,7 +57,7 @@ router.get(
   roles.isBusiness,
   async (req, res, next) => {
     try {
-      const response = await Vacancy.find({ creator: req.user.id });
+      const response = await Vacancy.find({ creator: req.user._id }).lean();
       return res.json(response);
     } catch (error) {
       next(error);

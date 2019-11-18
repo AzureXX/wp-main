@@ -15,17 +15,17 @@ router.post('/signup', async (req, res, next) => {
     if (!email) throw new Error('Email is required');
     if (password != password2) throw new Error('Passwords do not match');
 
-    let user = await User.findOne({ email: req.body.email });
+    let exist = await User.findOne({ email: req.body.email }, "_id").lean();
 
-    if (user) throw new Error('Email already exists');
+    if (exist) throw new Error('Email already exists');
     if (username) {
-      user = await User.findOne({ username: username });
-      if (user) throw new Error('Username already exists');
+      exist = await User.findOne({ username: username }, "_id").lean();
+      if (exist) throw new Error('Username already exists');
     }
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    user = new User({
+    const user = new User({
       username: username,
       email: email,
       password: hash,
@@ -33,10 +33,11 @@ router.post('/signup', async (req, res, next) => {
     });
     const newUser = await user.save();
     const payload = {
-      id: newUser._id,
+      id: newUser.id,
       username: newUser.username,
       role: newUser.role
     };
+    console.log(payload)
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });
@@ -96,7 +97,7 @@ router.post('/signin', async (req, res, next) => {
       } 
     });
 
-    const user = await User.findOne({ email }, "+password");
+    const user = await User.findOne({ email }, "+password username role").lean();
     if (!user) throw new Error('User Not Found');
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
