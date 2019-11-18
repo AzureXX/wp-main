@@ -68,6 +68,7 @@ router.get('/', async (req, res, next) => {
     let music = Music.find({
       name: regex
     },'name img').limit(20).lean();
+
     categories = await categories;
     subcategories = await subcategories;
     topics = await topics;

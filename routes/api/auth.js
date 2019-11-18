@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 //@route   POST api/auth/signup
 //@desc    Return JWT
 //@access  Public
@@ -12,8 +12,9 @@ router.post('/signup', async (req, res, next) => {
 
   try {
     if (!password) throw new Error('Password is required');
+    if (password.length < 5) throw new Error('Password must contain 5 or more characters');
     if (!email) throw new Error('Email is required');
-    if (password != password2) throw new Error('Passwords do not match');
+    if (password !== password2) throw new Error('Passwords do not match');
 
     let exist = await User.findOne({ email: req.body.email }, "_id").lean();
 
@@ -37,7 +38,7 @@ router.post('/signup', async (req, res, next) => {
       username: newUser.username,
       role: newUser.role
     };
-    console.log(payload)
+    // console.log(payload)
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });
@@ -78,25 +79,31 @@ router.post('/signin', async (req, res, next) => {
                   message: {
                     en: 'Password is required',
                     ru: 'Необходимо ввести пароль',
-                    az: 'Parol mütləqdi'
+                    az: 'Şifrə mütləqdi'
                   }
-                };
+                }
             }
           });
         })
     });
-
-    Joi.validate(req.body, schema, { abortEarly: false }, (err, value) => {
-      const errors = {};
+    
+    // schema.validate(req.body, { abortEarly: false }, (err, value) => {
+    //   const errors = {};
       
-      if (err) {
-        err.details.forEach(el => {
-          errors[el.path[0]] = el.message;
-        });
-        throw new Error(JSON.stringify(errors));
-      } 
-    });
+    //   if (err) {
+    //     console.log(err)
+    //     err.details.forEach(el => {
+    //       errors[el.path[0]] = el.message;
+    //     });
+    //     console.log(errors)
+    //     throw new Error(JSON.stringify(errors));
+    //   } 
+    // });
 
+    let result = schema.validate(req.body,{abortEarly:false})
+    if(result.error){
+      throw new Error(result.error)
+    }
 
     const user = await User.findOne({ email }, "+password username role").lean();
 
