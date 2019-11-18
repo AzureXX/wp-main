@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 //@route   POST api/auth/signup
 //@desc    Return JWT
 //@access  Public
@@ -12,10 +12,12 @@ router.post('/signup', async (req, res, next) => {
 
   try {
 
+
     if (!password) throw new Error('password.required');
     if (password.length < 5) throw new Error('password.min');
     if (!email) throw new Error('email.required');
     if (password !== password2) throw new Error('password.notmatch');
+
 
     let exist = await User.findOne({ email: req.body.email }, "_id").lean();
 
@@ -39,6 +41,7 @@ router.post('/signup', async (req, res, next) => {
       username: newUser.username,
       role: newUser.role
     };
+
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });
@@ -61,6 +64,7 @@ router.post('/signin', async (req, res, next) => {
         .required(),
       password: Joi.string()
         .required()
+
     });
 
     let result = schema.validate(req.body,{abortEarly:false})
@@ -84,6 +88,7 @@ router.post('/signin', async (req, res, next) => {
           }
         }
         }))
+
     }
 
     const user = await User.findOne({ email }, "+password username role").lean();
