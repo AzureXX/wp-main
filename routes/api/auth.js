@@ -97,7 +97,9 @@ router.post('/signin', async (req, res, next) => {
       } 
     });
 
+
     const user = await User.findOne({ email }, "+password username role").lean();
+
     if (!user) throw new Error('User Not Found');
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {

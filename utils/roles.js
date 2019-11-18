@@ -2,7 +2,8 @@ const passport = require('passport');
 
 module.exports = {
   isAdmin: (req, res, next) => {
-    if (req.user.role !== "admin") return next(new Error("Not authorised"));
+    if (req.user.role !== "admin") 
+      return next(new Error("Not authorised"));
     next();
   },
   isModerator: (req, res, next) => {
