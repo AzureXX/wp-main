@@ -7,6 +7,7 @@
     "dev_start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@hapi/joi": "^16.1.7",
     "aws-sdk": "^2.457.0",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
@@ -16,7 +17,6 @@
     "dotenv": "^6.2.0",
     "express": "~4.16.0",
     "helmet": "^3.21.2",
-    "joi": "^14.3.1",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.10",
     "morgan": "~1.9.0",
