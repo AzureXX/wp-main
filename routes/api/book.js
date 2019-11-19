@@ -72,7 +72,7 @@ router.post(
         allowedTags: []
       });
       const genres = req.body.genres
-        ? req.body.genres.split(',').map(i => i.trim())
+        ? req.body.genres.split(',').map(i => i.trim().toLowerCase())
         : null;
       const tags = {}
       if(genres) {

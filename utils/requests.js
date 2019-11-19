@@ -79,7 +79,7 @@ module.exports = {
         select: select,
         populate: { path: deep }
       });
-      if (!item) throw new Error(`${name}.notfound`);
+      if (!item) throw new Error(`item.notfound`);
 
       return res.json(item);
     } catch (error) {
@@ -115,7 +115,7 @@ module.exports = {
       const Model = models.getModel(name);
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
-      if (!item) throw new Error(`${name}.notfound`);
+      if (!item) throw new Error(`item.notfound`);
       if (check && req.user.role !== 'admin') {
         if (item.creator.toString() !== req.user._id)
           throw new Error("auth.false");

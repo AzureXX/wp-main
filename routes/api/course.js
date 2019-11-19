@@ -3,7 +3,8 @@ const router = express.Router();
 const passport = require('passport');
 const roles = require('../../utils/roles');
 const requests = require('../../utils/requests');
-
+const axios = require('axios');
+const Course = require("../../models/Course")
 //@route   POST api/course/add
 //@desc    Adds new course to database
 //@access  Private/Moderator
@@ -54,4 +55,55 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'courses');
 });
 
+//@route   POST api/course/udemy
+//@desc    Adds new course to database from udemy
+//@access  Private/Moderator
+router.post(
+  '/udemy',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    try {
+      if(!req.body.link) throw new Error("course.nolink")
+      const courses = await axios.get("https://www.udemy.com/api-2.0/courses/", {
+        params: {search: req.body.link},
+        "headers": {
+          "Authorization" : process.env.UDEMY_TOKEN
+        }
+      })
+      const index  = courses.data.results.findIndex(course => "/course/"+ req.body.link + "/" === course.url
+      )
+      let genres = req.body.genres ?  req.body.genres.split(",").map(genre => genre.trim().toLowerCase()) : []
+      
+      const data = courses.data.results[index]
+      genres.push(data.is_paid ?  "paid" : "free");
+      const tags = {};
+      if(genres) {
+        genres.forEach(genre => {
+          tags[genre.toLowerCase().split(" ").join("_")] = 3
+        })
+      }
+      const course = new Course({
+        name: {
+          us: data.title
+        },
+        link: {
+          us: "https://www.udemy.com" + data.url
+        },
+        description: {
+          us: data.headline
+        },
+        img: {
+          us: data.image_480x270
+        },
+        genres,
+        tags
+      })
+      await course.save();
+      return res.json("success")
+    } catch (error) {
+      next(error)
+    }
+  }
+);
 module.exports = router;
