@@ -106,4 +106,25 @@ router.post(
     }
   }
 );
+
+//@route   GET api/course/edx
+//@desc    GET access token for edx
+//@access  Private/Moderator
+router.get(
+  '/edx',
+  passport.authenticate('jwt', { session: false }),
+  roles.isModerator,
+  async (req, res, next) => {
+    try {
+      const token = await axios.post("https://api.edx.org/oauth2/v1/access_token", {
+        "client_id": process.env.EDX_CLIENT_ID,
+        "client_secret": process.env.EDX_CLIENT_SECRET,
+        "grant_type": "client_credentials",
+        "token_type": "jwt"
+      })
+      res.json(token)
+    } catch (error) {
+      next(error)
+    }
+  })
 module.exports = router;
