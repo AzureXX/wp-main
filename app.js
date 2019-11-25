@@ -103,7 +103,7 @@ app.use("/api/files", require("./routes/api/files"));
 
 app.use((err, req, res, next) => {
     res.status(500);
-    return res.json({ message: err });
+    res.json({ message: err });
 });
 
 module.exports = app;

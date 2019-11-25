@@ -1,5 +1,10 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 
+const validator = {
+  checkBookBody: require('../validation/validators/bookValidator'),
+  // import other validators
+}
+
 module.exports = {
   getOffset(page, size) {
     page = parseInt(page);
@@ -68,7 +73,12 @@ module.exports = {
       az: item ? item.az : null
     };
   },
-  common({ name, description, img, tags }) {
+  common({
+    name,
+    description,
+    img,
+    tags
+  }) {
     return {
       name: this.multi(name),
       description: this.multi(description),
@@ -81,10 +91,26 @@ module.exports = {
     if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
     return item.split(',').map(i => i.trim());
   },
-
   getObject(req, type) {
     switch (type) {
       case 'book':
+        let test = (name, desc, img, tags, authors, genres, isbn, published, publisher, wikilink, website) => {
+          return {
+            name: name,
+            description: desc,
+            img: img,
+            tags: tags,
+            authors: authors,
+            genres: genres,
+            isbn: isbn,
+            published: published,
+            publisher: publisher,
+            wikipediaLink: wikilink,
+            website: website
+          }
+        }
+        validator.checkBookBody(test( /* fil data */ ))
+        // validator.checkBookBody(req.body)
         return this.getBookObject(req.body);
       case 'movie':
         return this.getMovieObject(req.body);
@@ -135,12 +161,11 @@ module.exports = {
       ...this.common(body),
       actors: this.strToArr(body.actors, true),
       genres: this.strToArr(body.genres),
-      crew: body.crew
-        ? body.crew.map(item => ({
-            role: item.role,
-            id: this.mongooseId(item.id.trim())
-          }))
-        : null,
+      crew: body.crew ?
+        body.crew.map(item => ({
+          role: item.role,
+          id: this.mongooseId(item.id.trim())
+        })) : null,
       released: body.released
     };
   },
@@ -161,9 +186,8 @@ module.exports = {
     return {
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
-      genres: body.genres
-        ? body.genres.split(',').map(item => item.trim())
-        : null,
+      genres: body.genres ?
+        body.genres.split(',').map(item => item.trim()) : null,
       published: body.published,
       publisher: this.strToArr(body.publisher, true),
       website: this.multi(body.website),
@@ -209,7 +233,9 @@ module.exports = {
     };
   },
   getVacancyObject(req) {
-    const { body } = req;
+    const {
+      body
+    } = req;
     return {
       creator: this.mongooseId(req.user._id),
       education: body.education,
@@ -248,7 +274,9 @@ module.exports = {
     };
   },
   getAccessGroupObject(req) {
-    let { body } = req;
+    let {
+      body
+    } = req;
     if (!body.users) body.users = [];
     return {
       creator: this.mongooseId(req.user._id),
@@ -269,7 +297,9 @@ module.exports = {
     };
   },
   getTaskObject(req) {
-    const { body } = req;
+    const {
+      body
+    } = req;
 
     return {
       creator: this.mongooseId(req.user._id),
@@ -304,11 +334,11 @@ module.exports = {
     const calculated = {};
     init.forEach(item => {
       for (const prop in item[type].tags) {
-        const coef = education
-          ? item.status
-          : item.status == 0
-          ? item.rating - 3
-          : 0;
+        const coef = education ?
+          item.status :
+          item.status == 0 ?
+          item.rating - 3 :
+          0;
         const value = item[type].tags[prop] * coef;
         if (calculated[prop] !== undefined) {
           calculated[prop] += value;
@@ -329,7 +359,6 @@ module.exports = {
     });
     return total;
   },
-
   calculatePoints(tags, user) {
     let points = 0;
     for (const prop in tags) {
@@ -339,13 +368,13 @@ module.exports = {
     return points;
   },
   convertMoodToTags(mood) {
-    switch(mood) {
-      case "sad": 
+    switch (mood) {
+      case "sad":
         return {
           comedy: 100
         }
-      default: 
-        return {}
+        default:
+          return {}
     }
   }
 };

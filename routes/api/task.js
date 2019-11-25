@@ -3,8 +3,6 @@ const router = express.Router();
 const passport = require('passport');
 const requests = require("../../utils/requests.js")
 
-
-
 //@route   POST api/task/add
 //@desc    Adds new task
 //@access  Private
@@ -48,7 +46,6 @@ router.put(
     await requests.updateTaskStatus(req,res,next)
   }
 );
-
 
 //@route   PUT api/task/archive/:id
 //@desc    Update task archive status

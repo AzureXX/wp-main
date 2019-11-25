@@ -6,7 +6,6 @@ const MovieRating = require('../models/Ratings/MovieRating');
 const CourseRating = require('../models/Ratings/CourseRating');
 const PersonRating = require('../models/Ratings/PersonRating');
 const MusicRating = require('../models/Ratings/MusicRating');
-
 // CONTENT MODELS
 const Book = require('../models/Book');
 const Movie = require('../models/Movie');
@@ -18,13 +17,11 @@ const EducationCategory = require('../models/Education/EducationCategory');
 const EducationSubcategory = require('../models/Education/EducationSubcategory');
 const EducationSubtopic = require('../models/Education/EducationSubtopic');
 const EducationTopic = require('../models/Education/EducationTopic');
-
 // EDUCATION STATUS MODELS
 const EducationCategoryStatus = require('../models/Education/Status/EducationCategoryStatus');
 const EducationSubcategoryStatus = require('../models/Education/Status/EducationSubcategoryStatus');
 const EducationSubtopicStatus = require('../models/Education/Status/EducationSubtopicStatus');
 const EducationTopicStatus = require('../models/Education/Status/EducationTopicStatus');
-
 // RECOMENDATION MODELS
 const BookRecommendation = require('../models/Recommendations/BookRecommendation');
 const MovieRecommendation = require('../models/Recommendations/MovieRecommendation');
@@ -33,14 +30,12 @@ const PersonRecommendation = require('../models/Recommendations/PersonRecommenda
 const MusicRecommendation = require('../models/Recommendations/MusicRecommendation');
 const EducationRecommendation = require('../models/Recommendations/EducationRecommendation');
 const VacancyRecommendation = require('../models/Recommendations/VacancyRecommendation');
-
 //Questions Models
 const Question = require('../models/Question');
 const Questionnaire = require('../models/Questionnaire');
-
 //Vacancy Models
 const Vacancy = require('../models/Vacancy');
-
+// Other Models
 const AccessGroup = require('../models/AccessGroup');
 const Message = require('../models/Message');
 const Notification = require('../models/Notification');

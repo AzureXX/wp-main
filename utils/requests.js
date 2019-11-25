@@ -17,31 +17,33 @@ module.exports = {
       if (req.query.filter) {
         filterJSON = JSON.parse(req.query.filter);
 
-        filterJSON.genres && filterJSON.genres.length > 0
-          ? (filter.genres = { $all: filterJSON.genres })
-          : null;
+        filterJSON.genres && filterJSON.genres.length > 0 ?
+          (filter.genres = {
+            $all: filterJSON.genres
+          }) :
+          null;
 
         filterJSON.published &&
-        filterJSON.published.start != null &&
-        filterJSON.published.end != null
-          ? (filter.published = {
-              $gte: new Date(filterJSON.published.start, 0, 1),
-              $lt: new Date(filterJSON.published.end + 1, 0, 1)
-            })
-          : null;
+          filterJSON.published.start != null &&
+          filterJSON.published.end != null ?
+          (filter.published = {
+            $gte: new Date(filterJSON.published.start, 0, 1),
+            $lt: new Date(filterJSON.published.end + 1, 0, 1)
+          }) :
+          null;
 
         filterJSON.released &&
-        filterJSON.released.start != null &&
-        filterJSON.released.end != null
-          ? (filter.released = {
-              $gte: new Date(filterJSON.released.start, 0, 1),
-              $lt: new Date(filterJSON.released.end + 1, 0, 1)
-            })
-          : null;
+          filterJSON.released.start != null &&
+          filterJSON.released.end != null ?
+          (filter.released = {
+            $gte: new Date(filterJSON.released.start, 0, 1),
+            $lt: new Date(filterJSON.released.end + 1, 0, 1)
+          }) :
+          null;
 
-        filterJSON.category && filterJSON.category != "all"? (filter.category = filterJSON.category) : null;
+        filterJSON.category && filterJSON.category != "all" ? (filter.category = filterJSON.category) : null;
 
-        filterJSON.city && filterJSON.city !="all"? (filter.city = filterJSON.city) : null;
+        filterJSON.city && filterJSON.city != "all" ? (filter.city = filterJSON.city) : null;
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
@@ -77,7 +79,9 @@ module.exports = {
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
-        populate: { path: deep }
+        populate: {
+          path: deep
+        }
       });
       if (!item) throw new Error(`item.notfound`);
 
@@ -98,11 +102,15 @@ module.exports = {
       }
       if (['book', 'movie', 'course', 'person', 'music'].includes(name)) {
         const Rating = models.getRatingModel(name);
-        Rating.deleteMany({ [name]: req.params.id }).exec();
+        Rating.deleteMany({
+          [name]: req.params.id
+        }).exec();
       }
       if (['category', 'subcategory', 'topic', 'subtopic'].includes(name)) {
         const Status = models.getEducationStatusModel(name);
-        Status.deleteMany({ [name]: req.params.id }).exec();
+        Status.deleteMany({
+          [name]: req.params.id
+        }).exec();
       }
       await model.findByIdAndDelete(req.params.id);
       return res.json('Success');
@@ -110,6 +118,7 @@ module.exports = {
       next(error);
     }
   },
+  // must joi here
   async editItem(req, res, next, name, check) {
     try {
       const Model = models.getModel(name);
@@ -129,6 +138,8 @@ module.exports = {
       next(error);
     }
   },
+
+  // must add joi here too 
   async createItem(req, res, next, name) {
     try {
       const Model = models.getModel(name);
@@ -144,7 +155,9 @@ module.exports = {
     try {
       const parent = transformation.getParentName(name)
       const Model = models.getModel(parent);
-      const items = await Model.find({[name]: req.params.id}).lean()
+      const items = await Model.find({
+        [name]: req.params.id
+      }).lean()
       return res.json(items)
     } catch (error) {
       next(error)
@@ -161,22 +174,34 @@ module.exports = {
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
           .getModel('user')
-          .findOne({ username: req.params.id }, '_id').lean();
+          .findOne({
+            username: req.params.id
+          }, '_id').lean();
         if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
 
       const access = await this.getUserAccess(req, res, next, req.params.id);
       if (type === 'book' && !access.showBookInfo)
-        return res.json({ ratings: [] });
+        return res.json({
+          ratings: []
+        });
       if (type === 'movie' && !access.showMovieInfo)
-        return res.json({ ratings: [] });
+        return res.json({
+          ratings: []
+        });
       if (type === 'music' && !access.showMusicInfo)
-        return res.json({ ratings: [] });
+        return res.json({
+          ratings: []
+        });
       if (type === 'course' && !access.showCourseInfo)
-        return res.json({ ratings: [] });
+        return res.json({
+          ratings: []
+        });
 
-      const ratings = await Model.findOne({ userId: req.params.id }).populate({
+      const ratings = await Model.findOne({
+        userId: req.params.id
+      }).populate({
         path: !req.query.populate ? type + '.id' : '',
         select: 'name'
       }).lean();
@@ -195,7 +220,9 @@ module.exports = {
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
           .getModel('user')
-          .findOne({ username: req.params.id }, '_id').lean();
+          .findOne({
+            username: req.params.id
+          }, '_id').lean();
         if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
@@ -204,25 +231,33 @@ module.exports = {
 
       let bookRating =
         access.showBookInfo &&
-        BookRating.find({ userId: req.params.id }).populate({
+        BookRating.find({
+          userId: req.params.id
+        }).populate({
           path: 'book',
           select: 'name'
         }).lean();
       let movieRating =
         access.showMovieInfo &&
-        MovieRating.find({ userId: req.params.id }).populate({
+        MovieRating.find({
+          userId: req.params.id
+        }).populate({
           path: 'movie',
           select: 'name'
         }).lean();
       let musicRating =
         access.showMusicInfo &&
-        MusicRating.find({ userId: req.params.id }).populate({
+        MusicRating.find({
+          userId: req.params.id
+        }).populate({
           path: 'music',
           select: 'name'
         }).lean();
       let courseRating =
         access.showCourseInfo &&
-        CourseRating.find({ userId: req.params.id }).populate({
+        CourseRating.find({
+          userId: req.params.id
+        }).populate({
           path: 'course',
           select: 'name'
         }).lean();
@@ -252,21 +287,32 @@ module.exports = {
       const itemRecommendationModel = models.getRecommendationModel(name);
       const plural = transformation.getPlural(name);
 
-      const ratings = await itemRatingModel.find({ userId: req.user._id }).lean();
+      const ratings = await itemRatingModel.find({
+        userId: req.user._id
+      }).lean();
       let rated = [];
       if (ratings) {
         rated = ratings.map(item => item[name]);
       }
-      const items = await itemModel.find({ _id: { $nin: rated } }, "tags").lean();
-      const tags = await this.calculateUserTags(req,res,next)
+      const items = await itemModel.find({
+        _id: {
+          $nin: rated
+        }
+      }, "tags").lean();
+      const tags = await this.calculateUserTags(req, res, next)
       let pointedItems = items.map(item => ({
         data: item._id,
         points: transformation.calculatePoints(item.tags, tags)
       }));
       pointedItems = pointedItems.sort((a, b) => b.points - a.points).slice(0, 200);
-      const toSave = { userId: req.user._id, [plural]: pointedItems };
+      const toSave = {
+        userId: req.user._id,
+        [plural]: pointedItems
+      };
       const recs = await itemRecommendationModel
-        .findOneAndUpdate({ userId: req.user._id }, toSave, {
+        .findOneAndUpdate({
+          userId: req.user._id
+        }, toSave, {
           upsert: true,
           returnOriginal: false,
           new: true
@@ -288,15 +334,16 @@ module.exports = {
           points: Math.floor(Math.random() * 10000)
         }))
         .sort((a, b) => b.points - a.points);
-      const recs = await VacancyRecommendation.findOneAndUpdate(
-        { userId: req.user._id },
-        { userId: req.user._id, vacancies },
-        {
-          upsert: true,
-          returnOriginal: false,
-          new: true
-        }
-      ).populate('vacancies.data');
+      const recs = await VacancyRecommendation.findOneAndUpdate({
+        userId: req.user._id
+      }, {
+        userId: req.user._id,
+        vacancies
+      }, {
+        upsert: true,
+        returnOriginal: false,
+        new: true
+      }).populate('vacancies.data');
       return res.json(recs);
     } catch (error) {
       next(error);
@@ -316,7 +363,7 @@ module.exports = {
         Topic.find().lean(),
         Subtopic.find().lean()
       ]);
-      const tags = await this.calculateUserTags(req,res,next)
+      const tags = await this.calculateUserTags(req, res, next)
 
       categories = categories
         .map(item => ({
@@ -342,15 +389,19 @@ module.exports = {
           points: transformation.calculatePoints(item.tags, tags)
         }))
         .sort((a, b) => b.points - a.points);
-      const recs = await Education.findOneAndUpdate(
-        { userId: req.user._id },
-        { userId: req.user._id, categories, subcategories, topics, subtopics },
-        {
-          upsert: true,
-          returnOriginal: false,
-          new: true
-        }
-      ).populate({
+      const recs = await Education.findOneAndUpdate({
+        userId: req.user._id
+      }, {
+        userId: req.user._id,
+        categories,
+        subcategories,
+        topics,
+        subtopics
+      }, {
+        upsert: true,
+        returnOriginal: false,
+        new: true
+      }).populate({
         path: 'categories.data subcategories.data topics.data subtopics.data',
         select: 'name icon'
       });
@@ -365,28 +416,31 @@ module.exports = {
       const plural = transformation.getPlural(name);
       if (name === 'education') {
         const recs = await itemRecommendationModel
-          .findOne({ userId: req.user._id })
+          .findOne({
+            userId: req.user._id
+          })
           .populate({
-            path:
-              'categories.data subcategories.data topics.data subtopics.data',
+            path: 'categories.data subcategories.data topics.data subtopics.data',
             select: 'name icon'
           }).lean();
         return res.json(recs);
       } else {
         const recs = await itemRecommendationModel
-          .findOne({ userId: req.user._id })
+          .findOne({
+            userId: req.user._id
+          })
           .populate({
             path: plural + '.data',
             select: 'name description img position companyName salary'
           }).lean();
         return res.json(recs);
-        
+
       }
     } catch (error) {
       next(error);
     }
   },
-  
+
   async calculateUserTags(req, res, next) {
     try {
       const userId = req.user._id;
@@ -408,27 +462,62 @@ module.exports = {
         topics,
         subtopics
       ] = await Promise.all([
-        BookRating.find({ userId })
-          .populate({ path: 'book', select: 'tags' })
-          .lean(),
-        MovieRating.find({ userId })
-          .populate({ path: 'movie', select: 'tags' })
-          .lean(),
-        MusicRating.find({ userId })
-          .populate({ path: 'music', select: 'tags' })
-          .lean(),
-        CourseRating.find({ userId })
-          .populate({ path: 'course', select: 'tags' })
-          .lean(),
-        SubcategoryStatus.find({ userId })
-          .populate({ path: 'subcategory', select: 'tags' })
-          .lean(),
-        TopicStatus.find({ userId })
-          .populate({ path: 'topic', select: 'tags' })
-          .lean(),
-        SubtopicStatus.find({ userId })
-          .populate({ path: 'subtopic', select: 'tags' })
-          .lean()
+        BookRating.find({
+          userId
+        })
+        .populate({
+          path: 'book',
+          select: 'tags'
+        })
+        .lean(),
+        MovieRating.find({
+          userId
+        })
+        .populate({
+          path: 'movie',
+          select: 'tags'
+        })
+        .lean(),
+        MusicRating.find({
+          userId
+        })
+        .populate({
+          path: 'music',
+          select: 'tags'
+        })
+        .lean(),
+        CourseRating.find({
+          userId
+        })
+        .populate({
+          path: 'course',
+          select: 'tags'
+        })
+        .lean(),
+        SubcategoryStatus.find({
+          userId
+        })
+        .populate({
+          path: 'subcategory',
+          select: 'tags'
+        })
+        .lean(),
+        TopicStatus.find({
+          userId
+        })
+        .populate({
+          path: 'topic',
+          select: 'tags'
+        })
+        .lean(),
+        SubtopicStatus.find({
+          userId
+        })
+        .populate({
+          path: 'subtopic',
+          select: 'tags'
+        })
+        .lean()
       ]);
       const calculatedBooks = transformation.calculateItemTags(books, 'book');
       const calculatedMovies = transformation.calculateItemTags(
@@ -450,35 +539,38 @@ module.exports = {
         'subtopic'
       );
       const mood = transformation.convertMoodToTags(req.user.emotion)
-      const total = transformation.calculateTotal(calculatedBooks,calculatedMovies,calculatedMusic,calculatedCourses,calculatedSubcategory,calculatedTopic,calculatedSubtopic, mood)
-      const user = await User.findOneAndUpdate(
-        { _id: req.user._id },
-        {
-          tags: total
-        },
-        { upsert: true, returnOriginal: false, new: true }
-      );
+      const total = transformation.calculateTotal(calculatedBooks, calculatedMovies, calculatedMusic, calculatedCourses, calculatedSubcategory, calculatedTopic, calculatedSubtopic, mood)
+      const user = await User.findOneAndUpdate({
+        _id: req.user._id
+      }, {
+        tags: total
+      }, {
+        upsert: true,
+        returnOriginal: false,
+        new: true
+      });
       return user.tags
     } catch (error) {
       next(error);
     }
   },
-  
+
   /************
     EDU STATUS
   ************/
   async setEducationStatus(req, res, next, type) {
     try {
       const EducationStatusModel = models.getEducationStatusModel(type);
-      const status = await EducationStatusModel.updateOne(
-        { userId: req.user._id, [type]: req.body.id },
-        {
-          userId: req.user._id,
-          [type]: req.body.id,
-          status: parseInt(req.body.status)
-        },
-        { upsert: true }
-      );
+      const status = await EducationStatusModel.updateOne({
+        userId: req.user._id,
+        [type]: req.body.id
+      }, {
+        userId: req.user._id,
+        [type]: req.body.id,
+        status: parseInt(req.body.status)
+      }, {
+        upsert: true
+      });
       return res.json('success');
     } catch (error) {
       next(error);
@@ -491,12 +583,16 @@ module.exports = {
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
           .getModel('user')
-          .findOne({ username: req.params.id }, '_id').lean();
+          .findOne({
+            username: req.params.id
+          }, '_id').lean();
         if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
       const access = await this.getUserAccess(req, res, next, req.params.id);
-      if (!access.showEducationInfo) return res.json({ stasuses: [] });
+      if (!access.showEducationInfo) return res.json({
+        stasuses: []
+      });
       const statuses = await EducationStatusModel.find({
         userId: req.params.id
       }).lean();
@@ -514,32 +610,52 @@ module.exports = {
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
           .getModel('user')
-          .findOne({ username: req.params.id }, '_id').lean();
+          .findOne({
+            username: req.params.id
+          }, '_id').lean();
         if (!user) throw new Error("user.notfound");
         req.params.id = user._id;
       }
 
       const access = await this.getUserAccess(req, res, next, req.params.id);
       if (!access.showEducationInfo)
-        return res.json({ subcategories: [], topics: [], subtopics: [] });
+        return res.json({
+          subcategories: [],
+          topics: [],
+          subtopics: []
+        });
 
-      let subcategories = Subcategory.find(
-        { userId: req.params.id },
+      let subcategories = Subcategory.find({
+          userId: req.params.id
+        },
         '-_id -__v'
-      ).populate({ path: 'subcategory', select: 'name' }).lean();
-      let topics = Topic.find({ userId: req.params.id }, '-_id -__v').populate({
+      ).populate({
+        path: 'subcategory',
+        select: 'name'
+      }).lean();
+      let topics = Topic.find({
+        userId: req.params.id
+      }, '-_id -__v').populate({
         path: 'topic',
         select: 'name'
       }).lean();
-      let subtopics = Subtopic.find(
-        { userId: req.params.id },
+      let subtopics = Subtopic.find({
+          userId: req.params.id
+        },
         '-_id -__v'
-      ).populate({ path: 'subtopic', select: 'name' }).lean();
+      ).populate({
+        path: 'subtopic',
+        select: 'name'
+      }).lean();
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
 
-      return res.json({ subcategories, topics, subtopics });
+      return res.json({
+        subcategories,
+        topics,
+        subtopics
+      });
     } catch (error) {
       next(error);
     }
@@ -571,7 +687,9 @@ module.exports = {
         };
       const accessGroups = await AccessModel.find({
         creator: user,
-        users: { $in: req.user._id }
+        users: {
+          $in: req.user._id
+        }
       }).lean();
       if (accessGroups.length === 0) {
         const data = await User.findById(user);
@@ -589,8 +707,7 @@ module.exports = {
           showCourseInfo: a.showCourseInfo || b.options.showCourseInfo,
           showEducationInfo: a.showEducationInfo || b.options.showEducationInfo,
           giveTasks: a.giveTasks || b.options.giveTasks
-        }),
-        {}
+        }), {}
       );
     } catch (error) {
       next(error);
@@ -615,7 +732,9 @@ module.exports = {
   async getMyTasks(req, res, next) {
     try {
       const Task = models.getModel('task');
-      const tasks = await Task.find({ creator: req.user._id }).populate(
+      const tasks = await Task.find({
+        creator: req.user._id
+      }).populate(
         'user item',
         'name username'
       ).lean();
@@ -627,7 +746,9 @@ module.exports = {
   async getTasksForMe(req, res, next) {
     try {
       const Task = models.getModel('task');
-      const tasks = await Task.find({ user: req.user._id }).populate(
+      const tasks = await Task.find({
+        user: req.user._id
+      }).populate(
         'creator item',
         'name username'
       ).lean();
@@ -647,10 +768,11 @@ module.exports = {
         task.creator.toString() == req.user._id.toString() ||
         task.user.toString() == req.user._id.toString()
       ) {
-        Task.updateOne(
-          { _id: req.params.id },
-          { status: req.body.status || task.status }
-        ).exec();
+        Task.updateOne({
+          _id: req.params.id
+        }, {
+          status: req.body.status || task.status
+        }).exec();
       } else {
         throw new Error("auth.false");
       }
@@ -669,10 +791,11 @@ module.exports = {
         task.creator.toString() == req.user._id.toString() ||
         task.user.toString() == req.user._id.toString()
       ) {
-        Task.updateOne(
-          { _id: req.params.id },
-          { archived: req.body.archived || task.archived }
-        ).exec();
+        Task.updateOne({
+          _id: req.params.id
+        }, {
+          archived: req.body.archived || task.archived
+        }).exec();
       } else {
         throw new Error("auth.false");
       }
