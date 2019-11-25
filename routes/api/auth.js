@@ -3,27 +3,32 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
-const Joi = require('@hapi/joi');
+const validator = require('../../validation/validators/authValidator')
+
 //@route   POST api/auth/signup
 //@desc    Return JWT
 //@access  Public
 router.post('/signup', async (req, res, next) => {
-  const { username, email, password, password2, type } = req.body;
-
   try {
+    const {
+      username,
+      email,
+      password,
+      type
+    } = req.body;
 
+    // validate request body through hapi/joi signUp schema
+    validator.signUp(req.body)
 
-    if (!password) throw new Error('password.required');
-    if (password.length < 5) throw new Error('password.min');
-    if (!email) throw new Error('email.required');
-    if (password !== password2) throw new Error('password.notmatch');
-
-
-    let exist = await User.findOne({ email: req.body.email }, "_id").lean();
+    let exist = await User.findOne({
+      email: req.body.email
+    }, "_id").lean();
 
     if (exist) throw new Error('email.exist');
     if (username) {
-      exist = await User.findOne({ username: username }, "_id").lean();
+      exist = await User.findOne({
+        username: username
+      }, "_id").lean();
       if (exist) throw new Error('user.exist');
     }
 
@@ -45,9 +50,12 @@ router.post('/signup', async (req, res, next) => {
     const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
       expiresIn: 360000
     });
-    return res.json({ success: true, token: 'Bearer ' + token });
+    return res.json({
+      success: true,
+      token: 'Bearer ' + token
+    });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 
@@ -55,43 +63,18 @@ router.post('/signup', async (req, res, next) => {
 //@desc    Return JWT
 //@access  Public
 router.post('/signin', async (req, res, next) => {
-  const { email, password } = req.body;
-
   try {
-    const schema = Joi.object().keys({
-      email: Joi.string()
-        .email()
-        .required(),
-      password: Joi.string()
-        .required()
+    const {
+      email,
+      password
+    } = req.body;
 
-    });
+    // validate request body through hapi/joi signIn schema
+    validator.signIn(req.body)
 
-    let result = schema.validate(req.body,{abortEarly:false})
-
-    if(result.error){
-      throw new Error(result.error.details.map(e=> {
-        switch (e.path[0]) {
-          case "email": {
-            switch (e.type) {
-              case 'string.empty':
-                return 'email.required';
-              case 'string.email':
-                return 'email.notemail';
-            }
-          }
-          case "password": {
-            switch (e.type ) {
-              case 'string.empty':
-                return 'password.required'
-            }
-          }
-        }
-        }))
-
-    }
-
-    const user = await User.findOne({ email }, "+password username role").lean();
+    const user = await User.findOne({
+      email
+    }, "+password username role").lean();
 
     if (!user) throw new Error('user.notfound');
     const isMatch = await bcrypt.compare(password, user.password);
@@ -104,7 +87,10 @@ router.post('/signin', async (req, res, next) => {
       const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 360000
       });
-      return res.json({ success: true, token: 'Bearer ' + token });
+      return res.json({
+        success: true,
+        token: 'Bearer ' + token
+      });
     } else {
       throw new Error('password.invalid');
     }
