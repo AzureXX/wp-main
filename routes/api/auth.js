@@ -55,7 +55,7 @@ router.post('/signup', async (req, res, next) => {
       token: 'Bearer ' + token
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 

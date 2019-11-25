@@ -1,12 +1,11 @@
 const schema = require('../schemas/authSchema')
 
-module.exports.signUp = (reqBody) => {    
+module.exports.signUp = (reqBody) => {
     let validationResult = schema.signUp.validate(reqBody, {
         abortEarly: false
     })
-
     if (validationResult.error) {
-        throw new Error(validationResult.error.details.map(e => {
+        throw validationResult.error.details.map(e => {
             switch (e.path[0]) {
                 case 'email': {
                     switch (e.type) {
@@ -30,7 +29,7 @@ module.exports.signUp = (reqBody) => {
                             return 'password.notMatch'
                     }
                 }
-                case 'username':{
+                case 'username': {
                     switch (e.type) {
                         case 'string.pattern.base':
                             return 'username.invalidChars'
@@ -48,7 +47,7 @@ module.exports.signUp = (reqBody) => {
                             return 'type.notAllowed'
                     }
             }
-        }))
+        })
     }
 }
 
@@ -58,7 +57,7 @@ module.exports.signIn = (reqBody) => {
     })
 
     if (validationResult.error) {
-        throw new Error(validationResult.error.details.map(e => {
+        throw validationResult.error.details.map(e => {
             switch (e.path[0]) {
                 case 'email': {
                     switch (e.type) {
@@ -75,6 +74,6 @@ module.exports.signIn = (reqBody) => {
                     }
                 }
             }
-        }))
+        })
     }
 }
