@@ -87,6 +87,7 @@ module.exports = {
     };
   },
   strToArr(item, isID) {
+    if(item instanceof Array) return item
     if (!item) return null;
     if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
     return item.split(',').map(i => i.trim());
@@ -230,6 +231,7 @@ module.exports = {
   },
   getCourseObject(body) {
     return {
+      
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
       genres: body.genres ?

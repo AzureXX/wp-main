@@ -63,7 +63,9 @@ const messageRoute = require("./routes/api/message");
 const notificationRoute = require("./routes/api/notification");
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(cors());
 
 app.use("/api/auth", authRoute);
@@ -103,7 +105,9 @@ app.use("/api/files", require("./routes/api/files"));
 
 app.use((err, req, res, next) => {
     res.status(500);
-    res.json({ message: err });
+    res.json({
+        message: err
+    });
 });
 
 module.exports = app;
