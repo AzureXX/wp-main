@@ -109,7 +109,53 @@ module.exports = {
             website: website
           }
         }
-        validator.checkBookBody(test( /* fil data */ ))
+        validator.checkBookBody(test(
+          // name  completed
+          {
+            us: 'Aasdcasd',
+            ru: '',
+            az: ''
+          },
+          // description completed
+          {
+            us: '',
+            ru: '',
+            az: ' '
+          },
+          // img completed
+          {
+            us: '',
+            ru: '',
+            az: ''
+          },
+          // tags completed
+          {
+            test: 3,
+            kids: 2
+          },
+          // authors completed
+          '5d6cd5841732ff001704413c',
+          // genres completed
+          'adcasd',
+          // isbn completed
+          '',
+          // published completed
+          '2012-12-12',
+          // publisher 
+          '5d6cd5841732ff001704413c',
+          // wikipediaLink
+          {
+            us: 'asdascd',
+            ru: 'asdascd',
+            az: 'asdascd',
+          },
+          // website
+          {
+            us: 'asdcasdcas',
+            ru: 'asdcasdcas',
+            az: 'asdcasdcas',
+          }
+        ))
         // validator.checkBookBody(req.body)
         return this.getBookObject(req.body);
       case 'movie':

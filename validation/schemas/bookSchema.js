@@ -6,60 +6,78 @@ module.exports = joi.object({
         us: joi.string()
             .required()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
         ru: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .allow('')
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
         az: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/)
+            .allow('')
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
     }),
     description: joi.object({
         us: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .allow('')
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         ru: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .allow('')
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         az: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/)
+            .allow('')
+            .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/)
     }),
     img: joi.object({
         us: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .allow('')
+            .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/),
+            .allow('')
+            .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi.string()
             .trim()
-            .pattern(/^(?:[^\<\>]*)$/)
+            .allow('')
+            .pattern(/^(?:[^\<\>\ ]*)$/)
     }),
-    tags: joi.object(),
-    authors: joi.string()
-        .custom((value, helpers) => {
-            if (!mongooseID.isValid(value)) return 'mongooseID.invalid'
-            return value
-        }, 'Mongoose validID checker'),
+    tags: joi.object().allow({}),
+    authors: joi.custom((value, helpers) => {
+        if (!mongooseID.isValid(value))
+            return helpers.error('mongooseID.invalid')
+        return value
+    }, 'MongooseID_validity_checker'),
     genres: joi.string()
         .trim()
-        .pattern(/^(?:[^\<\>]*)$/),
+        .allow('')
+        .custom((value, helpers) => {
+            let genreArr = value.split(',')
+            let length = genreArr.length
+
+            for (let i = 0; i < length; i++) {
+                if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\_\+\=\/\|)]*)$/.test(genreArr[i])) {
+                    return helpers.error('genre.invalidChars')
+                }
+            }
+            return value
+        }, 'Genre_checker'),
     isbn: joi.string()
         .trim()
         .alphanum()
-        .pattern(/^(?:[^\<\>]*)$/),
-    published: joi.string()
-        .custom((value, helpers) => {
-            if (new Date(value) == 'Invalid Date') return 'date.invalid'
-            return value
-        }, 'Valid time checker')
+        .allow(''),
+    published: joi.date()
+        .less('now')
         .required(),
     publisher: joi.string()
+        .allow('')
         .custom((value, helpers) => {
-            if (!mongooseID.isValid(value)) return 'mongooseID.invalid'
+            if (!mongooseID.isValid(value))
+                return helpers.error('mongooseID.invalid')
             return value
-        }, 'Mongoose validID checker'),
+        }, 'MongooseID_validity_checker'),
     wikipediaLink: joi.object({
         us: joi.string()
             .trim()
