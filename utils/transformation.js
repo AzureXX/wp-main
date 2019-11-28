@@ -87,7 +87,7 @@ module.exports = {
     };
   },
   strToArr(item, isID) {
-    if(item instanceof Array) return item
+    if (item instanceof Array) return item
     if (!item) return null;
     if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
     return item.split(',').map(i => i.trim());
@@ -95,69 +95,6 @@ module.exports = {
   getObject(req, type) {
     switch (type) {
       case 'book':
-        let test = (name, desc, img, tags, authors, genres, isbn, published, publisher, wikilink, website) => {
-          return {
-            name: name,
-            description: desc,
-            img: img,
-            tags: tags,
-            authors: authors,
-            genres: genres,
-            isbn: isbn,
-            published: published,
-            publisher: publisher,
-            wikipediaLink: wikilink,
-            website: website
-          }
-        }
-        validator.checkBookBody(test(
-          // name  completed
-          {
-            us: 'Aasdcasd',
-            ru: '',
-            az: ''
-          },
-          // description completed
-          {
-            us: '',
-            ru: '',
-            az: ' '
-          },
-          // img completed
-          {
-            us: '',
-            ru: '',
-            az: ''
-          },
-          // tags completed
-          {
-            test: 3,
-            kids: 2
-          },
-          // authors completed
-          '5d6cd5841732ff001704413c',
-          // genres completed
-          'adcasd',
-          // isbn completed
-          '',
-          // published completed
-          '2012-12-12',
-          // publisher 
-          '5d6cd5841732ff001704413c',
-          // wikipediaLink
-          {
-            us: 'asdascd',
-            ru: 'asdascd',
-            az: 'asdascd',
-          },
-          // website
-          {
-            us: 'asdcasdcas',
-            ru: 'asdcasdcas',
-            az: 'asdcasdcas',
-          }
-        ))
-        // validator.checkBookBody(req.body)
         return this.getBookObject(req.body);
       case 'movie':
         return this.getMovieObject(req.body);
@@ -192,7 +129,7 @@ module.exports = {
     }
   },
   getBookObject(body) {
-    return {
+    let bodyObj = {
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
       genres: this.strToArr(body.genres),
@@ -201,7 +138,10 @@ module.exports = {
       publisher: this.strToArr(body.publisher, true),
       wikipediaLink: this.multi(body.wikipediaLink),
       website: this.multi(body.website)
-    };
+    }
+    validator.checkBookBody(bodyObj)
+    
+    return bodyObj
   },
   getMovieObject(body) {
     return {
@@ -231,7 +171,6 @@ module.exports = {
   },
   getCourseObject(body) {
     return {
-      
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
       genres: body.genres ?

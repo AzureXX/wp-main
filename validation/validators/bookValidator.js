@@ -6,8 +6,9 @@ module.exports = (reqBody) => {
     })
 
     if (validationResult.error) {
+        console.log('===================== START ========================')
         throw validationResult.error.details.map(e => {
-            // console.log(validationResult)
+            console.log('===================== Error Start ========================')
             console.log(e)
             // return `[ ${e.type} ] error at path [ ${e.path} ]`
             switch (e.path[0]) {
@@ -34,6 +35,12 @@ module.exports = (reqBody) => {
                             }
                         }
                     }
+                    switch (e.type) {
+                        case 'object.length':
+                            return 'form.modified'
+                        case 'object.unknown':
+                            return 'form.modified'
+                    }
                 }
                 case 'description': {
                     switch (e.path[1]) {
@@ -55,6 +62,12 @@ module.exports = (reqBody) => {
                                     return 'descriptionAZ.invalidChars'
                             }
                         }
+                    }
+                    switch (e.type) {
+                        case 'object.length':
+                            return 'form.modified'
+                        case 'object.unknown':
+                            return 'form.modified'
                     }
                 }
                 case 'img': {
@@ -78,6 +91,12 @@ module.exports = (reqBody) => {
                             }
                         }
                     }
+                    switch (e.type) {
+                        case 'object.length':
+                            return 'form.modified'
+                        case 'object.unknown':
+                            return 'form.modified'
+                    }
                 }
                 case 'tags': {
                     switch (e.type) {
@@ -87,6 +106,8 @@ module.exports = (reqBody) => {
                 }
                 case 'authors': {
                     switch (e.type) {
+                        case 'array.base':
+                            return 'form.modified'
                         case 'mongooseID.invalid':
                             return 'authors.invalidID'
                     }
@@ -97,16 +118,16 @@ module.exports = (reqBody) => {
                             return 'genre.invalidChars'
                     }
                 }
-                case 'isbn': {
+                case 'ISBN': {
                     switch (e.type) {
                         case 'string.alphanum':
-                            return 'isbn.invalidChars'
+                            return 'ISBN.invalidChars'
                     }
                 }
                 case 'published': {
                     switch (e.type) {
                         case 'date.base':
-                            return 'published.invalidType'
+                            return 'published.required'
                         case 'date.less':
                             return 'published.timeLimit'
                     }
@@ -114,9 +135,65 @@ module.exports = (reqBody) => {
                 case 'publisher': {
                     switch (e.type) {
                         case 'string.base':
-                            return 'publisher.invalidType'
+                            return 'form.modified'
                         case 'mongooseID.invalid':
                             return 'publisher.invalidID'
+                    }
+                }
+                case 'wikipediaLink': {
+                    switch (e.path[1]) {
+                        case 'us': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'wikipediaLinkUS.invalidChars'
+                            }
+                        }
+                        case 'ru': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'wikipediaLinkRU.invalidChars'
+                            }
+                        }
+                        case 'az': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'wikipediaLinkAZ.invalidChars'
+                            }
+                        }
+                    }
+                    switch (e.type) {
+                        case 'object.length':
+                            return 'form.modified'
+                        case 'object.unknown':
+                            return 'form.modified'
+                    }
+                }
+                case 'website': {
+                    switch (e.path[1]) {
+                        case 'us': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'websiteUS.invalidChars'
+                            }
+                        }
+                        case 'ru': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'websiteRU.invalidChars'
+                            }
+                        }
+                        case 'az': {
+                            switch (e.type) {
+                                case 'string.pattern.base':
+                                    return 'websiteAZ.isbn.invalidChars'
+                            }
+                        }
+                    }
+                    switch (e.type) {
+                        case 'object.length':
+                            return 'form.modified'
+                        case 'object.unknown':
+                            return 'form.modified'
                     }
                 }
             }

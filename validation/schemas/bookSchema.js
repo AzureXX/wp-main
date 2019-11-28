@@ -9,70 +9,74 @@ module.exports = joi.object({
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
         ru: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
         az: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
-    }),
+    }).length(3),
     description: joi.object({
         us: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         ru: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         az: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/)
-    }),
+    }).length(3),
     img: joi.object({
         us: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi.string()
             .trim()
-            .allow('')
+            .allow(null, '')
             .pattern(/^(?:[^\<\>\ ]*)$/)
-    }),
-    tags: joi.object().allow({}),
-    authors: joi.custom((value, helpers) => {
-        if (!mongooseID.isValid(value))
-            return helpers.error('mongooseID.invalid')
-        return value
-    }, 'MongooseID_validity_checker'),
-    genres: joi.string()
-        .trim()
-        .allow('')
+    }).length(3),
+    tags: joi.object()
+        .allow({}, null, ''),
+    authors: joi.array()
+        .allow(null,'')
         .custom((value, helpers) => {
-            let genreArr = value.split(',')
-            let length = genreArr.length
+            let length = value.length
+            for (let i = 0; i < length; i++) {
+                if (!mongooseID.isValid(value[i]))
+                    return helpers.error('mongooseID.invalid')
+                return value
+            }
+        }, 'MongooseID_validity_checker'),
+    genres: joi.array()
+        .allow(null,'')
+        .custom((value, helpers) => {
+            let length = value.length
 
             for (let i = 0; i < length; i++) {
-                if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\_\+\=\/\|)]*)$/.test(genreArr[i])) {
+                if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(value[i])) {
                     return helpers.error('genre.invalidChars')
                 }
             }
             return value
         }, 'Genre_checker'),
-    isbn: joi.string()
+    ISBN: joi.string()
         .trim()
         .alphanum()
-        .allow(''),
+        .allow(null, ''),
     published: joi.date()
         .less('now')
         .required(),
     publisher: joi.string()
-        .allow('')
+        .allow(null, '')
         .custom((value, helpers) => {
             if (!mongooseID.isValid(value))
                 return helpers.error('mongooseID.invalid')
@@ -80,24 +84,30 @@ module.exports = joi.object({
         }, 'MongooseID_validity_checker'),
     wikipediaLink: joi.object({
         us: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
-    }),
+    }).length(3),
     website: joi.object({
         us: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi.string()
+            .allow(null, '')
             .trim()
             .pattern(/^(?:[^\<\>\ ]*)$/),
-    })
+    }).length(3)
 })
