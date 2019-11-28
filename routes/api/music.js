@@ -95,7 +95,7 @@ router.post('/youtube',  async (req, res, next) => {
  }
 });
 
-//@route   POST api/music/youtube
+//@route   POST api/music/discogs
 //@desc    Add music using discogs api
 //@access  Public
 router.post('/discogs',  async (req, res, next) => {
@@ -124,6 +124,8 @@ router.post('/discogs',  async (req, res, next) => {
       tags: tags,
       discogs: "https://www.discogs.com/master/" + masterId
     })
+    const exist = await Music.findOne({discogs: "https://www.discogs.com/master/"+ masterId})
+    if (exist) throw new Error("music.exist")
     const music = await musicObj.save()
     res.json(music);
   } catch (error) {
