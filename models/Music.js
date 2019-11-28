@@ -10,6 +10,7 @@ const MusicSchema = new Schema({
     img: String,
     video: String,
     audio: String,
+    discogs: String,
     tags: {}
 });
 

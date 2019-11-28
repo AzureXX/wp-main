@@ -57,7 +57,7 @@ router.get('/get/id/:id',  async (req, res, next) => {
 });
 
 //@route   POST api/music/youtube
-//@desc    Add music using yyoutube api
+//@desc    Add music using youtube api
 //@access  Public
 router.post('/youtube',  async (req, res, next) => {
  try {
@@ -94,5 +94,41 @@ router.post('/youtube',  async (req, res, next) => {
    next(error)
  }
 });
+
+//@route   POST api/music/youtube
+//@desc    Add music using discogs api
+//@access  Public
+router.post('/discogs',  async (req, res, next) => {
+  try {
+    const {id, isMaster} = req.body;
+    if (!id) throw new Error("id.required")
+    const response = await axios.get("https://api.discogs.com/releases/" + id)
+    const data = response.data;
+    const genres = data.genres.map(i => i.split(' ').join("_").trim().toLowerCase())
+       const tags = {}
+    if(genres) {
+      genres.forEach(genre => {
+        tags[genre.toLowerCase().split(" ").join("_")] = 3
+      })
+    }
+    const youtube = data.videos[0] ? data.videos[0].uri.split("v=")[1] : null
+    const released = isMaster ? data.year : data.released
+    const masterId = isMaster ? id : data.master_id
+    const musicObj = new Music({
+      name: data.title,
+      video: youtube,
+      released: released,
+      img: youtube ? "https://i.ytimg.com/vi/" + youtube + "/mqdefault.jpg" : null,
+      duration: youtube ? data.videos[0].duration : null,
+      genres: genres,
+      tags: tags,
+      discogs: "https://www.discogs.com/master/" + masterId
+    })
+    const music = await musicObj.save()
+    res.json(music);
+  } catch (error) {
+    next(error)
+  }
+ });
 
 module.exports = router;
