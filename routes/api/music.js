@@ -63,13 +63,16 @@ router.post('/youtube',  async (req, res, next) => {
  try {
    const {id} = req.body;
    if (!id) throw new Error("id.required")
+   const exist = await Music.findOne({video: id});
+   if(exist) throw new Error("video.exist")
    const response = await axios.get("https://www.googleapis.com/youtube/v3/videos", {
      params: {
        id: id,
-       part: "snippet",
+       part: "snippet,contentDetails",
        key: process.env.YOUTUBE_API_KEY
      }
    })
+   
    const genres = req.body.genres
         ? req.body.genres.split(',').map(i => i.trim().toLowerCase())
         : null;
@@ -86,7 +89,8 @@ router.post('/youtube',  async (req, res, next) => {
      released: data.snippet.publishedAt,
      img: data.snippet.thumbnails.medium.url,
      genres: genres,
-     tags: tags
+     tags: tags,
+     duration: data.contentDetails.duration.split("PT")[1]
    })
    const music = await musicObj.save()
    res.json(music);
@@ -95,40 +99,5 @@ router.post('/youtube',  async (req, res, next) => {
  }
 });
 
-//@route   POST api/music/youtube
-//@desc    Add music using discogs api
-//@access  Public
-router.post('/discogs',  async (req, res, next) => {
-  try {
-    const {id, isMaster} = req.body;
-    if (!id) throw new Error("id.required")
-    const response = await axios.get("https://api.discogs.com/releases/" + id)
-    const data = response.data;
-    const genres = data.genres.map(i => i.split(' ').join("_").trim().toLowerCase())
-       const tags = {}
-    if(genres) {
-      genres.forEach(genre => {
-        tags[genre.toLowerCase().split(" ").join("_")] = 3
-      })
-    }
-    const youtube = data.videos[0] ? data.videos[0].uri.split("v=")[1] : null
-    const released = isMaster ? data.year : data.released
-    const masterId = isMaster ? id : data.master_id
-    const musicObj = new Music({
-      name: data.title,
-      video: youtube,
-      released: released,
-      img: youtube ? "https://i.ytimg.com/vi/" + youtube + "/mqdefault.jpg" : null,
-      duration: youtube ? data.videos[0].duration : null,
-      genres: genres,
-      tags: tags,
-      discogs: "https://www.discogs.com/master/" + masterId
-    })
-    const music = await musicObj.save()
-    res.json(music);
-  } catch (error) {
-    next(error)
-  }
- });
 
 module.exports = router;
