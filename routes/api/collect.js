@@ -11,67 +11,113 @@ const MusicRating = require('../../models/Ratings/MusicRating');
 const Question = require('../../models/Question');
 const QuestionAnswer = require('../../models/QuestionAnswer');
 const roles = require('../../utils/roles');
-
+const BookRecommendation = require('../../models/Recommendations/BookRecommendation');
+const MovieRecommendation = require('../../models/Recommendations/MovieRecommendation');
+const CourseRecommendation = require('../../models/Recommendations/CourseRecommendation');
+const MusicRecommendation = require('../../models/Recommendations/MusicRecommendation');
 router.get('/initial', roles.isUser, async (req, res, next) => {
-  let ratedBooks = [];
-  let ratedMovies = [];
-  let ratedMusic = [];
-  let ratedCourses = [];
-  let answeredQuestion = [];
-  if (req.user._id) {
-    let bookRatings = BookRating.find({ userId: req.user._id }).lean();
-    let movieRatings = MovieRating.find({ userId: req.user._id }).lean();
-    let musicRatings = MusicRating.find({ userId: req.user._id }).lean();
-    let courseRatings = CourseRating.find({ userId: req.user._id }).lean();
-    let questionAnswers = QuestionAnswer.find({ userId: req.user._id }).lean();
+  try {
+    let ratedBooks = [];
+    let ratedMovies = [];
+    let ratedMusic = [];
+    let ratedCourses = [];
+    let answeredQuestion = [];
+    let bookRec, movieRec, musicRec, courseRec;
 
-    bookRatings = await bookRatings;
-    movieRatings = await movieRatings;
-    courseRatings = await courseRatings;
-    musicRatings = await musicRatings;
-    questionAnswers = await questionAnswers;
+    if (req.user._id) {
+      [bookRec, movieRec, musicRec, courseRec] = await Promise.all([
+        BookRecommendation.findOne({ userId: req.user._id })
+          .lean()
+          .populate({path:'books.data', select: "name img"}),
+        MovieRecommendation.findOne({ userId: req.user._id })
+          .lean()
+          .populate({path:'movies.data', select: "name img"}),
+        MusicRecommendation.findOne({ userId: req.user._id })
+          .lean()
+          .populate({path:'music.data', select: "name img"}),
+        CourseRecommendation.findOne({ userId: req.user._id })
+          .lean()
+          .populate({path:'courses.data', select: "name img"})
+      ]);
+      
+      bookRec = bookRec && bookRec.books.map(item => item.data).slice(0, 20);
+      movieRec = movieRec && movieRec.movies.map(item => item.data).slice(0, 20);
+      musicRec = musicRec && musicRec.music.map(item => item.data).slice(0, 20);
+      courseRec = courseRec && courseRec.courses.map(item => item.data).slice(0, 20);
+      let bookRatings, movieRatings, musicRatings, courseRatings
+      if(!bookRec) {
+        bookRatings = BookRating.find({ userId: req.user._id }).lean();
+      }
+      if(!movieRec) {
+         movieRatings = MovieRating.find({ userId: req.user._id }).lean();
+      }
+      if(!musicRec) {
+         musicRatings = MusicRating.find({ userId: req.user._id }).lean();
+      }
+      if(!courseRec) {
+        courseRatings = CourseRating.find({ userId: req.user._id }).lean();
+      }
+      let questionAnswers = QuestionAnswer.find({
+        userId: req.user._id
+      }).lean();
 
-    if (bookRatings) {
-      ratedBooks = bookRatings.map(item => item.book);
+      bookRatings = await bookRatings;
+      movieRatings = await movieRatings;
+      courseRatings = await courseRatings;
+      musicRatings = await musicRatings;
+      questionAnswers = await questionAnswers;
+
+      if (bookRatings) {
+        ratedBooks = bookRatings.map(item => item.book);
+      }
+
+      if (movieRatings) {
+        ratedMovies = movieRatings.map(item => item.movie);
+      }
+
+      if (musicRatings) {
+        ratedMusic = musicRatings.map(item => item.music);
+      }
+
+      if (movieRatings) {
+        ratedCourses = movieRatings.map(item => item.movie);
+      }
+
+      if (questionAnswers) {
+        answeredQuestion = questionAnswers.map(item => item.question);
+      }
     }
-
-    if (movieRatings) {
-      ratedMovies = movieRatings.map(item => item.movie);
-    }
-
-    if (musicRatings) {
-      ratedMusic = musicRatings.map(item => item.music);
-    }
-
-    if (movieRatings) {
-      ratedCourses = movieRatings.map(item => item.movie);
-    }
-
-    if (questionAnswers) {
-      answeredQuestion = questionAnswers.map(item => item.question);
-    }
+    let books =
+      bookRec ||
+      Book.find({ _id: { $nin: ratedBooks } }, "name img")
+        .limit(20)
+        .lean();
+    let movies =
+      movieRec ||
+      Movie.find({ _id: { $nin: ratedMovies } }, "name img")
+        .limit(20)
+        .lean();
+    let music =
+      musicRec ||
+      Music.find({ _id: { $nin: ratedMusic } }, "name img")
+        .limit(20)
+        .lean();
+    let courses =
+      courseRec ||
+      Course.find({ _id: { $nin: ratedCourses } }, "name img")
+        .limit(20)
+        .lean();
+    let questions = Question.find({ _id: { $nin: answeredQuestion } })
+      .limit(20)
+      .lean();
+    books = await books;
+    movies = await movies;
+    music = await music;
+    courses = await courses;
+    questions = await questions;
+    return res.json({ books, movies, music, courses, questions });
+  } catch (err) {
+    next(err);
   }
-
-  let books = Book.find({ _id: { $nin: ratedBooks } })
-    .limit(20)
-    .lean();
-  let movies = Movie.find({ _id: { $nin: ratedMovies } })
-    .limit(20)
-    .lean();
-  let music = Music.find({ _id: { $nin: ratedMusic } })
-    .limit(20)
-    .lean();
-  let courses = Course.find({ _id: { $nin: ratedCourses } })
-    .limit(20)
-    .lean();
-  let questions = Question.find({ _id: { $nin: answeredQuestion } })
-    .limit(20)
-    .lean();
-  books = await books;
-  movies = await movies;
-  music = await music;
-  courses = await courses;
-  questions = await questions;
-  return res.json({ books, movies, music, courses,questions });
 });
 module.exports = router;
