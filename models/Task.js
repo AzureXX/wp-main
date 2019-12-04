@@ -25,7 +25,11 @@ const TaskSchema = new Schema({
   comment: String,
   deadline: Date,
   status: {type:String, default: "new"},
-  archived: {type: Boolean, default: false} 
+  archived: {type: Boolean, default: false},
+  allowDelete: {
+    user: {type: Boolean, default: false},
+    creator: {type: Boolean, default: false}
+  }
 })
 
 const Task = mongoose.model("Task", TaskSchema)
