@@ -27,7 +27,10 @@ const CourseSchema = new Schema({
         ru: String,
         az: String
     },
-    authors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Person' }],
+    authors: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Person'
+    }],
     genres: [String],
     tags: {}
 })

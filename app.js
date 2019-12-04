@@ -6,18 +6,18 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const app = express();
-const compression = require('compression');
+const compression = require("compression");
 
-app.use(compression())
-app.use(helmet())
+app.use(compression());
+app.use(helmet());
 mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-    })
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.log(err));
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
 //Passport middleware
 app.use(passport.initialize());
@@ -26,7 +26,7 @@ app.use(passport.initialize());
 require("./config/passport.js")(passport);
 
 //Actions route
-const actionsRoute = require("./routes/api/actions")
+const actionsRoute = require("./routes/api/actions");
 //Require routes
 const authRoute = require("./routes/api/auth");
 const userRoute = require("./routes/api/user");
@@ -56,16 +56,18 @@ const recommendationsPersonRoute = require("./routes/api/recommendations/person"
 const recommendationsEducationRoute = require("./routes/api/recommendations/education");
 const recommendationsVacancyRoute = require("./routes/api/recommendations/vacancy");
 
-const collectRoute = require('./routes/api/collect')
+const collectRoute = require("./routes/api/collect");
 const searchRoute = require("./routes/api/search");
 
 const messageRoute = require("./routes/api/message");
 const notificationRoute = require("./routes/api/notification");
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({
+app.use(
+  express.urlencoded({
     extended: false
-}));
+  })
+);
 app.use(cors());
 
 app.use("/api/auth", authRoute);
@@ -104,10 +106,10 @@ app.use("/api/notification", notificationRoute);
 app.use("/api/files", require("./routes/api/files"));
 
 app.use((err, req, res, next) => {
-    res.status(500);
-    res.json({
-        message: err
-    });
+  res.status(500);
+  return res.json({
+    message: err.message
+  });
 });
 
 module.exports = app;

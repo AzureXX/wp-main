@@ -1,9 +1,15 @@
-const ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const validator = {
-  checkBookBody: require('../validation/validators/bookValidator'),
-  // import other validators
-}
+  validateBook: require("../validation/validators/book"),
+  validateCourse: require("../validation/validators/course"),
+  validateEducationCategory: require("../validation/validators/eduCategory"),
+  validateEducationSubcategory: require("../validation/validators/eduSubCategory"),
+  validateEducationTopic: require("../validation/validators/eduTopic"),
+  validateEducationSubTopic: require("../validation/validators/eduSubTopic"),
+  validateMovie: require("../validation/validators/movie"),
+  validateMusic: require("../validation/validators/music")
+};
 
 module.exports = {
   getOffset(page, size) {
@@ -14,57 +20,57 @@ module.exports = {
   },
   getParentName(name) {
     switch (name) {
-      case 'subcategories':
-      case 'subcategory':
-        return 'category';
-      case 'topics':
-      case 'topic':
-        return 'subcategory';
-      case 'subtopics':
-      case 'subtopic':
-        return 'topic';
+      case "subcategories":
+      case "subcategory":
+        return "category";
+      case "topics":
+      case "topic":
+        return "subcategory";
+      case "subtopics":
+      case "subtopic":
+        return "topic";
       default:
         return null;
     }
   },
   getPlural(name) {
     switch (name) {
-      case 'book':
-        return 'books';
-      case 'movie':
-        return 'movies';
-      case 'course':
-        return 'courses';
-      case 'person':
-        return 'people';
-      case 'music':
-        return 'music';
-      case 'vacancy':
-        return 'vacancies';
-      case 'education':
-        return 'education';
+      case "book":
+        return "books";
+      case "movie":
+        return "movies";
+      case "course":
+        return "courses";
+      case "person":
+        return "people";
+      case "music":
+        return "music";
+      case "vacancy":
+        return "vacancies";
+      case "education":
+        return "education";
       default:
         return null;
     }
   },
   getSingular(name) {
     switch (name) {
-      case 'books':
-        return 'book';
-      case 'movies':
-        return 'movie';
-      case 'courses':
-        return 'course';
-      case 'people':
-        return 'person';
-      case 'music':
-        return 'music';
+      case "books":
+        return "book";
+      case "movies":
+        return "movie";
+      case "courses":
+        return "course";
+      case "people":
+        return "person";
+      case "music":
+        return "music";
       default:
         return null;
     }
   },
   mongooseId(id) {
-    return new ObjectId(ObjectId.isValid(id) ? id : '000000000000000000000000');
+    return new ObjectId(ObjectId.isValid(id) ? id : "000000000000000000000000");
   },
   multi(item) {
     return {
@@ -73,12 +79,7 @@ module.exports = {
       az: item ? item.az : null
     };
   },
-  common({
-    name,
-    description,
-    img,
-    tags
-  }) {
+  common({ name, description, img, tags }) {
     return {
       name: this.multi(name),
       description: this.multi(description),
@@ -87,99 +88,101 @@ module.exports = {
     };
   },
   strToArr(item, isID) {
-    if (item instanceof Array) return item
+    if (item instanceof Array) return item;
     if (!item) return null;
-    if (isID) return item.split(',').map(i => this.mongooseId(i.trim()));
-    return item.split(',').map(i => i.trim());
+    if (isID) return item.split(",").map(i => this.mongooseId(i.trim()));
+    return item.split(",").map(i => i.trim());
   },
   getObject(req, type) {
     switch (type) {
-      case 'book':
+      case "book":
+        // done
         return this.getBookObject(req.body);
-      case 'movie':
+      case "movie":
+        // done
         return this.getMovieObject(req.body);
-      case 'music':
+      case "music":
+        // done
         return this.getMusicObject(req.body);
-      case 'course':
+      case "course":
         return this.getCourseObject(req.body);
-      case 'person':
+      case "person":
         return this.getPersonObject(req.body);
-      case 'category':
+      case "category":
         return this.getEducationCategoryObject(req.body);
-      case 'subcategory':
+      case "subcategory":
         return this.getEducationSubcategoryObject(req.body);
-      case 'topic':
+      case "topic":
         return this.getEducationTopicObject(req.body);
-      case 'subtopic':
+      case "subtopic":
         return this.getEducationSubtopicObject(req.body);
-      case 'question':
+      case "question":
         return this.getQuestionObject(req.body);
-      case 'questionnaire':
+      case "questionnaire":
         return this.getQuestionnaireObject(req.body);
-      case 'vacancy':
+      case "vacancy":
         return this.getVacancyObject(req);
-      case 'accessgroup':
+      case "accessgroup":
         return this.getAccessGroupObject(req);
-      case 'task':
+      case "task":
         return this.getTaskObject(req);
-      case 'message':
+      case "message":
         return this.getMessageObject(req.body);
-      case 'notification':
+      case "notification":
         return this.getNotificationObject(req.body);
     }
   },
   getBookObject(body) {
-    let bodyObj = {
-      ...this.common(body),
-      authors: this.strToArr(body.authors, true),
-      genres: this.strToArr(body.genres),
-      ISBN: body.isbn,
-      published: body.published,
-      publisher: this.strToArr(body.publisher, true),
-      wikipediaLink: this.multi(body.wikipediaLink),
-      website: this.multi(body.website)
-    }
-    validator.checkBookBody(bodyObj)
-    
-    return bodyObj
+    let validBody = validator.validateBook(body);
+    return {
+      ...this.common(validBody),
+      authors: this.strToArr(validBody.authors, true),
+      genres: this.strToArr(validBody.genres),
+      ISBN: validBody.isbn,
+      published: validBody.published,
+      publisher: this.strToArr(validBody.publisher, true),
+      wikipediaLink: this.multi(validBody.wikipediaLink),
+      website: this.multi(validBody.website)
+    };
   },
   getMovieObject(body) {
+    let validBody = validator.validateMovie(body);
     return {
-      ...this.common(body),
-      actors: this.strToArr(body.actors, true),
-      genres: this.strToArr(body.genres),
-      crew: body.crew ?
-        body.crew.map(item => ({
-          role: item.role,
-          id: this.mongooseId(item.id.trim())
-        })) : null,
-      released: body.released
+      ...this.common(validBody),
+      actors: this.strToArr(validBody.actors, true),
+      genres: this.strToArr(validBody.genres),
+      crew: validBody.crew
+        ? validBody.crew.map(item => ({
+            role: item.role,
+            id: this.mongooseId(item.id.trim())
+          }))
+        : null,
+      released: validBody.released
     };
   },
   getMusicObject(body) {
+    let validBody = validator.validateMusic(body);
     return {
-      name: body.name,
-      duration: body.duration,
-      img: body.img,
-      video: body.video,
-      audio: body.audio,
-      tags: body.tags,
-      singers: this.strToArr(body.singers, true),
-      genres: this.strToArr(body.genres),
-      released: body.released
+      name: validBody.name,
+      duration: validBody.duration,
+      img: validBody.img,
+      video: validBody.video,
+      audio: validBody.audio,
+      tags: validBody.tags,
+      singers: this.strToArr(validBody.singers, true),
+      genres: this.strToArr(validBody.genres),
+      released: validBody.released
     };
   },
   getCourseObject(body) {
+    let validBody = validator.validateCourse(body);
+    throw new Error("stop");
     return {
-      ...this.common(body),
-      authors: this.strToArr(body.authors, true),
-      genres: body.genres ?
-        body.genres.split(',').map(item => item.trim()) : null,
-      published: body.published,
-      publisher: this.strToArr(body.publisher, true),
-      website: this.multi(body.website),
-      video: this.multi(body.video),
-      link: this.multi(body.link)
+      ...this.common(validBody),
+      authors: this.strToArr(validBody.authors, true),
+      genres: validBody.genres ? validBody.genres.split(",").map(item => item.trim()) : null,
+      video: this.multi(validBody.video),
+      link: this.multi(validBody.link)
     };
   },
   getPersonObject(body) {
@@ -189,40 +192,50 @@ module.exports = {
     };
   },
   getEducationCategoryObject(body) {
-    return {
+    let bodyObj = {
       ...this.common(body),
       subcategories: this.strToArr(body.subcategories, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
     };
+    validator.validateEducationCategory(bodyObj);
+
+    return bodyObj;
   },
   getEducationSubcategoryObject(body) {
-    return {
+    let bodyObj = {
       ...this.common(body),
       topics: this.strToArr(body.topics, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
     };
+    validator.validateEducationSubcategory(bodyObj);
+
+    return bodyObj;
   },
   getEducationTopicObject(body) {
-    return {
+    let bodyObj = {
       ...this.common(body),
       subtopics: this.strToArr(body.subtopics, true),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
     };
+    validator.validateEducationTopic(bodyObj);
+
+    return bodyObj;
   },
   getEducationSubtopicObject(body) {
-    return {
+    let bodyObj = {
       ...this.common(body),
       icon: body.icon,
       courses: this.strToArr(body.courses, true)
     };
+    validator.validateEducationSubTopic(bodyObj);
+
+    return bodyObj;
   },
   getVacancyObject(req) {
-    const {
-      body
-    } = req;
+    const { body } = req;
     return {
       creator: this.mongooseId(req.user._id),
       education: body.education,
@@ -235,9 +248,7 @@ module.exports = {
       workInfo: body.workInfo,
       companyName: body.companyName,
       contactPerson: body.contactPerson,
-      subcategories: body.subcategories.filter(
-        subcategory => subcategory.data.name.us
-      ),
+      subcategories: body.subcategories.filter(subcategory => subcategory.data.name.us),
       topics: body.topics.filter(topic => topic.data.name.us),
       subtopics: body.subtopics.filter(subtopic => subtopic.data.name.us),
       experience: body.experience,
@@ -261,14 +272,12 @@ module.exports = {
     };
   },
   getAccessGroupObject(req) {
-    let {
-      body
-    } = req;
+    let { body } = req;
     if (!body.users) body.users = [];
     return {
       creator: this.mongooseId(req.user._id),
       name: body.name,
-      users: this.strToArr(body.users.join(','), true),
+      users: this.strToArr(body.users.join(","), true),
       options: {
         showEmail: !!body.showEmail,
         showPhone: !!body.showPhone,
@@ -284,9 +293,7 @@ module.exports = {
     };
   },
   getTaskObject(req) {
-    const {
-      body
-    } = req;
+    const { body } = req;
 
     return {
       creator: this.mongooseId(req.user._id),
@@ -316,16 +323,11 @@ module.exports = {
   },
   calculateItemTags(init, type) {
     let education = false;
-    if (type === 'subcategory' || type === 'topic' || type === 'subtopic')
-      education = true;
+    if (type === "subcategory" || type === "topic" || type === "subtopic") education = true;
     const calculated = {};
     init.forEach(item => {
       for (const prop in item[type].tags) {
-        const coef = education ?
-          item.status :
-          item.status == 0 ?
-          item.rating - 3 :
-          0;
+        const coef = education ? item.status : item.status == 0 ? item.rating - 3 : 0;
         const value = item[type].tags[prop] * coef;
         if (calculated[prop] !== undefined) {
           calculated[prop] += value;
@@ -359,9 +361,9 @@ module.exports = {
       case "sad":
         return {
           comedy: 100
-        }
-        default:
-          return {}
+        };
+      default:
+        return {};
     }
   }
 };

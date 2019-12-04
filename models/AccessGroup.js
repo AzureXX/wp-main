@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AccessGroupSchema = new Schema({
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   name: String,
   options: {
     showEmail: {
@@ -37,7 +40,6 @@ const AccessGroupSchema = new Schema({
       type: Boolean,
       default: false
     },
-    
     showEducationInfo: {
       type: Boolean,
       default: false
@@ -47,7 +49,10 @@ const AccessGroupSchema = new Schema({
       default: false
     }
   },
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  users: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 const AccessGroup = mongoose.model('AccessGroup', AccessGroupSchema);

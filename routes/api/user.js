@@ -12,7 +12,9 @@ const roles = require('../../utils/roles');
 //@access  Private
 router.get(
   '/current',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
     try {
       return res.json({
@@ -43,17 +45,19 @@ router.get(
 router.get('/get/:username', roles.isUser, async (req, res, next) => {
   try {
     const objId = new ObjectId(
-      ObjectId.isValid(req.params.username)
-        ? req.params.username
-        : '123456789012'
+      ObjectId.isValid(req.params.username) ? req.params.username : '123456789012'
     );
 
     const user = await User.findOne({
-      $or: [{ username: req.params.username }, { _id: objId }]
+      $or: [{
+        username: req.params.username
+      }, {
+        _id: objId
+      }]
     }).lean();
-    
+
     if (!user) throw new Error("user.notfound");
-    const access = await requests.getUserAccess(req,res,next,user._id);
+    const access = await requests.getUserAccess(req, res, next, user._id);
     return res.json({
       email: access.showEmail ? user.email : "No access",
       username: user.username,
@@ -65,8 +69,8 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
       description: user.description,
       country: user.country,
       city: user.city,
-      dob:access.showDOB ?  user.dob : "No access",
-      phoneNumber: access.showPhone ?user.phoneNumber : "No access"
+      dob: access.showDOB ? user.dob : "No access",
+      phoneNumber: access.showPhone ? user.phoneNumber : "No access"
     });
   } catch (error) {
     return next(error);
@@ -78,61 +82,38 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
 //@access  Private
 router.put(
   '/update',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
     try {
       let user;
       if (req.body.username && req.user.username !== req.body.username) {
-        user = await User.findOne({ username: req.body.username }, "_id").lean();
+        user = await User.findOne({
+          username: req.body.username
+        }, "_id").lean();
         if (user) throw new Error("user.exist");
       }
       if (req.body.email && req.user.email !== req.body.email) {
-        user = await User.findOne({ email: req.body.email }, "_id").lean();
+        user = await User.findOne({
+          email: req.body.email
+        }, "_id").lean();
         if (user) throw new Error("email.exist");
       }
 
-      user = await User.findOneAndUpdate(
-        { _id: req.user._id },
-        {
-          username: req.body.username || req.user.username,
-          email: req.body.email || req.user.email,
-          firstname: req.body.firstname
-            ? req.body.firstname
-            : req.body.firstname === ''
-            ? req.body.firstname
-            : req.user.firstname,
-          lastname: req.body.lastname
-            ? req.body.lastname
-            : req.body.lastname === ''
-            ? req.body.lastname
-            : req.user.lastname,
-          city: req.body.city
-            ? req.body.city
-            : req.body.city === ''
-            ? req.body.city
-            : req.user.city,
-          country: req.body.country
-            ? req.body.country
-            : req.body.country === ''
-            ? req.body.country
-            : req.user.country,
-          description: req.body.description
-            ? req.body.description
-            : req.body.description === ''
-            ? req.body.description
-            : req.user.description,
-          dob: req.body.dob
-            ? req.body.dob
-            : req.body.dob === ''
-            ? null
-            : req.user.dob,
-          phoneNumber: req.body.phoneNumber
-            ? req.body.phoneNumber
-            : req.body.phoneNumber === ''
-            ? req.body.phoneNumber
-            : req.user.phoneNumber
-        }
-      );
+      user = await User.findOneAndUpdate({
+        _id: req.user._id
+      }, {
+        username: req.body.username || req.user.username,
+        email: req.body.email || req.user.email,
+        firstname: req.body.firstname ? req.body.firstname : req.body.firstname === '' ? req.body.firstname : req.user.firstname,
+        lastname: req.body.lastname ? req.body.lastname : req.body.lastname === '' ? req.body.lastname : req.user.lastname,
+        city: req.body.city ? req.body.city : req.body.city === '' ? req.body.city : req.user.city,
+        country: req.body.country ? req.body.country : req.body.country === '' ? req.body.country : req.user.country,
+        description: req.body.description ? req.body.description : req.body.description === '' ? req.body.description : req.user.description,
+        dob: req.body.dob ? req.body.dob : req.body.dob === '' ? null : req.user.dob,
+        phoneNumber: req.body.phoneNumber ? req.body.phoneNumber : req.body.phoneNumber === '' ? req.body.phoneNumber : req.user.phoneNumber
+      });
       return res.status(200).json("success");
     } catch (error) {
       return next(error);
@@ -145,17 +126,25 @@ router.put(
 //@access  Private
 router.put(
   '/changepass',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
     try {
-      const { password, newPassword, newPassword2 } = req.body;
+      const {
+        password,
+        newPassword,
+        newPassword2
+      } = req.body;
       const isMatch = await bcrypt.compare(password, req.user.password);
       if (isMatch) {
         if (newPassword !== newPassword2)
           throw new Error("password.notmatch");
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
-        await User.findByIdAndUpdate(req.user._id, { password: hash });
+        await User.findByIdAndUpdate(req.user._id, {
+          password: hash
+        });
         return res.json('Password was succesfully changed');
       } else {
         throw new Error("password.oldinvalid");
@@ -171,13 +160,19 @@ router.put(
 //@access  Private
 router.delete(
   '/delete',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
     try {
-      const { password } = req.body;
+      const {
+        password
+      } = req.body;
       const isMatch = await bcrypt.compare(password, req.user.password);
       if (isMatch) {
-        await User.findOneAndDelete({ _id: req.user._id });
+        await User.findOneAndDelete({
+          _id: req.user._id
+        });
         return res.status(200).send('Successully deleted');
       } else {
         throw new Error("password.invalid");
@@ -191,7 +186,7 @@ router.delete(
 //@route   GET api/user/getrating/:type/:id
 //@desc    Return user by username or id
 //@access  Public
-router.get('/getrating/:type/:id',roles.isUser, async (req, res, next) => {
+router.get('/getrating/:type/:id', roles.isUser, async (req, res, next) => {
   if (req.params.type === 'all') {
     await requests.getUserRatingListAll(req, res, next);
   } else {
@@ -202,7 +197,7 @@ router.get('/getrating/:type/:id',roles.isUser, async (req, res, next) => {
 //@route   GET api/user/getrating/:type/:id
 //@desc    Return user by username or id
 //@access  Public
-router.get('/getedustatus/:type/:id',roles.isUser, async (req, res, next) => {
+router.get('/getedustatus/:type/:id', roles.isUser, async (req, res, next) => {
   if (req.params.type === 'all') {
     await requests.getUserEducationStatusAll(req, res, next);
   } else {
@@ -215,27 +210,29 @@ router.get('/getedustatus/:type/:id',roles.isUser, async (req, res, next) => {
 //@access  Private
 router.put(
   '/generalaccess',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
     try {
-      const user = await User.findOneAndUpdate(
-        { _id: req.user._id },
-        {
-          generalAccessOptions: {
-            showEmail: !!req.body.showEmail,
-            showPhone: !!req.body.showPhone,
-            showName: !!req.body.showName,
-            showDOB: !!req.body.showDOB,
-            showBookInfo: !!req.body.showBookInfo,
-            showMovieInfo: !!req.body.showMovieInfo,
-            showMusicInfo: !!req.body.showMusicInfo,
-            showCourseInfo: !!req.body.showCourseInfo,
-            showEducationInfo: !!req.body.showEducationInfo,
-            giveTasks: !!req.body.giveTasks
-          }
-        },
-        { new: true }
-      );
+      const user = await User.findOneAndUpdate({
+        _id: req.user._id
+      }, {
+        generalAccessOptions: {
+          showEmail: !!req.body.showEmail,
+          showPhone: !!req.body.showPhone,
+          showName: !!req.body.showName,
+          showDOB: !!req.body.showDOB,
+          showBookInfo: !!req.body.showBookInfo,
+          showMovieInfo: !!req.body.showMovieInfo,
+          showMusicInfo: !!req.body.showMusicInfo,
+          showCourseInfo: !!req.body.showCourseInfo,
+          showEducationInfo: !!req.body.showEducationInfo,
+          giveTasks: !!req.body.giveTasks
+        }
+      }, {
+        new: true
+      });
       return res.json(user);
     } catch (error) {
       next(error);
@@ -248,14 +245,20 @@ router.put(
 //@access  Private
 router.put(
   '/emote',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
-      try {
-          await User.update({_id: req.user._id}, {emotion: req.body.emotion || "neutral"})
-          return res.json("success")
-      } catch (error) {
-          next(error)
-      }
+    try {
+      await User.update({
+        _id: req.user._id
+      }, {
+        emotion: req.body.emotion || "neutral"
+      })
+      return res.json("success")
+    } catch (error) {
+      next(error)
+    }
   }
 );
 
@@ -264,9 +267,11 @@ router.put(
 //@access  Private
 router.get(
   '/tags',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false
+  }),
   async (req, res, next) => {
-    await requests.calculateUserTags(req,res,next);
+    await requests.calculateUserTags(req, res, next);
   }
 );
 module.exports = router;
