@@ -5,18 +5,18 @@ module.exports = joi
   .object({
     name: joi
       .string()
-      .required()
       .trim()
-      .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
+      .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
+      .required(),
     singers: joi
       .string()
-      .allow("")
+      .allow("", null)
       .custom((value, helpers) => {
         let singerIDs = value.split(",");
         let length = singerIDs.length;
 
         for (let i = 0; i < length; i++) {
-          if (!mongooseID.isValid(singerIDs[i])) {
+          if (!mongooseID.isValid(singerIDs[i].trim())) {
             return helpers.error("any.custom");
           }
         }
@@ -24,18 +24,21 @@ module.exports = joi
       }, "MongooseID_validity_checker"),
     duration: joi
       .string()
-      .allow("")
+      .allow("", null)
       .pattern(/^(?:[^\<\>\ ]*)$/),
-    released: joi.date().less("now"),
+    released: joi
+      .date()
+      .less("now")
+      .required(),
     genres: joi
       .string()
-      .allow("")
+      .allow("", null)
       .custom((value, helpers) => {
         let genres = value.split(",");
         let length = genres.length;
 
         for (let i = 0; i < length; i++) {
-          if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(genres[i])) {
+          if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(genres[i].trim())) {
             return helpers.error("any.custom");
           }
         }
@@ -43,17 +46,28 @@ module.exports = joi
       }, "Genre_checker"),
     img: joi
       .string()
-      .allow("")
+      .allow("", null)
       .pattern(/^(?:[^\<\>\ ]*)$/),
     video: joi
       .string()
-      .allow("")
+      .allow("", null)
       .pattern(/^(?:[^\<\>\ ]*)$/),
     audio: joi
       .string()
-      .allow("")
+      .allow("", null)
       .pattern(/^(?:[^\<\>\ ]*)$/),
-    tags: joi.object().allow({})
+    tags: joi
+      .object()
+      .allow({})
+      .custom((value, helpers) => {
+        for (const key in value) {
+          if (value.hasOwnProperty(key)) {
+            if (!/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/.test(key.trim()) || !(+value[key] >= 0)) {
+              return helpers.error("any.custom");
+            }
+          }
+        }
+        return value;
+      })
   })
-  .and("name", "singers", "duration", "released", "genres", "img", "video", "audio", "tags")
   .unknown(true);

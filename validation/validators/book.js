@@ -17,7 +17,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameUS.modified";
                 }
               }
               case "ru": {
@@ -25,7 +25,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameRU.modified";
                 }
               }
               case "az": {
@@ -33,13 +33,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameAZ.modified";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "form.modified";
+                return "name.modified";
             }
           }
           case "description": {
@@ -49,7 +49,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionUS.modified";
                 }
               }
               case "ru": {
@@ -57,7 +57,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionRU.modified";
                 }
               }
               case "az": {
@@ -65,13 +65,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionAZ.modified";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "form.modified";
+                return "description.modified";
             }
           }
           case "img": {
@@ -81,7 +81,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgUS.modified";
                 }
               }
               case "ru": {
@@ -89,7 +89,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgRU.modified";
                 }
               }
               case "az": {
@@ -97,38 +97,37 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgAZ.modified";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "form.modified";
+                return "img.modified";
             }
           }
           case "tags": {
             switch (e.type) {
-              case "object.base":
+              case "any.custom":
+                return "tags.invalidChars";
               default:
-                return "form.modified";
+                return "tags.modified";
             }
           }
           case "authors": {
             switch (e.type) {
-              case "string.base":
-              default:
-                return "form.modified";
               case "any.custom":
                 return "authors.invalidID";
+              default:
+                return "authors.modified";
             }
           }
           case "genres": {
             switch (e.type) {
-              case "string.base":
-              default:
-                return "form.modified";
               case "any.custom":
                 return "genre.invalidChars";
+              default:
+                return "genres.modified";
             }
           }
           case "isbn": {
@@ -136,7 +135,7 @@ module.exports = body => {
               case "string.alphanum":
                 return "isbn.invalidChars";
               default:
-                return "form.modified";
+                return "isbn.modified";
             }
           }
           case "published": {
@@ -145,14 +144,16 @@ module.exports = body => {
                 return "published.required";
               case "date.less":
                 return "published.timeLimit";
+              default:
+                return "published.modified";
             }
           }
           case "publisher": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "any.custom":
                 return "publisher.invalidID";
+              default:
+                return "publisher.modified";
             }
           }
           case "wikipediaLink": {
@@ -162,7 +163,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "wikipediaLinkUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "wikipediaLinkUS.modified";
                 }
               }
               case "ru": {
@@ -170,7 +171,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "wikipediaLinkRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "wikipediaLinkRU.modified";
                 }
               }
               case "az": {
@@ -178,13 +179,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "wikipediaLinkAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "wikipediaLinkAZ.modified";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "form.modified";
+                return "wikipedia.modified";
             }
           }
           case "website": {
@@ -194,7 +195,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "websiteUS.modified";
                 }
               }
               case "ru": {
@@ -202,7 +203,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "websiteRU.modified";
                 }
               }
               case "az": {
@@ -210,17 +211,17 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "websiteAZ.modified";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "form.modified";
+                return "website.modified";
             }
           }
           default:
-            return "form.modified";
+            return "bookData.modified";
         }
       })
     );

@@ -1,14 +1,13 @@
 const ObjectId = require("mongoose").Types.ObjectId;
-
 const validator = {
   validateBook: require("../validation/validators/book"),
+  validateMovie: require("../validation/validators/movie"),
+  validateMusic: require("../validation/validators/music"),
   validateCourse: require("../validation/validators/course"),
   validateEducationCategory: require("../validation/validators/eduCategory"),
   validateEducationSubcategory: require("../validation/validators/eduSubCategory"),
   validateEducationTopic: require("../validation/validators/eduTopic"),
-  validateEducationSubTopic: require("../validation/validators/eduSubTopic"),
-  validateMovie: require("../validation/validators/movie"),
-  validateMusic: require("../validation/validators/music")
+  validateEducationSubTopic: require("../validation/validators/eduSubTopic")
 };
 
 module.exports = {
@@ -96,15 +95,16 @@ module.exports = {
   getObject(req, type) {
     switch (type) {
       case "book":
-        // done
+        // validation done
         return this.getBookObject(req.body);
       case "movie":
-        // done
+        // validation done
         return this.getMovieObject(req.body);
       case "music":
-        // done
+        // validation done
         return this.getMusicObject(req.body);
       case "course":
+        // validation done
         return this.getCourseObject(req.body);
       case "person":
         return this.getPersonObject(req.body);
@@ -176,7 +176,6 @@ module.exports = {
   },
   getCourseObject(body) {
     let validBody = validator.validateCourse(body);
-    throw new Error("stop");
     return {
       ...this.common(validBody),
       authors: this.strToArr(validBody.authors, true),

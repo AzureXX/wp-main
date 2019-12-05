@@ -15,16 +15,15 @@ module.exports = body => {
               case "string.pattern.base":
                 return "name.invalidChars";
               default:
-                return "form.modified";
+                return "name.modified";
             }
           }
           case "singers": {
             switch (e.type) {
               case "any.custom":
                 return "singers.invalidID";
-              case "string.base":
               default:
-                return "form.modified";
+                return "singers.modified";
             }
           }
           case "duration": {
@@ -32,7 +31,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "duration.invalidChars";
               default:
-                return "form.modified";
+                return "duration.modified";
             }
           }
           case "released": {
@@ -41,51 +40,52 @@ module.exports = body => {
                 return "released.required";
               case "date.less":
                 return "released.timeLimit";
+              default:
+                return "released.modified";
             }
           }
           case "genres": {
             switch (e.type) {
               case "any.custom":
                 return "genre.invalidChars";
-              case "string.base":
               default:
-                return "form.modified";
+                return "genres.modified";
             }
           }
           case "img": {
             switch (e.type) {
-              case "string.base":
-              default:
-                return "form.modified";
               case "string.pattern.base":
                 return "img.invalidChars";
+              default:
+                return "img.modified";
             }
           }
           case "video": {
             switch (e.type) {
-              case "string.base":
-              default:
-                return "form.modified";
               case "string.pattern.base":
                 return "video.invalidChars";
+              default:
+                return "video.modified";
             }
           }
           case "audio": {
             switch (e.type) {
-              case "string.base":
-              default:
-                return "form.modified";
               case "string.pattern.base":
                 return "audio.invalidChars";
+              default:
+                return "audio.modified";
             }
           }
           case "tags": {
             switch (e.type) {
-              case "object.base":
+              case "any.custom":
+                return "tags.invalidChars";
               default:
-                return "form.modified";
+                return "tags.modified";
             }
           }
+          default:
+            return "musicData.modified";
         }
       })
     );

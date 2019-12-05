@@ -13,83 +13,94 @@ module.exports = joi
         ru: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
         az: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
       })
-      .and("us", "ru", "az")
+      .required()
       .unknown(false),
     description: joi
       .object({
         us: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         ru: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
         az: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/)
       })
-      .and("us", "ru", "az")
       .unknown(false),
     img: joi
       .object({
         us: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi
           .string()
           .trim()
-          .allow("")
+          .allow("", null)
           .pattern(/^(?:[^\<\>\ ]*)$/)
       })
-      .and("us", "ru", "az")
       .unknown(false),
-    tags: joi.object().allow({}),
+    tags: joi
+      .object()
+      .allow({})
+      .custom((value, helpers) => {
+        for (const key in value) {
+          if (value.hasOwnProperty(key)) {
+            if (!/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/.test(key.trim()) || !(+value[key] >= 0)) {
+              return helpers.error("any.custom");
+            }
+          }
+        }
+        return value;
+      }),
     actors: joi
       .string()
-      .allow("")
+      .allow("", null)
       .custom((value, helpers) => {
         let actorIDs = value.split(",");
         let length = actorIDs.length;
 
         for (let i = 0; i < length; i++) {
-          if (!mongooseID.isValid(actorIDs[i])) {
+          if (!mongooseID.isValid(actorIDs[i].trim())) {
             return helpers.error("any.custom");
           }
         }
         return value;
       }, "MongooseID_validity_checker"),
+    // crew and duration might change based of request body
     // crew: joi
     //   .array()
     //   .items(
     //     joi
     //       .object({
-    //         role: joi.string().allow(""),
+    //         role: joi.string().allow("",null),
     //         person: joi
     //           .string()
-    //           .allow("")
+    //           .allow("",null)
     //           .custom((value, helpers) => {
-    //             if (!mongooseID.isValid(value)) {
-    //               return "any.custom";
+    //             if (!mongooseID.isValid(value.trim())) {
+    //               return helpers.error("any.custom");
     //             }
     //             return value;
     //           }, "MongooseID_validity_checker")
@@ -97,68 +108,65 @@ module.exports = joi
     //       .and("role","person")
     //       .unknown(false)
     //   )
-    //   .allow(null),
+    //   .allow("",null),
+    //   add .pattern(valid duration regex) below
     //   duration: joi.string().allow(""),
     genres: joi
       .string()
-      .allow("")
+      .allow("", null)
       .custom((value, helpers) => {
         let genres = value.split(",");
         let length = genres.length;
 
         for (let i = 0; i < length; i++) {
-          if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(genres[i])) {
+          if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(genres[i].trim())) {
             return helpers.error("any.custom");
           }
         }
         return value;
       }, "Genre_checker"),
-    released: joi.date().less("now"),
-    // duration: joi
-    //   .string()
-    //   .allow("")
-    //   .pattern(/^(?:[^\<\>\ ]*)$/),
+    released: joi
+      .date()
+      .less("now")
+      .required(),
+    // just uncomment wikipediaLink if it gets added in the future
     // wikipediaLink: joi
     //   .object({
     //     us: joi
     //       .string()
-    //       .allow("")
+    //       .allow("",null)
     //       .trim()
     //       .pattern(/^(?:[^\<\>\ ]*)$/),
     //     ru: joi
     //       .string()
-    //       .allow("")
+    //       .allow("",null)
     //       .trim()
     //       .pattern(/^(?:[^\<\>\ ]*)$/),
     //     az: joi
     //       .string()
-    //       .allow("")
+    //       .allow("",null)
     //       .trim()
     //       .pattern(/^(?:[^\<\>\ ]*)$/)
     //   })
-    //   .and("us", "ru", "az")
     //   .unknown(false),
     website: joi
       .object({
         us: joi
           .string()
-          .allow("")
+          .allow("", null)
           .trim()
           .pattern(/^(?:[^\<\>\ ]*)$/),
         ru: joi
           .string()
-          .allow("")
+          .allow("", null)
           .trim()
           .pattern(/^(?:[^\<\>\ ]*)$/),
         az: joi
           .string()
-          .allow("")
+          .allow("", null)
           .trim()
           .pattern(/^(?:[^\<\>\ ]*)$/)
       })
-      .and("us", "ru", "az")
       .unknown(false)
   })
-  // add key names below for commented keys above
-  .and("name", "description", "img", "tags", "actors", "genres", "released", "website")
   .unknown(true);
