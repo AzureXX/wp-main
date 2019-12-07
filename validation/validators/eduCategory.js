@@ -1,7 +1,7 @@
 const schema = require("../schemas/eduCategory");
 
-module.exports = bodyObj => {
-  let validationResult = schema.validate(bodyObj, {
+module.exports = body => {
+  let validationResult = schema.validate(body, {
     abortEarly: false
   });
   if (validationResult.error) {
@@ -14,168 +14,136 @@ module.exports = bodyObj => {
                 switch (e.type) {
                   case "string.empty":
                     return "nameUS.required";
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "nameUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameUS.modified";
                 }
               }
               case "ru": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "nameRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameRU.modified";
                 }
               }
               case "az": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "nameAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "nameAZ.modified";
                 }
               }
             }
             switch (e.type) {
-              case "object.length":
-                return "form.modified";
-              case "object.unknown":
-                return "form.modified";
               default:
-                return "form.modified";
+                return "name.modified";
             }
           }
           case "description": {
             switch (e.path[1]) {
               case "us": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "descriptionUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionUS.modified";
                 }
               }
               case "ru": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "descriptionRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionRU.modified";
                 }
               }
               case "az": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "descriptionAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "descriptionAZ.modified";
                 }
               }
             }
             switch (e.type) {
-              case "object.length":
-                return "form.modified";
-              case "object.unknown":
-                return "form.modified";
               default:
-                return "form.modified";
+                return "description.modified";
             }
           }
           case "img": {
             switch (e.path[1]) {
               case "us": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "imgUS.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgUS.modified";
                 }
               }
               case "ru": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "imgRU.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgRU.modified";
                 }
               }
               case "az": {
                 switch (e.type) {
-                  case "string.base":
-                    return "form.modified";
                   case "string.pattern.base":
                     return "imgAZ.invalidChars";
                   default:
-                    return "form.modified";
+                    return "imgAZ.modified";
                 }
               }
             }
             switch (e.type) {
-              case "object.length":
-                return "form.modified";
-              case "object.unknown":
-                return "form.modified";
               default:
-                return "form.modified";
+                return "img.modified";
             }
           }
           case "tags": {
             switch (e.type) {
-              case "object.base":
-                return "form.modified";
+              case "any.custom":
+                return "tags.invalidChars";
               default:
-                return "form.modified";
+                return "tags.modified";
             }
           }
           case "subcategories": {
             switch (e.type) {
-              case "array.base":
-                return "form.modified";
-              case "mongooseID.invalid":
-                return "subcategories.invalidID";
+              case "any.custom":
+                return "subCategories.invalidID";
               default:
-                return "form.modified";
+                return "subCategories.modified";
             }
           }
           case "icon": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.pattern.base":
                 return "icon.invalidChars";
               default:
-                return "form.modified";
+                return "icon.modified";
             }
           }
           case "courses": {
             switch (e.type) {
-              case "array.base":
-                return "form.modified";
-              case "mongooseID.invalid":
+              case "any.custom":
                 return "courses.invalidID";
               default:
-                return "form.modified";
+                return "courses.modified";
             }
           }
+          default:
+            return "educationCategoryData.modified";
         }
       })
     );
+  } else {
+    return validationResult.value;
   }
 };

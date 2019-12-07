@@ -191,47 +191,39 @@ module.exports = {
     };
   },
   getEducationCategoryObject(body) {
-    let bodyObj = {
-      ...this.common(body),
-      subcategories: this.strToArr(body.subcategories, true),
-      icon: body.icon,
-      courses: this.strToArr(body.courses, true)
+    let validBody = validator.validateEducationCategory(body);
+    return {
+      ...this.common(validBody),
+      subcategories: this.strToArr(validBody.subcategories, true),
+      icon: validBody.icon,
+      courses: this.strToArr(validBody.courses, true)
     };
-    validator.validateEducationCategory(bodyObj);
-
-    return bodyObj;
   },
   getEducationSubcategoryObject(body) {
-    let bodyObj = {
-      ...this.common(body),
-      topics: this.strToArr(body.topics, true),
-      icon: body.icon,
-      courses: this.strToArr(body.courses, true)
+    let validBody = validator.validateEducationSubcategory(body);
+    return {
+      ...this.common(validBody),
+      topics: this.strToArr(validBody.topics, true),
+      icon: validBody.icon,
+      courses: this.strToArr(validBody.courses, true)
     };
-    validator.validateEducationSubcategory(bodyObj);
-
-    return bodyObj;
   },
   getEducationTopicObject(body) {
-    let bodyObj = {
-      ...this.common(body),
-      subtopics: this.strToArr(body.subtopics, true),
-      icon: body.icon,
-      courses: this.strToArr(body.courses, true)
+    let validBody = validator.validateEducationTopic(body);
+    return {
+      ...this.common(validBody),
+      subtopics: this.strToArr(validBody.subtopics, true),
+      icon: validBody.icon,
+      courses: this.strToArr(validBody.courses, true)
     };
-    validator.validateEducationTopic(bodyObj);
-
-    return bodyObj;
   },
   getEducationSubtopicObject(body) {
-    let bodyObj = {
-      ...this.common(body),
-      icon: body.icon,
-      courses: this.strToArr(body.courses, true)
+    let validBody = validator.validateEducationSubTopic(body);
+    return {
+      ...this.common(validBody),
+      icon: validBody.icon,
+      courses: this.strToArr(validBody.courses, true)
     };
-    validator.validateEducationSubTopic(bodyObj);
-
-    return bodyObj;
   },
   getVacancyObject(req) {
     const { body } = req;

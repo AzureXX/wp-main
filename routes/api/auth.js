@@ -10,10 +10,9 @@ const validator = require("../../validation/validators/auth");
 //@access  Public
 router.post("/signup", async (req, res, next) => {
   try {
-    const { username, email, password, type } = req.body;
-    
-    // joi validation of request body
     validator.signUp(req.body);
+
+    const { username, email, password, type } = req.body;
 
     let exist = await User.findOne(
       {
@@ -64,10 +63,9 @@ router.post("/signup", async (req, res, next) => {
 //@access  Public
 router.post("/signin", async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-
-    // joi validation of request body
     validator.signIn(req.body);
+
+    const { email, password } = req.body;
 
     const user = await User.findOne(
       {

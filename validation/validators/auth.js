@@ -10,22 +10,22 @@ module.exports.signUp = reqBody => {
         switch (e.path[0]) {
           case "email": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.email":
                 return "email.notEmail";
               case "string.empty":
                 return "email.required";
+              default:
+                return "email.modified";
             }
           }
           case "password": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.empty":
                 return "password.required";
               case "string.min":
-                return "password.min";
+                return "password.minLength";
+              default:
+                return "password.modified";
             }
           }
           case "password2": {
@@ -36,28 +36,28 @@ module.exports.signUp = reqBody => {
           }
           case "username": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.min":
                 return "username.min";
               case "string.max":
                 return "username.max";
               case "string.pattern.base":
                 return "username.invalidChars";
+              default:
+                return "username.modified";
             }
           }
           case "type": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.empty":
                 return "userType.required";
               case "any.only":
                 return "userType.notAllowed";
+              default:
+                return "userType.modified";
             }
           }
           default:
-            return "form.modified";
+            return "signUp.modified";
         }
       })
     );
@@ -74,28 +74,24 @@ module.exports.signIn = reqBody => {
         switch (e.path[0]) {
           case "email": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.empty":
                 return "email.required";
               case "string.email":
                 return "email.notEmail";
               default:
-                return "form.modified";
+                return "email.modified";
             }
           }
           case "password": {
             switch (e.type) {
-              case "string.base":
-                return "form.modified";
               case "string.empty":
                 return "password.required";
               default:
-                return "form.modified";
+                return "password.modified";
             }
           }
           default:
-            return "form.modified";
+            return "signIn.modified";
         }
       })
     );

@@ -149,6 +149,8 @@ module.exports = body => {
           case "released": {
             switch (e.type) {
               case "date.base":
+                return "released.invalid";
+              case "any.required":
                 return "released.required";
               case "date.less":
                 return "released.timeLimit";

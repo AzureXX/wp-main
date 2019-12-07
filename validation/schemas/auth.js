@@ -8,8 +8,8 @@ module.exports.signIn = joi
       .required(),
     password: joi.string().required()
   })
-  .length(2)
-  .unknown(false);
+  .required()
+  .unknown(true);
 
 module.exports.signUp = joi
   .object({
@@ -25,7 +25,7 @@ module.exports.signUp = joi
     username: joi
       .string()
       .trim()
-      .allow("")
+      .allow("", null)
       .min(3)
       .max(20)
       .pattern(/^(?:[^\<\>\ ]*)$/),
@@ -34,5 +34,5 @@ module.exports.signUp = joi
       .valid("private", "business")
       .required()
   })
-  .length(5)
-  .unknown(false);
+  .required()
+  .unknown(true);

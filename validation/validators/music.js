@@ -36,8 +36,10 @@ module.exports = body => {
           }
           case "released": {
             switch (e.type) {
-              case "date.base":
+              case "any.required":
                 return "released.required";
+              case "date.base":
+                return "released.invalid";
               case "date.less":
                 return "released.timeLimit";
               default:
