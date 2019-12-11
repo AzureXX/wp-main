@@ -731,23 +731,25 @@ module.exports = {
       if (
         (task.allowDelete.creator && task.allowDelete.user) ||
         (task.allowDelete.creator && isUser) ||
-        (task.allowDelete.user && isCreator)
+        (task.allowDelete.user && isCreator) || (isCreator && isUser)
       ) {
         Task.deleteOne({ _id: req.params.id }).exec();
+        return res.json('deleted');
       } else if (isCreator) {
         Task.updateOne(
           { _id: req.params.id },
           { allowDelete: { creator: req.body.allow } }
         ).exec();
+        return res.json('allowed');
       } else if (isUser) {
         Task.updateOne(
           { _id: req.params.id },
           { allowDelete: { user: req.body.allow } }
         ).exec();
+        return res.json('allowed');
       } else {
         throw new Error('auth.false');
       }
-      return res.json('success');
     } catch (error) {
       next(error);
     }
