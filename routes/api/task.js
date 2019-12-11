@@ -61,7 +61,7 @@ router.put(
   }
 );
 
-//@route   PUT api/task/archive/:id
+//@route   PUT api/task/delete/:id
 //@desc    Update task archive status
 //@access  Private
 router.put(

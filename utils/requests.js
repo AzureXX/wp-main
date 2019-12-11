@@ -738,13 +738,13 @@ module.exports = {
       } else if (isCreator) {
         Task.updateOne(
           { _id: req.params.id },
-          { allowDelete: { creator: req.body.allow } }
+          { allowDelete: { creator: !task.allowDelete.creator } }
         ).exec();
         return res.json('allowed');
       } else if (isUser) {
         Task.updateOne(
           { _id: req.params.id },
-          { allowDelete: { user: req.body.allow } }
+          { allowDelete: { user: !task.allowDelete.user } }
         ).exec();
         return res.json('allowed');
       } else {
