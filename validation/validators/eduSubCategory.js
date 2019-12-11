@@ -139,11 +139,9 @@ module.exports = body => {
             }
           }
           default:
-            return "educationSubCategoryData.modified";
+            return "educationSubCategoryBody.modified";
         }
       })
     );
-  } else {
-    return validationResult.value;
   }
 };

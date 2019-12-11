@@ -195,11 +195,9 @@ module.exports = body => {
             }
           }
           default:
-            return "courseData.modified";
+            return "courseBody.modified";
         }
       })
     );
-  } else {
-    return validationResult.value;
   }
 };

@@ -57,7 +57,7 @@ module.exports.signUp = reqBody => {
             }
           }
           default:
-            return "signUp.modified";
+            return "signUpBody.modified";
         }
       })
     );
@@ -91,7 +91,7 @@ module.exports.signIn = reqBody => {
             }
           }
           default:
-            return "signIn.modified";
+            return "signInBody.modified";
         }
       })
     );

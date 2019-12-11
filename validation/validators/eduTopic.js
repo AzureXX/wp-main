@@ -1,7 +1,6 @@
 const schema = require("../schemas/eduTopic");
 
 module.exports = body => {
-  console.log(body);
   let validationResult = schema.validate(body, {
     abortEarly: false
   });
@@ -139,6 +138,8 @@ module.exports = body => {
                 return "courses.modified";
             }
           }
+          default:
+            return "educationTopicBody.modified";
         }
       })
     );

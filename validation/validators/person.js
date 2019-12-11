@@ -1,12 +1,13 @@
-const schema = require("../schemas/eduSubTopic");
+const schema = require("../schemas/person");
 
 module.exports = body => {
-  let validationResult = schema.validate(body, {
+  let validatonResult = schema.validate(body, {
     abortEarly: false
   });
-  if (validationResult.error) {
+
+  if (validatonResult.error) {
     throw new Error(
-      validationResult.error.details.map(e => {
+      validatonResult.error.details.map(e => {
         switch (e.path[0]) {
           case "name": {
             switch (e.path[1]) {
@@ -109,29 +110,45 @@ module.exports = body => {
           case "tags": {
             switch (e.type) {
               case "any.custom":
-                return "tags.modified";
+                return "tags.invalidChars";
               default:
                 return "tags.modified";
             }
           }
-          case "icon": {
-            switch (e.type) {
-              case "string.pattern.base":
-                return "icon.invalidChars";
-              default:
-                return "icon.modified";
+          case "wikipediaLink": {
+            switch (e.path[1]) {
+              case "us": {
+                switch (e.type) {
+                  case "string.pattern.base":
+                    return "wikipediaLinkUS.invalidChars";
+                  default:
+                    return "wikipediaLinkUS.modified";
+                }
+              }
+              case "ru": {
+                switch (e.type) {
+                  case "string.pattern.base":
+                    return "wikipediaLinkRU.invalidChars";
+                  default:
+                    return "wikipediaLinkRU.modified";
+                }
+              }
+              case "az": {
+                switch (e.type) {
+                  case "string.pattern.base":
+                    return "wikipediaLinkAZ.invalidChars";
+                  default:
+                    return "wikipediaLinkAZ.modified";
+                }
+              }
             }
-          }
-          case "courses": {
             switch (e.type) {
-              case "any.custom":
-                return "courses.invalidID";
               default:
-                return "courses.modified";
+                return "wikipedia.modified";
             }
           }
           default:
-            return "educationSubTopicBody.modified";
+            return "personBody.modified";
         }
       })
     );

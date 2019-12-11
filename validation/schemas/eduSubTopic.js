@@ -9,17 +9,17 @@ module.exports = joi
           .string()
           .required()
           .trim()
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
+          .pattern(/^(?:[^\<\>]*)$/)
       })
       .required()
       .unknown(false),
@@ -29,17 +29,17 @@ module.exports = joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/)
+          .pattern(/^(?:[^\<\>]*)$/)
       })
       .unknown(false),
     img: joi

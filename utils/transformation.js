@@ -7,7 +7,10 @@ const validator = {
   validateEducationCategory: require("../validation/validators/eduCategory"),
   validateEducationSubcategory: require("../validation/validators/eduSubCategory"),
   validateEducationTopic: require("../validation/validators/eduTopic"),
-  validateEducationSubTopic: require("../validation/validators/eduSubTopic")
+  validateEducationSubTopic: require("../validation/validators/eduSubTopic"),
+  validatePerson: require("../validation/validators/person"),
+  validateQuestion: require("../validation/validators/question"),
+  validateQuestionnaire: require("../validation/validators/questionnaire"),
 };
 
 module.exports = {
@@ -107,122 +110,135 @@ module.exports = {
         // validation done
         return this.getCourseObject(req.body);
       case "person":
+        // validation done
         return this.getPersonObject(req.body);
       case "category":
+        // validation done
         return this.getEducationCategoryObject(req.body);
       case "subcategory":
+        // validation done
         return this.getEducationSubcategoryObject(req.body);
       case "topic":
+        // validation done
         return this.getEducationTopicObject(req.body);
       case "subtopic":
+        // validation done
         return this.getEducationSubtopicObject(req.body);
       case "question":
+        // validation done
         return this.getQuestionObject(req.body);
       case "questionnaire":
+        // validation done
         return this.getQuestionnaireObject(req.body);
       case "vacancy":
+        // validation ----
         return this.getVacancyObject(req);
       case "accessgroup":
+        // validation ----
         return this.getAccessGroupObject(req);
       case "task":
+        // validation ----
         return this.getTaskObject(req);
       case "message":
+        // validation ----
         return this.getMessageObject(req.body);
       case "notification":
+        // validation ----
         return this.getNotificationObject(req.body);
     }
   },
   getBookObject(body) {
-    let validBody = validator.validateBook(body);
+    validator.validateBook(body);
     return {
-      ...this.common(validBody),
-      authors: this.strToArr(validBody.authors, true),
-      genres: this.strToArr(validBody.genres),
-      ISBN: validBody.isbn,
-      published: validBody.published,
-      publisher: this.strToArr(validBody.publisher, true),
-      wikipediaLink: this.multi(validBody.wikipediaLink),
-      website: this.multi(validBody.website)
+      ...this.common(body),
+      authors: this.strToArr(body.authors, true),
+      genres: this.strToArr(body.genres),
+      ISBN: body.isbn,
+      published: body.published,
+      publisher: this.strToArr(body.publisher, true),
+      wikipediaLink: this.multi(body.wikipediaLink),
+      website: this.multi(body.website)
     };
   },
   getMovieObject(body) {
-    let validBody = validator.validateMovie(body);
+    validator.validateMovie(body);
     return {
-      ...this.common(validBody),
-      actors: this.strToArr(validBody.actors, true),
-      genres: this.strToArr(validBody.genres),
-      crew: validBody.crew
-        ? validBody.crew.map(item => ({
+      ...this.common(body),
+      actors: this.strToArr(body.actors, true),
+      genres: this.strToArr(body.genres),
+      crew: body.crew
+        ? body.crew.map(item => ({
             role: item.role,
             id: this.mongooseId(item.id.trim())
           }))
         : null,
-      released: validBody.released
+      released: body.released
     };
   },
   getMusicObject(body) {
-    let validBody = validator.validateMusic(body);
+    validator.validateMusic(body);
     return {
-      name: validBody.name,
-      duration: validBody.duration,
-      img: validBody.img,
-      video: validBody.video,
-      audio: validBody.audio,
-      tags: validBody.tags,
-      singers: this.strToArr(validBody.singers, true),
-      genres: this.strToArr(validBody.genres),
-      released: validBody.released
+      name: body.name,
+      duration: body.duration,
+      img: body.img,
+      video: body.video,
+      audio: body.audio,
+      tags: body.tags,
+      singers: this.strToArr(body.singers, true),
+      genres: this.strToArr(body.genres),
+      released: body.released
     };
   },
   getCourseObject(body) {
-    let validBody = validator.validateCourse(body);
+    validator.validateCourse(body);
     return {
-      ...this.common(validBody),
-      authors: this.strToArr(validBody.authors, true),
-      genres: validBody.genres ? validBody.genres.split(",").map(item => item.trim()) : null,
-      video: this.multi(validBody.video),
-      link: this.multi(validBody.link)
+      ...this.common(body),
+      authors: this.strToArr(body.authors, true),
+      genres: body.genres ? body.genres.split(",").map(item => item.trim()) : null,
+      video: this.multi(body.video),
+      link: this.multi(body.link)
     };
   },
   getPersonObject(body) {
+    validator.validatePerson(body);
     return {
       ...this.common(body),
       wikipediaLink: this.multi(body.wikipediaLink)
     };
   },
   getEducationCategoryObject(body) {
-    let validBody = validator.validateEducationCategory(body);
+    validator.validateEducationCategory(body);
     return {
-      ...this.common(validBody),
-      subcategories: this.strToArr(validBody.subcategories, true),
-      icon: validBody.icon,
-      courses: this.strToArr(validBody.courses, true)
+      ...this.common(body),
+      subcategories: this.strToArr(body.subcategories, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationSubcategoryObject(body) {
-    let validBody = validator.validateEducationSubcategory(body);
+    validator.validateEducationSubcategory(body);
     return {
-      ...this.common(validBody),
-      topics: this.strToArr(validBody.topics, true),
-      icon: validBody.icon,
-      courses: this.strToArr(validBody.courses, true)
+      ...this.common(body),
+      topics: this.strToArr(body.topics, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationTopicObject(body) {
-    let validBody = validator.validateEducationTopic(body);
+    validator.validateEducationTopic(body);
     return {
-      ...this.common(validBody),
-      subtopics: this.strToArr(validBody.subtopics, true),
-      icon: validBody.icon,
-      courses: this.strToArr(validBody.courses, true)
+      ...this.common(body),
+      subtopics: this.strToArr(body.subtopics, true),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getEducationSubtopicObject(body) {
-    let validBody = validator.validateEducationSubTopic(body);
+    validator.validateEducationSubTopic(body);
     return {
-      ...this.common(validBody),
-      icon: validBody.icon,
-      courses: this.strToArr(validBody.courses, true)
+      ...this.common(body),
+      icon: body.icon,
+      courses: this.strToArr(body.courses, true)
     };
   },
   getVacancyObject(req) {
@@ -249,6 +265,7 @@ module.exports = {
     };
   },
   getQuestionObject(body) {
+    validator.validateQuestion(body);
     return {
       multiple: !!body.multiple,
       text: this.multi(body.text),
@@ -257,6 +274,7 @@ module.exports = {
     };
   },
   getQuestionnaireObject(body) {
+    validator.validateQuestionnaire(body);
     return {
       questions: this.strToArr(body.questions, true),
       tags: body.tags

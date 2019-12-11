@@ -6,7 +6,7 @@ module.exports = joi
     name: joi
       .string()
       .trim()
-      .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
+      .pattern(/^(?:[^\<\>]*)$/)
       .required(),
     singers: joi
       .string()

@@ -9,17 +9,17 @@ module.exports = joi
           .string()
           .required()
           .trim()
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=\;]*)$/)
+          .pattern(/^(?:[^\<\>]*)$/)
       })
       .required()
       .unknown(false),
@@ -29,17 +29,17 @@ module.exports = joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/),
+          .pattern(/^(?:[^\<\>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\/\\\|\{\}\[\]\+\*\`\~\@\#\$\%\^\&\_\=]*)$/)
+          .pattern(/^(?:[^\<\>]*)$/)
       })
       .unknown(false),
     img: joi
@@ -90,27 +90,21 @@ module.exports = joi
       }, "MongooseID_validity_checker"),
     // crew and duration might change based of request body
     // crew: joi
-    //   .array()
-    //   .items(
-    //     joi
-    //       .object({
-    //         role: joi.string().allow("",null),
-    //         person: joi
-    //           .string()
-    //           .allow("",null)
-    //           .custom((value, helpers) => {
-    //             if (!mongooseID.isValid(value.trim())) {
-    //               return helpers.error("any.custom");
-    //             }
-    //             return value;
-    //           }, "MongooseID_validity_checker")
-    //       })
-    //       .and("role","person")
-    //       .unknown(false)
-    //   )
-    //   .allow("",null),
-    //   add .pattern(valid duration regex) below
-    //   duration: joi.string().allow(""),
+    //   .string()
+    //   .allow("", null)
+    //   .custom((value, helpers) => {
+    //     let crewIDs = value.split(",");
+    //     let length = crewIDs.length;
+
+    //     for (let i = 0; i < length; i++) {
+    //       if (!mongooseID.isValid(crewIDs[i].trim())) {
+    //         return helpers.error("any.custom");
+    //       }
+    //     }
+    //     return value;
+    //   }, "MongooseID_validity_checker"),
+    // add .pattern(valid duration regex) below
+    // duration: joi.string().allow(""),
     genres: joi
       .string()
       .allow("", null)

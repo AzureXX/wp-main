@@ -4,6 +4,7 @@ module.exports = body => {
   let validationResult = schema.validate(body, {
     abortEarly: false
   });
+
   if (validationResult.error) {
     throw new Error(
       validationResult.error.details.map(e => {
@@ -223,11 +224,9 @@ module.exports = body => {
             }
           }
           default:
-            return "bookData.modified";
+            return "bookBody.modified";
         }
       })
     );
-  } else {
-    return validationResult.value;
   }
 };

@@ -87,11 +87,9 @@ module.exports = body => {
             }
           }
           default:
-            return "musicData.modified";
+            return "musicBody.modified";
         }
       })
     );
-  } else {
-    return validationResult.value;
   }
 };

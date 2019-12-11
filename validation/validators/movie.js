@@ -223,11 +223,9 @@ module.exports = body => {
             }
           }
           default:
-            return "movideData.modified";
+            return "movideBody.modified";
         }
       })
     );
-  } else {
-    return validationResult.value;
   }
 };
