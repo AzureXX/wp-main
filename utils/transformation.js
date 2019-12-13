@@ -11,6 +11,7 @@ const validator = {
   validatePerson: require("../validation/validators/person"),
   validateQuestion: require("../validation/validators/question"),
   validateQuestionnaire: require("../validation/validators/questionnaire"),
+  validateVacancy: require("../validation/validators/vacancy")
 };
 
 module.exports = {
@@ -243,6 +244,7 @@ module.exports = {
   },
   getVacancyObject(req) {
     const { body } = req;
+    validator.validateVacancy(body);
     return {
       creator: this.mongooseId(req.user._id),
       education: body.education,
@@ -255,9 +257,9 @@ module.exports = {
       workInfo: body.workInfo,
       companyName: body.companyName,
       contactPerson: body.contactPerson,
-      subcategories: body.subcategories.filter(subcategory => subcategory.data.name.us),
-      topics: body.topics.filter(topic => topic.data.name.us),
-      subtopics: body.subtopics.filter(subtopic => subtopic.data.name.us),
+      subcategories: body.subcategories,
+      topics: body.topics,
+      subtopics: body.subtopics,
       experience: body.experience,
       salary: body.salary,
       city: body.city,
