@@ -109,6 +109,7 @@ module.exports = joi
       .allow("", null),
     published: joi
       .date()
+      .iso()
       .less("now")
       .required(),
     publisher: joi

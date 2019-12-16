@@ -23,31 +23,23 @@ module.exports = {
             })
           : null;
 
-        filterJSON.published &&
-        filterJSON.published.start != null &&
-        filterJSON.published.end != null
+        filterJSON.published && filterJSON.published.start != null && filterJSON.published.end != null
           ? (filter.published = {
               $gte: new Date(filterJSON.published.start, 0, 1),
               $lt: new Date(filterJSON.published.end + 1, 0, 1)
             })
           : null;
 
-        filterJSON.released &&
-        filterJSON.released.start != null &&
-        filterJSON.released.end != null
+        filterJSON.released && filterJSON.released.start != null && filterJSON.released.end != null
           ? (filter.released = {
               $gte: new Date(filterJSON.released.start, 0, 1),
               $lt: new Date(filterJSON.released.end + 1, 0, 1)
             })
           : null;
 
-        filterJSON.category && filterJSON.category != "all"
-          ? (filter.category = filterJSON.category)
-          : null;
+        filterJSON.category && filterJSON.category != "all" ? (filter.category = filterJSON.category) : null;
 
-        filterJSON.city && filterJSON.city != "all"
-          ? (filter.city = filterJSON.city)
-          : null;
+        filterJSON.city && filterJSON.city != "all" ? (filter.city = filterJSON.city) : null;
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
@@ -79,9 +71,7 @@ module.exports = {
       const populate = req.query.populate ? req.query.populate : "";
       let select = req.query.select ? req.query.select : "";
       if (select.match(/password/i)) select = "_id";
-      const deep =
-        req.query.deeppopulate ||
-        "categories subcategories topics subtopics courses";
+      const deep = req.query.deeppopulate || "categories subcategories topics subtopics courses";
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
@@ -102,8 +92,7 @@ module.exports = {
       if (!validation.mongooseId(req.params.id)) throw new Error("id.invalid");
       if (check && req.user.role !== "admin") {
         const item = await model.findById(req.params.id);
-        if (item.creator.toString() !== req.user._id)
-          throw new Error("auth.false");
+        if (item.creator.toString() !== req.user._id) throw new Error("auth.false");
       }
       if (["book", "movie", "course", "person", "music"].includes(name)) {
         const Rating = models.getRatingModel(name);
@@ -130,13 +119,9 @@ module.exports = {
       const item = await Model.findById(id);
       if (!item) throw new Error(`item.notfound`);
       if (check && req.user.role !== "admin") {
-        if (item.creator.toString() !== req.user._id)
-          throw new Error("auth.false");
+        if (item.creator.toString() !== req.user._id) throw new Error("auth.false");
       }
-      const saved = await Model.findByIdAndUpdate(
-        id,
-        transformation.getObject(req, name)
-      );
+      const saved = await Model.findByIdAndUpdate(id, transformation.getObject(req, name));
       res.status(200).json(saved);
     } catch (error) {
       next(error);
@@ -328,9 +313,7 @@ module.exports = {
         data: item._id,
         points: transformation.calculatePoints(item.tags, tags)
       }));
-      pointedItems = pointedItems
-        .sort((a, b) => b.points - a.points)
-        .slice(0, 200);
+      pointedItems = pointedItems.sort((a, b) => b.points - a.points).slice(0, 200);
       const toSave = {
         userId: req.user._id,
         [plural]: pointedItems
@@ -458,8 +441,7 @@ module.exports = {
             userId: req.user._id
           })
           .populate({
-            path:
-              "categories.data subcategories.data topics.data subtopics.data",
+            path: "categories.data subcategories.data topics.data subtopics.data",
             select: "name icon"
           })
           .lean();
@@ -492,15 +474,7 @@ module.exports = {
       const TopicStatus = models.getEducationStatusModel("topic");
       const SubtopicStatus = models.getEducationStatusModel("subtopic");
 
-      const [
-        books,
-        movies,
-        music,
-        courses,
-        subcategories,
-        topics,
-        subtopics
-      ] = await Promise.all([
+      const [books, movies, music, courses, subcategories, topics, subtopics] = await Promise.all([
         BookRating.find({
           userId
         })
@@ -559,24 +533,12 @@ module.exports = {
           .lean()
       ]);
       const calculatedBooks = transformation.calculateItemTags(books, "book");
-      const calculatedMovies = transformation.calculateItemTags(
-        movies,
-        "movie"
-      );
+      const calculatedMovies = transformation.calculateItemTags(movies, "movie");
       const calculatedMusic = transformation.calculateItemTags(music, "music");
-      const calculatedCourses = transformation.calculateItemTags(
-        courses,
-        "course"
-      );
-      const calculatedSubcategory = transformation.calculateItemTags(
-        subcategories,
-        "subcategory"
-      );
+      const calculatedCourses = transformation.calculateItemTags(courses, "course");
+      const calculatedSubcategory = transformation.calculateItemTags(subcategories, "subcategory");
       const calculatedTopic = transformation.calculateItemTags(topics, "topic");
-      const calculatedSubtopic = transformation.calculateItemTags(
-        subtopics,
-        "subtopic"
-      );
+      const calculatedSubtopic = transformation.calculateItemTags(subtopics, "subtopic");
       const mood = transformation.convertMoodToTags(req.user.emotion);
       const total = transformation.calculateTotal(
         calculatedBooks,
@@ -746,7 +708,7 @@ module.exports = {
         const data = await User.findById(user);
         return data.generalAccessOptions;
       }
-      if (req.user._id.toString() === user.toString())
+      if (req.user._id.toString() === user.toString()) {
         return {
           showEmail: true,
           showPhone: true,
@@ -759,6 +721,7 @@ module.exports = {
           showEducationInfo: true,
           giveTasks: true
         };
+      }
       const accessGroups = await AccessModel.find({
         creator: user,
         users: {
@@ -794,9 +757,9 @@ module.exports = {
   async createTask(req, res, next) {
     try {
       const Task = models.getModel("task");
+      const newTask = new Task(transformation.getObject(req, "task"));
       const access = await this.getUserAccess(req, res, next, req.body.user);
       if (!access.giveTasks) throw new Error("access.false");
-      const newTask = new Task(transformation.getObject(req, "task"));
       const task = await newTask.save();
       res.status(200).json(task);
     } catch (error) {
@@ -836,10 +799,7 @@ module.exports = {
 
       if (!task) {
         throw new Error("task.notfound");
-      } else if (
-        task.creator.toString() == req.user._id.toString() ||
-        task.user.toString() == req.user._id.toString()
-      ) {
+      } else if (task.creator.toString() == req.user._id.toString() || task.user.toString() == req.user._id.toString()) {
         Task.updateOne(
           {
             _id: req.params.id
@@ -862,10 +822,7 @@ module.exports = {
       const task = await Task.findById(req.params.id);
       if (!task) {
         throw new Error("task.required");
-      } else if (
-        task.creator.toString() == req.user._id.toString() ||
-        task.user.toString() == req.user._id.toString()
-      ) {
+      } else if (task.creator.toString() == req.user._id.toString() || task.user.toString() == req.user._id.toString()) {
         Task.updateOne(
           {
             _id: req.params.id

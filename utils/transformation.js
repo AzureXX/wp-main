@@ -11,7 +11,9 @@ const validator = {
   validatePerson: require("../validation/validators/person"),
   validateQuestion: require("../validation/validators/question"),
   validateQuestionnaire: require("../validation/validators/questionnaire"),
-  validateVacancy: require("../validation/validators/vacancy")
+  validateVacancy: require("../validation/validators/vacancy"),
+  validateAccessGroup: require("../validation/validators/accessGroup"),
+  validateTask: require("../validation/validators/task")
 };
 
 module.exports = {
@@ -132,13 +134,13 @@ module.exports = {
         // validation done
         return this.getQuestionnaireObject(req.body);
       case "vacancy":
-        // validation ----
+        // validation done
         return this.getVacancyObject(req);
       case "accessgroup":
-        // validation ----
+        // validation done
         return this.getAccessGroupObject(req);
       case "task":
-        // validation ----
+        // validation done
         return this.getTaskObject(req);
       case "message":
         // validation ----
@@ -243,8 +245,8 @@ module.exports = {
     };
   },
   getVacancyObject(req) {
+    validator.validateVacancy(req.body);
     const { body } = req;
-    validator.validateVacancy(body);
     return {
       creator: this.mongooseId(req.user._id),
       education: body.education,
@@ -283,6 +285,7 @@ module.exports = {
     };
   },
   getAccessGroupObject(req) {
+    validator.validateAccessGroup(req.body);
     let { body } = req;
     if (!body.users) body.users = [];
     return {
@@ -304,8 +307,8 @@ module.exports = {
     };
   },
   getTaskObject(req) {
+    validator.validateTask(req.body);
     const { body } = req;
-
     return {
       creator: this.mongooseId(req.user._id),
       user: this.mongooseId(body.user),

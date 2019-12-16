@@ -141,12 +141,11 @@ module.exports = body => {
           }
           case "published": {
             switch (e.type) {
-              case "date.base":
-                return "published.invalid";
-              case "any.required":
-                return "published.required";
               case "date.less":
                 return "published.timeLimit";
+              case "date.format":
+              case "any.required":
+              case "date.base":
               default:
                 return "published.modified";
             }
