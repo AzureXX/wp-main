@@ -13,7 +13,8 @@ const validator = {
   validateQuestionnaire: require("../validation/validators/questionnaire"),
   validateVacancy: require("../validation/validators/vacancy"),
   validateAccessGroup: require("../validation/validators/accessGroup"),
-  validateTask: require("../validation/validators/task")
+  validateTask: require("../validation/validators/task"),
+  validateMessage: require("../validation/validators/message")
 };
 
 module.exports = {
@@ -321,6 +322,7 @@ module.exports = {
     };
   },
   getMessageObject(body) {
+    validator.validateMessage(body);
     return {
       text: this.multi(body.text),
       to: body.all ? null : this.strToArr(body.to, true),
