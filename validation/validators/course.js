@@ -108,20 +108,22 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.nameLength";
               case "any.custom":
                 return "tags.invalidChars";
               default:
                 return "tags.modified";
             }
           }
-          case "authors": {
-            switch (e.type) {
-              case "any.custom":
-                return "authors.invalidID";
-              default:
-                return "authors.modified";
-            }
-          }
+          // case "authors": {
+          //   switch (e.type) {
+          //     case "any.custom":
+          //       return "authors.invalidID";
+          //     default:
+          //       return "authors.modified";
+          //   }
+          // }
           case "genres": {
             switch (e.type) {
               case "any.custom":

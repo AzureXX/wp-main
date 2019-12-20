@@ -15,17 +15,17 @@ module.exports = joi
           .string()
           .required()
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
           .allow("", null)
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
           .allow("", null)
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/)
+          .pattern(/^(?:[^<>]*)$/)
       })
       .required()
       .unknown(false),
@@ -39,17 +39,17 @@ module.exports = joi
                 .string()
                 .required()
                 .trim()
-                .pattern(/^(?:[^\<\>]*)$/),
+                .pattern(/^(?:[^<>]*)$/),
               ru: joi
                 .string()
                 .allow("", null)
                 .trim()
-                .pattern(/^(?:[^\<\>]*)$/),
+                .pattern(/^(?:[^<>]*)$/),
               az: joi
                 .string()
                 .allow("", null)
                 .trim()
-                .pattern(/^(?:[^\<\>]*)$/)
+                .pattern(/^(?:[^<>]*)$/)
             })
             .required()
             .unknown(false),
@@ -58,11 +58,14 @@ module.exports = joi
               .object({
                 tagName: joi
                   .string()
+                  .min(2)
                   .trim()
-                  .pattern(/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/),
-                effect: joi.number().min(0)
+                  .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/),
+                effect: joi
+                  .number()
+                  .integer()
+                  .required()
               })
-              .and("tagName", "effect")
               .unknown(false)
           )
         })
@@ -75,7 +78,21 @@ module.exports = joi
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (!/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/.test(key.trim()) || !(+value[key] >= 0)) {
+            if (key.length <= 1) {
+              return helpers.error("key.length");
+            }
+            if (
+              joi
+                .string()
+                .trim()
+                .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/)
+                .validate(key).error ||
+              joi
+                .number()
+                .integer()
+                .required()
+                .validate(value[key]).error
+            ) {
               return helpers.error("any.custom");
             }
           }

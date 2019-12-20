@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const QuestionSchema = new Schema({
@@ -18,6 +18,7 @@ const QuestionSchema = new Schema({
       },
       result: [
         {
+          _id: false,
           tagName: String,
           effect: Number
         }
@@ -27,5 +28,5 @@ const QuestionSchema = new Schema({
   tags: {}
 });
 
-const Question = mongoose.model('Question', QuestionSchema);
+const Question = mongoose.model("Question", QuestionSchema);
 module.exports = Question;

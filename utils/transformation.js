@@ -1,20 +1,20 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 const validator = {
-  validateBook: require("../validation/validators/book"),
-  validateMovie: require("../validation/validators/movie"),
-  validateMusic: require("../validation/validators/music"),
-  validateCourse: require("../validation/validators/course"),
-  validateEducationCategory: require("../validation/validators/eduCategory"),
-  validateEducationSubcategory: require("../validation/validators/eduSubCategory"),
-  validateEducationTopic: require("../validation/validators/eduTopic"),
-  validateEducationSubTopic: require("../validation/validators/eduSubTopic"),
-  validatePerson: require("../validation/validators/person"),
-  validateQuestion: require("../validation/validators/question"),
-  validateQuestionnaire: require("../validation/validators/questionnaire"),
-  validateVacancy: require("../validation/validators/vacancy"),
-  validateAccessGroup: require("../validation/validators/accessGroup"),
-  validateTask: require("../validation/validators/task"),
-  validateMessage: require("../validation/validators/message")
+  Book: require("../validation/validators/book"),
+  Movie: require("../validation/validators/movie"),
+  Music: require("../validation/validators/music"),
+  Course: require("../validation/validators/course"),
+  EducationCategory: require("../validation/validators/eduCategory"),
+  EducationSubcategory: require("../validation/validators/eduSubCategory"),
+  EducationTopic: require("../validation/validators/eduTopic"),
+  EducationSubTopic: require("../validation/validators/eduSubTopic"),
+  Person: require("../validation/validators/person"),
+  Question: require("../validation/validators/question"),
+  Questionnaire: require("../validation/validators/questionnaire"),
+  Vacancy: require("../validation/validators/vacancy"),
+  AccessGroup: require("../validation/validators/accessGroup"),
+  Task: require("../validation/validators/task"),
+  Message: require("../validation/validators/message")
 };
 
 module.exports = {
@@ -152,7 +152,7 @@ module.exports = {
     }
   },
   getBookObject(body) {
-    validator.validateBook(body);
+    validator.Book(body);
     return {
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
@@ -165,9 +165,10 @@ module.exports = {
     };
   },
   getMovieObject(body) {
-    validator.validateMovie(body);
+    validator.Movie(body);
     return {
       ...this.common(body),
+      website: this.multi(body.website),
       actors: this.strToArr(body.actors, true),
       genres: this.strToArr(body.genres),
       crew: body.crew
@@ -180,7 +181,7 @@ module.exports = {
     };
   },
   getMusicObject(body) {
-    validator.validateMusic(body);
+    validator.Music(body);
     return {
       name: body.name,
       duration: body.duration,
@@ -194,7 +195,7 @@ module.exports = {
     };
   },
   getCourseObject(body) {
-    validator.validateCourse(body);
+    validator.Course(body);
     return {
       ...this.common(body),
       authors: this.strToArr(body.authors, true),
@@ -204,14 +205,14 @@ module.exports = {
     };
   },
   getPersonObject(body) {
-    validator.validatePerson(body);
+    validator.Person(body);
     return {
       ...this.common(body),
       wikipediaLink: this.multi(body.wikipediaLink)
     };
   },
   getEducationCategoryObject(body) {
-    validator.validateEducationCategory(body);
+    validator.EducationCategory(body);
     return {
       ...this.common(body),
       subcategories: this.strToArr(body.subcategories, true),
@@ -220,7 +221,7 @@ module.exports = {
     };
   },
   getEducationSubcategoryObject(body) {
-    validator.validateEducationSubcategory(body);
+    validator.EducationSubcategory(body);
     return {
       ...this.common(body),
       topics: this.strToArr(body.topics, true),
@@ -229,7 +230,7 @@ module.exports = {
     };
   },
   getEducationTopicObject(body) {
-    validator.validateEducationTopic(body);
+    validator.EducationTopic(body);
     return {
       ...this.common(body),
       subtopics: this.strToArr(body.subtopics, true),
@@ -238,7 +239,7 @@ module.exports = {
     };
   },
   getEducationSubtopicObject(body) {
-    validator.validateEducationSubTopic(body);
+    validator.EducationSubTopic(body);
     return {
       ...this.common(body),
       icon: body.icon,
@@ -246,7 +247,7 @@ module.exports = {
     };
   },
   getVacancyObject(req) {
-    validator.validateVacancy(req.body);
+    validator.Vacancy(req.body);
     const { body } = req;
     return {
       creator: this.mongooseId(req.user._id),
@@ -270,7 +271,8 @@ module.exports = {
     };
   },
   getQuestionObject(body) {
-    validator.validateQuestion(body);
+    validator.Question(body);
+    throw new Error("done");
     return {
       multiple: !!body.multiple,
       text: this.multi(body.text),
@@ -279,14 +281,14 @@ module.exports = {
     };
   },
   getQuestionnaireObject(body) {
-    validator.validateQuestionnaire(body);
+    validator.Questionnaire(body);
     return {
       questions: this.strToArr(body.questions, true),
       tags: body.tags
     };
   },
   getAccessGroupObject(req) {
-    validator.validateAccessGroup(req.body);
+    validator.AccessGroup(req.body);
     let { body } = req;
     if (!body.users) body.users = [];
     return {
@@ -308,7 +310,7 @@ module.exports = {
     };
   },
   getTaskObject(req) {
-    validator.validateTask(req.body);
+    validator.Task(req.body);
     const { body } = req;
     return {
       creator: this.mongooseId(req.user._id),
@@ -322,7 +324,7 @@ module.exports = {
     };
   },
   getMessageObject(body) {
-    validator.validateMessage(body);
+    validator.Message(body);
     return {
       text: this.multi(body.text),
       to: body.all ? null : this.strToArr(body.to, true),

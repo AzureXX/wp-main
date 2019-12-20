@@ -4,7 +4,6 @@ module.exports = body => {
   let validationResult = schema.validate(body, {
     abortEarly: false
   });
-
   if (validationResult.error) {
     throw new Error(
       validationResult.error.details.map(e => {
@@ -12,6 +11,7 @@ module.exports = body => {
           case "multiple": {
             switch (e.type) {
               case "any.custom":
+              default:
                 return "multiple.modified";
             }
           }
@@ -87,16 +87,16 @@ module.exports = body => {
                     switch (e.type) {
                       case "string.pattern.base":
                         return "answer.tagName.invalidChars";
+                      case "string.min":
+                        return "answer.tagName.nameLength";
                       case "string.empty":
-                        return "answer.tagName.invalidValue";
+                        return "answer.tagName.empty";
                       default:
                         return "answer.tagName.modified";
                     }
                   }
                   case "effect": {
                     switch (e.type) {
-                      case "number.min":
-                        return "answer.effect.invalidValue";
                       default:
                         return "answer.effect.modified";
                     }
@@ -117,6 +117,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.namelength";
               case "any.custom":
                 return "tags.invalidChars";
               default:

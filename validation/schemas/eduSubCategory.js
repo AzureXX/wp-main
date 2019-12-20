@@ -9,17 +9,17 @@ module.exports = joi
           .string()
           .required()
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>]*)$/)
+          .pattern(/^(?:[^<>]*)$/)
       })
       .required()
       .unknown(false),
@@ -29,17 +29,17 @@ module.exports = joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>]*)$/)
+          .pattern(/^(?:[^<>]*)$/)
       })
       .unknown(false),
     img: joi
@@ -48,17 +48,17 @@ module.exports = joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\ ]*)$/),
+          .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\ ]*)$/),
+          .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
           .trim()
           .allow("", null)
-          .pattern(/^(?:[^\<\>\ ]*)$/)
+          .pattern(/^(?:[^<> ]*)$/)
       })
       .unknown(false),
     tags: joi
@@ -67,7 +67,21 @@ module.exports = joi
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (!/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/.test(key.trim()) || !(+value[key] >= 0)) {
+            if (key.length <= 1) {
+              return helpers.error("key.length");
+            }
+            if (
+              joi
+                .string()
+                .trim()
+                .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/)
+                .validate(key).error ||
+              joi
+                .number()
+                .integer()
+                .required()
+                .validate(value[key]).error
+            ) {
               return helpers.error("any.custom");
             }
           }
@@ -92,7 +106,7 @@ module.exports = joi
       .string()
       .trim()
       .allow("", null)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     courses: joi
       .string()
       .allow("", null)

@@ -36,12 +36,10 @@ module.exports = body => {
           }
           case "released": {
             switch (e.type) {
+              case "date.format":
+                return "released.invalidFormat";
               case "any.required":
-                return "released.required";
               case "date.base":
-                return "released.invalid";
-              case "date.less":
-                return "released.timeLimit";
               default:
                 return "released.modified";
             }
@@ -80,6 +78,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.nameLength";
               case "any.custom":
                 return "tags.invalidChars";
               default:

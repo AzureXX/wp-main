@@ -108,6 +108,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.nameLength";
               case "any.custom":
                 return "tags.modified";
               default:

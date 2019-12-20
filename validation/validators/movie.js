@@ -108,6 +108,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.nameLength";
               case "any.custom":
                 return "tags.invalidChars";
               default:
@@ -122,22 +124,22 @@ module.exports = body => {
                 return "actors.modified";
             }
           }
-          case "crew": {
-            switch (e.type) {
-              case "any.custom":
-                return "crew.invalidID";
-              default:
-                return "crew.modified";
-            }
-          }
-          case "duration": {
-            switch (e.type) {
-              case "string.pattern.base":
-                return "duration.invalidChars";
-              default:
-                return "duration.modified";
-            }
-          }
+          // case "crew": {
+          //   switch (e.type) {
+          //     case "any.custom":
+          //       return "crew.invalidID";
+          //     default:
+          //       return "crew.modified";
+          //   }
+          // }
+          // case "duration": {
+          //   switch (e.type) {
+          //     case "string.pattern.base":
+          //       return "duration.invalidChars";
+          //     default:
+          //       return "duration.modified";
+          //   }
+          // }
           case "genres": {
             switch (e.type) {
               case "any.custom":
@@ -148,48 +150,46 @@ module.exports = body => {
           }
           case "released": {
             switch (e.type) {
-              case "date.base":
-                return "released.invalid";
+              case "date.format":
+                return "released.invalidFormat";
               case "any.required":
-                return "released.required";
-              case "date.less":
-                return "released.timeLimit";
+              case "date.base":
               default:
                 return "relased.modified";
             }
           }
-          case "wikipediaLink": {
-            switch (e.path[1]) {
-              case "us": {
-                switch (e.type) {
-                  case "string.pattern.base":
-                    return "wikipediaLinkUS.invalidChars";
-                  default:
-                    return "wikipediaLinkUS.modified";
-                }
-              }
-              case "ru": {
-                switch (e.type) {
-                  case "string.pattern.base":
-                    return "wikipediaLinkRU.invalidChars";
-                  default:
-                    return "wikipediaLinkRU.modified";
-                }
-              }
-              case "az": {
-                switch (e.type) {
-                  case "string.pattern.base":
-                    return "wikipediaLinkAZ.invalidChars";
-                  default:
-                    return "wikipediaLinkAZ.modified";
-                }
-              }
-            }
-            switch (e.type) {
-              default:
-                return "wikipediaLink.modified";
-            }
-          }
+          // case "wikipediaLink": {
+          //   switch (e.path[1]) {
+          //     case "us": {
+          //       switch (e.type) {
+          //         case "string.pattern.base":
+          //           return "wikipediaLinkUS.invalidChars";
+          //         default:
+          //           return "wikipediaLinkUS.modified";
+          //       }
+          //     }
+          //     case "ru": {
+          //       switch (e.type) {
+          //         case "string.pattern.base":
+          //           return "wikipediaLinkRU.invalidChars";
+          //         default:
+          //           return "wikipediaLinkRU.modified";
+          //       }
+          //     }
+          //     case "az": {
+          //       switch (e.type) {
+          //         case "string.pattern.base":
+          //           return "wikipediaLinkAZ.invalidChars";
+          //         default:
+          //           return "wikipediaLinkAZ.modified";
+          //       }
+          //     }
+          //   }
+          //   switch (e.type) {
+          //     default:
+          //       return "wikipediaLink.modified";
+          //   }
+          // }
           case "website": {
             switch (e.path[1]) {
               case "us": {
@@ -223,7 +223,7 @@ module.exports = body => {
             }
           }
           default:
-            return "movideBody.modified";
+            return "movieBody.modified";
         }
       })
     );

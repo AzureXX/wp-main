@@ -6,7 +6,7 @@ module.exports = joi
     name: joi
       .string()
       .trim()
-      .pattern(/^(?:[^\<\>]*)$/)
+      .pattern(/^(?:[^<>]*)$/)
       .required(),
     singers: joi
       .string()
@@ -25,10 +25,10 @@ module.exports = joi
     duration: joi
       .string()
       .allow("", null)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     released: joi
       .date()
-      .less("now")
+      .iso()
       .required(),
     genres: joi
       .string()
@@ -36,9 +36,9 @@ module.exports = joi
       .custom((value, helpers) => {
         let genres = value.split(",");
         let length = genres.length;
-
+        
         for (let i = 0; i < length; i++) {
-          if (!/^(?:[^0123456789\<\>\ \.\!\?\`\'\"\~\#\$\%\^\&\*\(\)\+\=\/\|\:\;\@)]*)$/.test(genres[i].trim())) {
+          if (!/^[a-zA-Z][a-zA-Z_]*[a-zA-Z]$/.test(genres[i].trim())) {
             return helpers.error("any.custom");
           }
         }
@@ -47,22 +47,36 @@ module.exports = joi
     img: joi
       .string()
       .allow("", null)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     video: joi
       .string()
       .allow("", null)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     audio: joi
       .string()
       .allow("", null)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     tags: joi
       .object()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (!/^(?:[^0123456789\<\>\/\\\|\ \{\}\[\]\+\*\`\~\@\#\$\%\^\&\=]*)$/.test(key.trim()) || !(+value[key] >= 0)) {
+            if (key.length <= 1) {
+              return helpers.error("key.length");
+            }
+            if (
+              joi
+                .string()
+                .trim()
+                .pattern(/[a-zA-Z][\w]*[a-zA-Z0-9]$/)
+                .validate(key).error ||
+              joi
+                .number()
+                .integer()
+                .required()
+                .validate(value[key]).error
+            ) {
               return helpers.error("any.custom");
             }
           }

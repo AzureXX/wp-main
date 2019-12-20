@@ -4,7 +4,6 @@ module.exports = body => {
   let validationResult = schema.validate(body, {
     abortEarly: false
   });
-
   if (validationResult.error) {
     throw new Error(
       validationResult.error.details.map(e => {
@@ -109,6 +108,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
+              case "key.length":
+                return "tags.nameLength";
               case "any.custom":
                 return "tags.invalidChars";
               default:
@@ -126,7 +127,7 @@ module.exports = body => {
           case "genres": {
             switch (e.type) {
               case "any.custom":
-                return "genre.invalidChars";
+                return "genres.invalidChars";
               default:
                 return "genres.modified";
             }
@@ -141,9 +142,8 @@ module.exports = body => {
           }
           case "published": {
             switch (e.type) {
-              case "date.less":
-                return "published.timeLimit";
               case "date.format":
+                return "published.invalidFormat";
               case "any.required":
               case "date.base":
               default:
