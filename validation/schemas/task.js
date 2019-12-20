@@ -3,26 +3,31 @@ const mongooseID = require("mongoose").Types.ObjectId;
 
 module.exports = joi
   .object({
-    user: joi.required().custom((value, helpers) => {
-      if (!mongooseID.isValid(value)) {
-        return helpers.error("any.custom");
-      }
-      return value;
-    }),
+    user: joi
+      .string()
+      .required()
+      .custom((value, helpers) => {
+        if (!mongooseID.isValid(value)) {
+          return helpers.error("any.custom");
+        }
+        return value;
+      }),
     type: joi.required().valid("Book", "Movie", "Music", "Course", "EducationTopic", "EducationSubtopic", "EducationSubcategory"),
     deadline: joi
       .date()
+      .required()
       .iso()
       .allow("", null),
     comment: joi
       .string()
-      .allow("", null)
+      .required()
       .trim()
-      .pattern(/^(?:[^\<\>]*)$/),
+      .allow("", null)
+      .pattern(/^(?:[^<>]*)$/),
     level: joi.when("type", {
       is: joi.valid("EducationTopic", "EducationSubtopic", "EducationSubcategory"),
-      then: joi.valid(null, "beginner", "intermediate", "advanced", "expert", "master"),
-      otherwise: joi.valid("", null)
+      then: joi.required().valid(null, "beginner", "intermediate", "advanced", "expert", "master"),
+      otherwise: joi.valid("", null).required()
     }),
     item: joi.required().custom((value, helpers) => {
       if (!mongooseID.isValid(value)) {
@@ -31,4 +36,5 @@ module.exports = joi
       return value;
     })
   })
+  .required()
   .unknown(true);

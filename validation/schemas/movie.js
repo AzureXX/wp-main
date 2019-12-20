@@ -12,11 +12,13 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
@@ -27,49 +29,55 @@ module.exports = joi
       .object({
         us: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
       })
+      .required()
       .unknown(false),
     img: joi
       .object({
         us: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/)
       })
+      .required()
       .unknown(false),
     tags: joi
       .object()
+      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (key.length <= 1) {
-              return helpers.error("key.length");
-            }
             if (
               joi
                 .string()
@@ -90,6 +98,7 @@ module.exports = joi
       }),
     actors: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let actorIDs = value.split(",");
@@ -105,6 +114,7 @@ module.exports = joi
     // crew and duration might change based of request body
     // crew: joi
     //   .string()
+    //   .required()
     //   .allow("", null)
     //   .custom((value, helpers) => {
     //     let crewIDs = value.split(",");
@@ -118,9 +128,14 @@ module.exports = joi
     //     return value;
     //   }, "MongooseID_validity_checker"),
     // add .pattern(valid duration regex) below
-    // duration: joi.string().allow("", null),
+    // duration: joi
+    //   .string()
+    //   .required()
+    //   .allow("", null)
+    //    .pattern(/^(?:[^<>]*)$/),
     genres: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let genres = value.split(",");
@@ -142,39 +157,48 @@ module.exports = joi
     //   .object({
     //     us: joi
     //       .string()
-    //       .allow("",null)
+    //       .required()
+    //       .allow("", null)
     //       .trim()
     //       .pattern(/^(?:[^<> ]*)$/),
     //     ru: joi
     //       .string()
-    //       .allow("",null)
+    //       .required()
+    //       .allow("", null)
     //       .trim()
     //       .pattern(/^(?:[^<> ]*)$/),
     //     az: joi
     //       .string()
-    //       .allow("",null)
+    //       .required()
+    //       .allow("", null)
     //       .trim()
     //       .pattern(/^(?:[^<> ]*)$/)
     //   })
+    //   .required()
     //   .unknown(false),
     website: joi
       .object({
         us: joi
           .string()
+          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
+          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
+          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/)
       })
+      .required()
       .unknown(false)
   })
+  .required()
   .unknown(true);

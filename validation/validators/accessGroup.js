@@ -11,9 +11,9 @@ module.exports = body => {
           case "name": {
             switch (e.type) {
               case "string.pattern.base":
-                return "groupName.invalidChars";
+                return "groupName.invalidFormat";
               case "string.empty":
-                return "groupName.required";
+                return "groupName.empty";
               default:
                 return "groupName.modified";
             }
@@ -38,7 +38,7 @@ module.exports = body => {
           case "giveTasks": {
             switch (e.type) {
               case "any.only":
-                return "accessOptions.invalid";
+                return "accessOptions.invalidValue";
               default:
                 return "accessOptions.modified";
             }

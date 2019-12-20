@@ -12,11 +12,13 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
@@ -27,53 +29,58 @@ module.exports = joi
       .object({
         us: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
       })
+      .required()
       .unknown(false),
     img: joi
       .object({
         us: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
+          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/)
       })
+      .required()
       .unknown(false),
     tags: joi
       .object()
+      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (key.length <= 1) {
-              return helpers.error("key.length");
-            }
             if (
               joi
                 .string()
-                .min(2)
                 .trim()
                 .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/)
                 .validate(key).error ||
@@ -91,6 +98,7 @@ module.exports = joi
       }),
     subcategories: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let subCategoryIDs = value.split(",");
@@ -105,11 +113,13 @@ module.exports = joi
       }, "MongooseID_validity_checker"),
     icon: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     courses: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let courseIDs = value.split(",");
@@ -123,4 +133,5 @@ module.exports = joi
         return value;
       }, "MongooseID_validity_checker")
   })
+  .required()
   .unknown(true);

@@ -2,13 +2,7 @@ const joi = require("@hapi/joi");
 
 module.exports = joi
   .object({
-    multiple: joi.custom((value, helpers) => {
-      let allowed = [true, false];
-      if (allowed.indexOf(value) == -1) {
-        return helpers.error("any.custom");
-      }
-      return value;
-    }),
+    multiple: joi.required().valid(true, false),
     text: joi
       .object({
         us: joi
@@ -18,11 +12,13 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
+          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
+          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/)
@@ -31,6 +27,8 @@ module.exports = joi
       .unknown(false),
     answers: joi
       .array()
+      .required()
+      .min(1)
       .items(
         joi.object({
           text: joi
@@ -42,45 +40,45 @@ module.exports = joi
                 .pattern(/^(?:[^<>]*)$/),
               ru: joi
                 .string()
+                .required()
                 .allow("", null)
                 .trim()
                 .pattern(/^(?:[^<>]*)$/),
               az: joi
                 .string()
+                .required()
                 .allow("", null)
                 .trim()
                 .pattern(/^(?:[^<>]*)$/)
             })
             .required()
             .unknown(false),
-          result: joi.array().items(
-            joi
-              .object({
-                tagName: joi
-                  .string()
-                  .min(2)
-                  .trim()
-                  .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/),
-                effect: joi
-                  .number()
-                  .integer()
-                  .required()
-              })
-              .unknown(false)
-          )
+          result: joi
+            .array()
+            .required()
+            .items(
+              joi
+                .object({
+                  tagName: joi
+                    .string()
+                    .trim()
+                    .pattern(/^[a-zA-Z][\w]*[a-zA-Z0-9]$/),
+                  effect: joi
+                    .number()
+                    .integer()
+                    .required()
+                })
+                .unknown(false)
+            )
         })
-      )
-      .required()
-      .min(1),
+      ),
     tags: joi
       .object()
+      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (key.length <= 1) {
-              return helpers.error("key.length");
-            }
             if (
               joi
                 .string()
@@ -100,4 +98,5 @@ module.exports = joi
         return value;
       })
   })
+  .required()
   .unknown(true);

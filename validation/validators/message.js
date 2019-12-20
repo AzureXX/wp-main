@@ -13,10 +13,9 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "textUS.invalidChars";
+                    return "textUS.invalidFormat";
                   case "string.empty":
-                    return "textUS.required";
-                  case "any.required":
+                    return "textUS.empty";
                   default:
                     return "textUS.modified";
                 }
@@ -24,7 +23,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "textRU.invalidChars";
+                    return "textRU.invalidFormat";
                   default:
                     return "textRU.modified";
                 }
@@ -32,7 +31,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "textAZ.invalidChars";
+                    return "textAZ.invalidFormat";
                   default:
                     return "textAZ.modified";
                 }
@@ -55,6 +54,8 @@ module.exports = body => {
           }
           case "all": {
             switch (e.type) {
+              case "any.only":
+                return "all.invalidValue";
               default:
                 return "all.modified";
             }

@@ -11,9 +11,9 @@ module.exports = body => {
           case "name": {
             switch (e.type) {
               case "string.empty":
-                return "name.required";
+                return "name.empty";
               case "string.pattern.base":
-                return "name.invalidChars";
+                return "name.invalidFormat";
               default:
                 return "name.modified";
             }
@@ -29,7 +29,7 @@ module.exports = body => {
           case "duration": {
             switch (e.type) {
               case "string.pattern.base":
-                return "duration.invalidChars";
+                return "duration.invalidFormat";
               default:
                 return "duration.modified";
             }
@@ -38,8 +38,6 @@ module.exports = body => {
             switch (e.type) {
               case "date.format":
                 return "released.invalidFormat";
-              case "any.required":
-              case "date.base":
               default:
                 return "released.modified";
             }
@@ -47,7 +45,7 @@ module.exports = body => {
           case "genres": {
             switch (e.type) {
               case "any.custom":
-                return "genre.invalidChars";
+                return "genre.invalidFormat";
               default:
                 return "genres.modified";
             }
@@ -55,7 +53,7 @@ module.exports = body => {
           case "img": {
             switch (e.type) {
               case "string.pattern.base":
-                return "img.invalidChars";
+                return "img.invalidFormat";
               default:
                 return "img.modified";
             }
@@ -63,7 +61,7 @@ module.exports = body => {
           case "video": {
             switch (e.type) {
               case "string.pattern.base":
-                return "video.invalidChars";
+                return "video.invalidFormat";
               default:
                 return "video.modified";
             }
@@ -71,17 +69,15 @@ module.exports = body => {
           case "audio": {
             switch (e.type) {
               case "string.pattern.base":
-                return "audio.invalidChars";
+                return "audio.invalidFormat";
               default:
                 return "audio.modified";
             }
           }
           case "tags": {
             switch (e.type) {
-              case "key.length":
-                return "tags.nameLength";
               case "any.custom":
-                return "tags.invalidChars";
+                return "tags.invalidFormat";
               default:
                 return "tags.modified";
             }

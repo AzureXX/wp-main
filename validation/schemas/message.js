@@ -9,17 +9,19 @@ module.exports = joi
           .string()
           .required()
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .allow("")
+          .required()
+          .allow("", null)
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/),
+          .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .allow("")
+          .required()
+          .allow("", null)
           .trim()
-          .pattern(/^(?:[^\<\>]*)$/)
+          .pattern(/^(?:[^<>]*)$/)
       })
       .required()
       .unknown(false),
@@ -27,18 +29,8 @@ module.exports = joi
       is: joi.valid(true),
       then: joi
         .string()
-        .allow("")
-        .custom((value, helpers) => {
-          let receieverIDs = value.split(",");
-          let length = receieverIDs.length;
-
-          for (let i = 0; i < length; i++) {
-            if (!mongooseID.isValid(receieverIDs[i])) {
-              return helpers.error("any.custom");
-            }
-          }
-          return value;
-        }),
+        .allow("", null)
+        .required(),
       otherwise: joi
         .string()
         .required()
@@ -56,4 +48,5 @@ module.exports = joi
     }),
     all: joi.valid(true, false).required()
   })
+  .required()
   .unknown(true);

@@ -10,9 +10,10 @@ module.exports = body => {
         switch (e.path[0]) {
           case "user": {
             switch (e.type) {
+              case "string.empty":
+                return "user.empty";
               case "any.custom":
                 return "user.invalidID";
-              case "any.required":
               default:
                 return "user.modified";
             }
@@ -20,7 +21,7 @@ module.exports = body => {
           case "type": {
             switch (e.type) {
               case "any.only":
-                return "type.only";
+                return "type.invalidValue";
               default:
                 return "type.modified";
             }
@@ -28,6 +29,7 @@ module.exports = body => {
           case "deadline": {
             switch (e.type) {
               case "date.format":
+                return "date.invalidFormat";
               default:
                 return "date.modified";
             }
@@ -35,7 +37,7 @@ module.exports = body => {
           case "comment": {
             switch (e.type) {
               case "string.pattern.base":
-                return "comment.invalidChars";
+                return "comment.invalidFormat";
               default:
                 return "comment.modified";
             }
@@ -43,7 +45,7 @@ module.exports = body => {
           case "level": {
             switch (e.type) {
               case "any.only":
-                return "level.only";
+                return "level.invalidValue";
               default:
                 return "level.modified";
             }

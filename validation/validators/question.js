@@ -10,7 +10,8 @@ module.exports = body => {
         switch (e.path[0]) {
           case "multiple": {
             switch (e.type) {
-              case "any.custom":
+              case "any.only":
+                return "multiple.invalidValue";
               default:
                 return "multiple.modified";
             }
@@ -20,9 +21,9 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.empty":
-                    return "textUS.required";
+                    return "textUS.empty";
                   case "string.pattern.base":
-                    return "textUS.invalidChars";
+                    return "textUS.invalidFormat";
                   default:
                     return "textUS.modified";
                 }
@@ -30,7 +31,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "textRU.invalidChars";
+                    return "textRU.invalidFormat";
                   default:
                     return "textRU.modified";
                 }
@@ -38,7 +39,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "textAZ.invalidChars";
+                    return "textAZ.invalidFormat";
                   default:
                     return "textAZ.modified";
                 }
@@ -56,9 +57,9 @@ module.exports = body => {
                   case "us": {
                     switch (e.type) {
                       case "string.empty":
-                        return "answer.textUS.required";
+                        return "answer.textUS.empty";
                       case "string.pattern.base":
-                        return "answer.textUS.invalidChars";
+                        return "answer.textUS.invalidFormat";
                       default:
                         return "answer.textUS.modified";
                     }
@@ -66,13 +67,13 @@ module.exports = body => {
                   case "ru": {
                     switch (e.type) {
                       case "string.pattern.base":
-                        return "answer.textRU.invalidChars";
+                        return "answer.textRU.invalidFormat";
                     }
                   }
                   case "az": {
                     switch (e.type) {
                       case "string.pattern.base":
-                        return "answer.textAZ.invalidChars";
+                        return "answer.textAZ.invalidFormat";
                     }
                   }
                 }
@@ -86,9 +87,9 @@ module.exports = body => {
                   case "tagName": {
                     switch (e.type) {
                       case "string.pattern.base":
-                        return "answer.tagName.invalidChars";
+                        return "answer.tagName.invalidFormat";
                       case "string.min":
-                        return "answer.tagName.nameLength";
+                        return "answer.tagName.minLength";
                       case "string.empty":
                         return "answer.tagName.empty";
                       default:
@@ -110,17 +111,15 @@ module.exports = body => {
             }
             switch (e.type) {
               case "array.min":
-                return "answer.required";
+                return "answer.empty";
               default:
                 return "answer.modified";
             }
           }
           case "tags": {
             switch (e.type) {
-              case "key.length":
-                return "tags.namelength";
               case "any.custom":
-                return "tags.invalidChars";
+                return "tags.invalidFormat";
               default:
                 return "tags.modified";
             }

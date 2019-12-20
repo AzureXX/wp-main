@@ -13,9 +13,9 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.empty":
-                    return "nameUS.required";
+                    return "nameUS.empty";
                   case "string.pattern.base":
-                    return "nameUS.invalidChars";
+                    return "nameUS.invalidFormat";
                   default:
                     return "nameUS.modified";
                 }
@@ -23,7 +23,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "nameRU.invalidChars";
+                    return "nameRU.invalidFormat";
                   default:
                     return "nameRU.modified";
                 }
@@ -31,7 +31,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "nameAZ.invalidChars";
+                    return "nameAZ.invalidFormat";
                   default:
                     return "nameAZ.modified";
                 }
@@ -47,7 +47,7 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "descriptionUS.invalidChars";
+                    return "descriptionUS.invalidFormat";
                   default:
                     return "descriptionUS.modified";
                 }
@@ -55,7 +55,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "descriptionRU.invalidChars";
+                    return "descriptionRU.invalidFormat";
                   default:
                     return "descriptionRU.modified";
                 }
@@ -63,7 +63,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "descriptionAZ.invalidChars";
+                    return "descriptionAZ.invalidFormat";
                   default:
                     return "descriptionAZ.modified";
                 }
@@ -79,7 +79,7 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "imgUS.invalidChars";
+                    return "imgUS.invalidFormat";
                   default:
                     return "imgUS.modified";
                 }
@@ -87,7 +87,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "imgRU.invalidChars";
+                    return "imgRU.invalidFormat";
                   default:
                     return "imgRU.modified";
                 }
@@ -95,7 +95,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "imgAZ.invalidChars";
+                    return "imgAZ.invalidFormat";
                   default:
                     return "imgAZ.modified";
                 }
@@ -108,10 +108,8 @@ module.exports = body => {
           }
           case "tags": {
             switch (e.type) {
-              case "key.length":
-                return "tags.nameLength";
               case "any.custom":
-                return "tags.invalidChars";
+                return "tags.invalidFormat";
               default:
                 return "tags.modified";
             }
@@ -127,7 +125,7 @@ module.exports = body => {
           case "genres": {
             switch (e.type) {
               case "any.custom":
-                return "genre.invalidChars";
+                return "genre.invalidFormat";
               default:
                 return "genres.modified";
             }
@@ -137,7 +135,7 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "videoUS.invalidChars";
+                    return "videoUS.invalidFormat";
                   default:
                     return "videoUS.modified";
                 }
@@ -145,7 +143,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "videoRU.invalidChars";
+                    return "videoRU.invalidFormat";
                   default:
                     return "videoRU.modified";
                 }
@@ -153,7 +151,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "videoAZ.invalidChars";
+                    return "videoAZ.invalidFormat";
                   default:
                     return "videoAZ.modified";
                 }
@@ -169,7 +167,7 @@ module.exports = body => {
               case "us": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "linkUS.invalidChars";
+                    return "linkUS.invalidFormat";
                   default:
                     return "linkUS.modified";
                 }
@@ -177,7 +175,7 @@ module.exports = body => {
               case "ru": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "linkRU.invalidChars";
+                    return "linkRU.invalidFormat";
                   default:
                     return "linkRU.modified";
                 }
@@ -185,7 +183,7 @@ module.exports = body => {
               case "az": {
                 switch (e.type) {
                   case "string.pattern.base":
-                    return "linkAZ.invalidChars";
+                    return "linkAZ.invalidFormat";
                   default:
                     return "linkAZ.modified";
                 }

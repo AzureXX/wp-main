@@ -13,7 +13,7 @@ module.exports.signUp = reqBody => {
               case "string.email":
                 return "email.notEmail";
               case "string.empty":
-                return "email.required";
+                return "email.empty";
               default:
                 return "email.modified";
             }
@@ -21,7 +21,7 @@ module.exports.signUp = reqBody => {
           case "password": {
             switch (e.type) {
               case "string.empty":
-                return "password.required";
+                return "password.empty";
               case "string.min":
                 return "password.minLength";
               default:
@@ -41,17 +41,15 @@ module.exports.signUp = reqBody => {
               case "string.max":
                 return "username.max";
               case "string.pattern.base":
-                return "username.invalidChars";
+                return "username.invalidFormat";
               default:
                 return "username.modified";
             }
           }
           case "type": {
             switch (e.type) {
-              case "string.empty":
-                return "userType.required";
               case "any.only":
-                return "userType.notAllowed";
+                return "userType.invalidValue";
               default:
                 return "userType.modified";
             }

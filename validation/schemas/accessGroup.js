@@ -6,18 +6,21 @@ module.exports = joi
       .string()
       .required()
       .trim()
-      .pattern(/^(?:[^\<\>]*)$/),
-    users: joi.array().items(
-      joi
-        .string()
-        .allow("")
-        .custom((value, helpers) => {
-          if (!mongooseID.isValid(value)) {
-            return helpers.error("any.custom");
-          }
-          return value;
-        })
-    ),
+      .pattern(/^(?:[^<>]*)$/),
+    users: joi
+      .array()
+      .required()
+      .items(
+        joi
+          .string()
+          .allow("")
+          .custom((value, helpers) => {
+            if (!mongooseID.isValid(value)) {
+              return helpers.error("any.custom");
+            }
+            return value;
+          })
+      ),
     showEmail: joi.valid(true, false).required(),
     showPhone: joi.valid(true, false).required(),
     showName: joi.valid(true, false).required(),

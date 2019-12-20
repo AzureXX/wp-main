@@ -3,62 +3,73 @@ const mongooseID = require("mongoose").Types.ObjectId;
 
 module.exports = joi
   .object({
-    education: joi.valid("default", "orta", "ali"),
+    education: joi.required().valid("default", "orta", "ali"),
     position: joi
       .string()
       .required()
       .trim()
-      .pattern(/^(?:[^\<\>]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     email: joi
       .string()
+      .required()
       .email()
       .allow("", null),
     phone: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
-      .pattern(/^([\+0-9\(])([0-9\(\)\-\s]){0,18}([0-9\)])$/),
+      .pattern(/^[+]?\d{10,20}$/),
     ageMin: joi
       .number()
+      .required()
       .min(0)
+      .integer()
       .allow(null),
     ageMax: joi.when("ageMin", {
       is: joi
         .number()
         .min(0)
-        .required(),
+        .integer(),
       then: joi
         .number()
-        .min(joi.ref("ageMin"))
-        .allow(null),
+        .required()
+        .integer()
+        .min(joi.ref("ageMin")),
       otherwise: joi
         .number()
+        .required()
         .min(0)
+        .integer()
         .allow(null)
     }),
     requirements: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
-      .pattern(/^(?:[^\<\>]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     workInfo: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
-      .pattern(/^(?:[^\<\>]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     companyName: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
-      .pattern(/^(?:[^\<\>]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     contactPerson: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
-      .pattern(/^(?:[^\<\>]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     subcategories: joi
       .array()
-      .allow(null)
+      .required()
       .items(
         joi.object({
           data: joi
@@ -73,13 +84,14 @@ module.exports = joi
                   return value;
                 })
             })
+            .required()
             .unknown(true),
-          status: joi.valid(1, 2, 3, 4, 5)
+          status: joi.valid(1, 2, 3, 4, 5).required()
         })
       ),
     topics: joi
       .array()
-      .allow(null)
+      .required()
       .items(
         joi.object({
           data: joi
@@ -94,13 +106,14 @@ module.exports = joi
                   return value;
                 })
             })
+            .required()
             .unknown(true),
-          status: joi.valid(1, 2, 3, 4, 5)
+          status: joi.valid(1, 2, 3, 4, 5).required()
         })
       ),
     subtopics: joi
       .array()
-      .allow(null)
+      .required()
       .items(
         joi.object({
           data: joi
@@ -115,16 +128,19 @@ module.exports = joi
                   return value;
                 })
             })
+            .required()
             .unknown(true),
-          status: joi.valid(1, 2, 3, 4, 5)
+          status: joi.valid(1, 2, 3, 4, 5).required()
         })
       ),
-    experience: joi.valid("default", "all", 1, 2, 3, 5, 10, "more"),
-    salary: joi.valid("default", "all", 100, 200, 400, 600, 800, 1000),
+    experience: joi.required().valid("default", "all", 1, 2, 3, 5, 10, "more"),
+    salary: joi.required().valid("default", "all", 100, 200, 400, 600, 800, 1000),
     city: joi
       .string()
+      .required()
       .allow("", null)
-      .pattern(/^(?:[^\<\>]*)$/),
-    category: joi.valid("default", "all", "finance", "construction", "education", "design", "management", "service", "trade", "it")
+      .pattern(/^(?:[^<>]*)$/),
+    category: joi.required().valid("default", "all", "finance", "construction", "education", "design", "management", "service", "trade", "it")
   })
+  .required()
   .unknown(true);

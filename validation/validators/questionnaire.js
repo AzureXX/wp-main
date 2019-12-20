@@ -4,7 +4,6 @@ module.exports = body => {
   let validationResult = schema.validate(body, {
     abortEarly: false
   });
-
   if (validationResult.error) {
     throw new Error(
       validationResult.error.details.map(e => {
@@ -12,7 +11,7 @@ module.exports = body => {
           case "questions": {
             switch (e.type) {
               case "string.empty":
-                return "questions.required";
+                return "questions.empty";
               case "any.custom":
                 return "questions.invalidID";
               default:
@@ -22,13 +21,13 @@ module.exports = body => {
           case "tags": {
             switch (e.type) {
               case "any.custom":
-                return "tags.invalidChars";
+                return "tags.invalidFormat";
               default:
                 return "tags.modified";
             }
           }
           default:
-            return "questionsBody.modified";
+            return "questionnaireBody.modified";
         }
       })
     );

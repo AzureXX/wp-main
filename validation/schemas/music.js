@@ -5,11 +5,12 @@ module.exports = joi
   .object({
     name: joi
       .string()
+      .required()
       .trim()
-      .pattern(/^(?:[^<>]*)$/)
-      .required(),
+      .pattern(/^(?:[^<>]*)$/),
     singers: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let singerIDs = value.split(",");
@@ -24,6 +25,7 @@ module.exports = joi
       }, "MongooseID_validity_checker"),
     duration: joi
       .string()
+      .required()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     released: joi
@@ -32,11 +34,12 @@ module.exports = joi
       .required(),
     genres: joi
       .string()
+      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let genres = value.split(",");
         let length = genres.length;
-        
+
         for (let i = 0; i < length; i++) {
           if (!/^[a-zA-Z][a-zA-Z_]*[a-zA-Z]$/.test(genres[i].trim())) {
             return helpers.error("any.custom");
@@ -46,25 +49,26 @@ module.exports = joi
       }, "Genre_checker"),
     img: joi
       .string()
+      .required()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     video: joi
       .string()
+      .required()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     audio: joi
       .string()
+      .required()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     tags: joi
       .object()
+      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            if (key.length <= 1) {
-              return helpers.error("key.length");
-            }
             if (
               joi
                 .string()
@@ -84,4 +88,5 @@ module.exports = joi
         return value;
       })
   })
+  .required()
   .unknown(true);
