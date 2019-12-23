@@ -15,24 +15,25 @@ module.exports.signUp = joi
   .object({
     email: joi
       .string()
-      .email()
-      .required(),
+      .required()
+      .email(),
     password: joi
       .string()
-      .min(5)
-      .required(),
+      .required()
+      .min(5),
     password2: joi.ref("password"),
     username: joi
       .string()
+      .required()
       .trim()
       .allow("", null)
       .min(3)
       .max(20)
-      .pattern(/^(?:[^\<\>\ ]*)$/),
+      .pattern(/^(?:[^<> ]*)$/),
     type: joi
       .string()
-      .valid("private", "business")
       .required()
+      .valid("private", "business")
   })
   .required()
   .unknown(true);
