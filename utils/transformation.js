@@ -102,52 +102,36 @@ module.exports = {
   getObject(req, type) {
     switch (type) {
       case "book":
-        // validation done
         return this.getBookObject(req.body);
       case "movie":
-        // validation done
         return this.getMovieObject(req.body);
       case "music":
-        // validation done
         return this.getMusicObject(req.body);
       case "course":
-        // validation done
         return this.getCourseObject(req.body);
       case "person":
-        // validation done
         return this.getPersonObject(req.body);
       case "category":
-        // validation done
         return this.getEducationCategoryObject(req.body);
       case "subcategory":
-        // validation done
         return this.getEducationSubcategoryObject(req.body);
       case "topic":
-        // validation done
         return this.getEducationTopicObject(req.body);
       case "subtopic":
-        // validation done
         return this.getEducationSubtopicObject(req.body);
       case "question":
-        // validation done
         return this.getQuestionObject(req.body);
       case "questionnaire":
-        // validation done
         return this.getQuestionnaireObject(req.body);
       case "vacancy":
-        // validation done
         return this.getVacancyObject(req);
       case "accessgroup":
-        // validation done
         return this.getAccessGroupObject(req);
       case "task":
-        // validation done
         return this.getTaskObject(req);
       case "message":
-        // validation ----
         return this.getMessageObject(req.body);
       case "notification":
-        // validation ----
         return this.getNotificationObject(req.body);
     }
   },
@@ -272,7 +256,6 @@ module.exports = {
   },
   getQuestionObject(body) {
     validator.Question(body);
-    throw new Error("done");
     return {
       multiple: !!body.multiple,
       text: this.multi(body.text),
