@@ -12,7 +12,7 @@ module.exports = body => {
             switch (e.type) {
               case "any.only":
                 return "education.invalidValue";
-              default:
+              default: 
                 return "education.modified";
             }
           }
@@ -29,7 +29,7 @@ module.exports = body => {
           case "email": {
             switch (e.type) {
               case "string.email":
-                return "email.notEmail";
+                return "email.invalidFormat";
               default:
                 return "email.modified";
             }
@@ -45,7 +45,7 @@ module.exports = body => {
           case "ageMin": {
             switch (e.type) {
               case "number.min":
-                return "ageMin.Limit";
+                return "ageMin.minLimit";
               default:
                 return "ageMin.modified";
             }
@@ -53,7 +53,7 @@ module.exports = body => {
           case "ageMax": {
             switch (e.type) {
               case "number.min":
-                return "ageMax.Limit";
+                return "ageMax.refLimit";
               default:
                 return "ageMax.modified";
             }

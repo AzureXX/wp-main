@@ -31,7 +31,9 @@ module.exports.signUp = reqBody => {
           case "password2": {
             switch (e.type) {
               case "any.only":
-                return "password.notMatch";
+                return "password2.notMatch";
+              default:
+                return "password2.modified";
             }
           }
           case "username": {
