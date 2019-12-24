@@ -716,7 +716,6 @@ module.exports = {
       const newTask = new Task(transformation.getObject(req, "task"));
       const access = await this.getUserAccess(req, res, next, req.body.user);
       if (!access.giveTasks) throw new Error('access.false');
-      const newTask = new Task(transformation.getObject(req, 'task'));
       const task = await newTask.save();
       res.status(200).json(task);
     } catch (error) {
