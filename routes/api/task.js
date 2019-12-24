@@ -57,4 +57,15 @@ router.put(
     await requests.updateTaskArchive(req,res,next)
   }
 );
+
+//@route   PUT api/task/delete/:id
+//@desc    Update task archive status
+//@access  Private
+router.put(
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.deleteTask(req,res,next)
+  }
+);
 module.exports = router;

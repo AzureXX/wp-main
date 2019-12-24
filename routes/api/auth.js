@@ -1,14 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
-const validator = require("../../validation/validators/auth");
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../../models/User');
+const validator = require('../../validation/validators/authValidator');
+
+const passport = require('passport');
+const roles = require('../../utils/roles');
+
 
 //@route   POST api/auth/signup
 //@desc    Return JWT
 //@access  Public
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", roles.isAdmin, async (req, res, next) => {
   try {
     validator.signUp(req.body);
 
@@ -64,14 +69,13 @@ router.post("/signup", async (req, res, next) => {
 router.post("/signin", async (req, res, next) => {
   try {
     validator.signIn(req.body);
-
     const { email, password } = req.body;
 
     const user = await User.findOne(
       {
         email
       },
-      "+password username role"
+      '+password username role'
     ).lean();
 
     if (!user) throw new Error("user.notfound");
