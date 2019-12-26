@@ -2,91 +2,92 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        sparse: true
+  username: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    unique: true,
+    required: "Email address is required",
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please fill a valid email address"]
+  },
+  password: {
+    type: String,
+    required: "Password is required",
+    select: false
+  },
+  accountType: {
+    type: String,
+    default: "private"
+  },
+  firstname: String,
+  lastname: String,
+  description: String,
+  country: String,
+  city: String,
+  dob: Date,
+  phoneNumber: String,
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  role: {
+    type: String,
+    default: "user"
+  },
+  emotion: { type: String, default: "neutral" },
+  tags: {},
+  generalAccessOptions: {
+    showEmail: {
+      type: Boolean,
+      default: false
     },
-    email: {
-        type: String,
-        trim: true,
-        lowercase: true,
-        unique: true,
-        required: "Email address is required",
-        match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            "Please fill a valid email address"
-        ]
+    showPhone: {
+      type: Boolean,
+      default: false
     },
-    password: {
-        type: String,
-        required: "Password is required",
-        select: false
+    showName: {
+      type: Boolean,
+      default: false
     },
-    accountType: {
-        type: String,
-        default: "private"
+    showDOB: {
+      type: Boolean,
+      default: false
     },
-    firstname: String,
-    lastname: String,
-    description: String,
-    country: String,
-    city: String,
-    dob: Date,
-    phoneNumber: String,
-    date: {
-        type: Date,
-        default: Date.now
+    showBookInfo: {
+      type: Boolean,
+      default: false
     },
-    role: {
-        type: String,
-        default: "user"
+    showMovieInfo: {
+      type: Boolean,
+      default: false
     },
-    emotion: {type: String, default: "neutral"},
-    tags: {},
-    generalAccessOptions: {
-        showEmail: {
-          type: Boolean,
-          default: false
-        },
-        showPhone: {
-          type: Boolean,
-          default: false
-        },
-        showName: {
-          type: Boolean,
-          default: false
-        },
-        showDOB: {
-          type: Boolean,
-          default: false
-        },
-        showBookInfo: {
-          type: Boolean,
-          default: false
-        },
-        showMovieInfo: {
-          type: Boolean,
-          default: false
-        },
-        showMusicInfo: {
-            type: Boolean,
-            default: false
-          },
-        showCourseInfo: {
-          type: Boolean,
-          default: false
-        },
-        showEducationInfo: {
-          type: Boolean,
-          default: false
-        },
-        giveTasks: {
-          type: Boolean,
-          default: false
-        }
+    showMusicInfo: {
+      type: Boolean,
+      default: false
+    },
+    showCourseInfo: {
+      type: Boolean,
+      default: false
+    },
+    showEducationInfo: {
+      type: Boolean,
+      default: false
+    },
+    giveTasks: {
+      type: Boolean,
+      default: false
     }
-})
+  },
+  verifiedEmail: {
+    default: null,
+    type: String
+  }
+});
 
-const User = mongoose.model("User", UserSchema)
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

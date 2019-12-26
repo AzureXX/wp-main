@@ -29,6 +29,7 @@ require("./config/passport.js")(passport);
 const actionsRoute = require("./routes/api/actions");
 //Require routes
 const authRoute = require("./routes/api/auth");
+const emailActivatorRoute = require("./routes/api/activateEmail");
 const userRoute = require("./routes/api/user");
 const bookRoute = require("./routes/api/book");
 const musicRoute = require("./routes/api/music");
@@ -71,6 +72,7 @@ app.use(
 app.use(cors());
 
 app.use("/api/auth", authRoute);
+app.use("/api/activate", emailActivatorRoute);
 app.use("/api/user", userRoute);
 app.use("/api/actions", actionsRoute);
 app.use("/api/book", bookRoute);
