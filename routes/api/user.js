@@ -31,7 +31,8 @@ router.get(
         dob: req.user.dob,
         phoneNumber: req.user.phoneNumber,
         emotion: req.user.emotion,
-        generalAccessOptions: req.user.generalAccessOptions
+        generalAccessOptions: req.user.generalAccessOptions,
+        verified: req.user.verified
       });
     } catch (error) {
       return next(error);

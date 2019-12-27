@@ -24,7 +24,6 @@ module.exports.signUp = joi
     password2: joi.ref("password"),
     username: joi
       .string()
-      .required()
       .trim()
       .allow("", null)
       .min(3)
