@@ -27,7 +27,7 @@ router.post("/", async (req, res, next) => {
 
 router.post("/resend", passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
-    const verificationCode = emailVerification(newUser.id, newUser.email);
+    const verificationCode = emailVerification(req.user.id, req.user.email);
     res.json({
       verificationLink: `/activation/${verificationCode}`
     })
