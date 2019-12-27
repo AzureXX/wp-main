@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
-const emailActivator = require("../../services/emailActivator");
+const emailVerification = require("../../services/emailVerification");
 const validator = require("../../validation/validators/auth");
 
 const passport = require("passport");
@@ -52,7 +52,7 @@ router.post(
       });
       const newUser = await user.save();
       // temporary here
-      const activationCode = emailActivator(newUser.id, newUser.email);
+      const verificationCode = emailVerification(newUser.id, newUser.email);
 
       const payload = {
         id: newUser.id,
@@ -66,7 +66,7 @@ router.post(
       return res.json({
         success: true,
         token: "Bearer " + token,
-        activationLink: `/api/activate/${activationCode}`
+        verificationLink: `/activation/${verificationCode}`
       });
     } catch (error) {
       next(error);

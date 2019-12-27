@@ -83,10 +83,13 @@ const UserSchema = new Schema({
       default: false
     }
   },
-  verifiedEmail: {
-    default: null,
-    type: String
+  verified: {
+    email: {
+      default: null,
+      type: String
+    }
   }
+
 });
 
 const User = mongoose.model("User", UserSchema);

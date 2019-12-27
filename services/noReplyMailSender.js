@@ -1,6 +1,6 @@
 const sgMail = require("@sendgrid/mail");
 
-module.exports = userEmail => {
+module.exports = (userEmail, verificationCodeObject) => {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   sgMail.send(
     {
@@ -8,7 +8,7 @@ module.exports = userEmail => {
       to: userEmail,
       templateId: "d-489fe786c3ad4b6e9b07830ecfe8444b",
       dynamic_template_data: {
-        code: activationCodeObject.code
+        code: verificationCodeObject.code
       }
     },
     (err, result) => {

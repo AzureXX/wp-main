@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ActivationSchema = new Schema({
+const EmailVerificationSchema = new Schema({
   userID: {
     type: mongoose.Types.ObjectId,
     required: true
@@ -20,5 +20,5 @@ const ActivationSchema = new Schema({
   }
 });
 
-const ActivationCode = mongoose.model("ActivationCode", ActivationSchema);
-module.exports = ActivationCode;
+const EmailVerification = mongoose.model("ActivationCode", EmailVerificationSchema);
+module.exports = EmailVerification;
