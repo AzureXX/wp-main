@@ -16,7 +16,7 @@ module.exports = (userEmail, verificationCodeObject) => {
         console.log("Error occured while sending verification mail to ", userEmail);
         throw new Error(err.message);
       } else {
-        console.log("Succcessfuly sent verification mail to ", userEmail);
+        console.log("Successfully sent verification mail to ", userEmail);
       }
     }
   );
