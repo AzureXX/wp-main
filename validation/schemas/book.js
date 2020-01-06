@@ -136,21 +136,6 @@ module.exports = joi
       .date()
       .iso()
       .required(),
-    publisher: joi
-      .string()
-      .required()
-      .allow("", null)
-      .custom((value, helpers) => {
-        let publisherIDs = value.split(",");
-        let length = publisherIDs.length;
-
-        for (let i = 0; i < length; i++) {
-          if (!mongooseID.isValid(publisherIDs[i].trim())) {
-            return helpers.error("any.custom");
-          }
-        }
-        return value;
-      }, "MongooseID_validity_checker"),
     wikipediaLink: joi
       .object({
         us: joi

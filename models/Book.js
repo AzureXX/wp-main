@@ -25,12 +25,6 @@ const BookSchema = new Schema({
   ],
   ISBN: String,
   published: Date,
-  publisher: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Person"
-    }
-  ],
   wikipediaLink: {
     us: String,
     ru: String,
