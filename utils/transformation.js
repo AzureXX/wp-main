@@ -143,7 +143,6 @@ module.exports = {
       genres: this.strToArr(body.genres),
       ISBN: body.isbn,
       published: body.published,
-      publisher: this.strToArr(body.publisher, true),
       wikipediaLink: this.multi(body.wikipediaLink),
       website: this.multi(body.website)
     };

@@ -146,14 +146,6 @@ module.exports = body => {
                 return "published.modified";
             }
           }
-          case "publisher": {
-            switch (e.type) {
-              case "any.custom":
-                return "publisher.invalidID";
-              default:
-                return "publisher.modified";
-            }
-          }
           case "wikipediaLink": {
             switch (e.path[1]) {
               case "us": {
