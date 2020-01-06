@@ -93,19 +93,19 @@ router.post(
 
       const newBook = new Book({
         name: {
-          us: response.data.volumeInfo.title
+          us: req.body.customName || response.data.volumeInfo.title
         },
         description: {
           us: description
         },
-        ISBN: response.data.volumeInfo.industryIdentifiers[1].identifier,
+        ISBN: req.body.customIsbn || response.data.volumeInfo.industryIdentifiers[1].identifier,
         img: {
           us: 'https://books.google.com/books/content?id=' +
             req.body.id +
             '&printsec=frontcover&img=1&zoom=1'
         },
         website: {
-          us: 'https://books.google.az/books?id=' + req.body.id
+          us: 'https://books.google.com/books?id=' + req.body.id
         },
         published: req.body.published,
         genres: genres,
