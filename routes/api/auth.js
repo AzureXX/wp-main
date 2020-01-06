@@ -60,7 +60,7 @@ router.post(
         role: newUser.role
       };
 
-      const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
+      const token = jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 360000
       });
       return res.json({
@@ -97,7 +97,7 @@ router.post("/signin", async (req, res, next) => {
         username: user.username,
         role: user.role
       };
-      const token = await jwt.sign(payload, process.env.SECRET_OR_KEY, {
+      const token = jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 360000
       });
       return res.json({

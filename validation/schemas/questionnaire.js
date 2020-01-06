@@ -19,7 +19,6 @@ module.exports = joi
       }, "MongooseID_validity_checker"),
     tags: joi
       .object()
-      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {

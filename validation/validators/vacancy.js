@@ -12,7 +12,7 @@ module.exports = body => {
             switch (e.type) {
               case "any.only":
                 return "education.invalidValue";
-              default: 
+              default:
                 return "education.modified";
             }
           }

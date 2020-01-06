@@ -9,7 +9,6 @@ module.exports = joi
       .pattern(/^(?:[^<>]*)$/),
     users: joi
       .array()
-      .required()
       .items(
         joi
           .string()

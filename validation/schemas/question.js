@@ -12,13 +12,11 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/)
@@ -40,13 +38,11 @@ module.exports = joi
                 .pattern(/^(?:[^<>]*)$/),
               ru: joi
                 .string()
-                .required()
                 .allow("", null)
                 .trim()
                 .pattern(/^(?:[^<>]*)$/),
               az: joi
                 .string()
-                .required()
                 .allow("", null)
                 .trim()
                 .pattern(/^(?:[^<>]*)$/)
@@ -55,7 +51,6 @@ module.exports = joi
             .unknown(false),
           result: joi
             .array()
-            .required()
             .items(
               joi
                 .object({
@@ -74,7 +69,6 @@ module.exports = joi
       ),
     tags: joi
       .object()
-      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {

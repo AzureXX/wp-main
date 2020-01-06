@@ -12,13 +12,11 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
@@ -29,51 +27,42 @@ module.exports = joi
       .object({
         us: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
       })
-      .required()
       .unknown(false),
     img: joi
       .object({
         us: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/)
       })
-      .required()
       .unknown(false),
     tags: joi
       .object()
-      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
@@ -114,7 +103,6 @@ module.exports = joi
     //   }, "MongooseID_validity_checker"),
     genres: joi
       .string()
-      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let genres = value.split(",");
@@ -131,47 +119,39 @@ module.exports = joi
       .object({
         us: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/)
       })
-      .required()
       .unknown(false),
     link: joi
       .object({
         us: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<> ]*)$/)
       })
-      .required()
       .unknown(false)
   })
   .required()

@@ -12,68 +12,56 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
       })
-      .required()
       .unknown(false),
     description: joi
       .object({
         us: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<>]*)$/)
       })
-      .required()
       .unknown(false),
     img: joi
       .object({
         us: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         ru: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/),
         az: joi
           .string()
-          .required()
           .trim()
           .allow("", null)
           .pattern(/^(?:[^<> ]*)$/)
       })
-      .required()
       .unknown(false),
     tags: joi
       .object()
-      .required()
       .allow({})
       .custom((value, helpers) => {
         for (const key in value) {
@@ -98,13 +86,11 @@ module.exports = joi
       }),
     icon: joi
       .string()
-      .required()
       .trim()
       .allow("", null)
       .pattern(/^(?:[^<> ]*)$/),
     courses: joi
       .string()
-      .required()
       .allow("", null)
       .custom((value, helpers) => {
         let courseIDs = value.split(",");

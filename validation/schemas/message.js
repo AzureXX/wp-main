@@ -12,13 +12,11 @@ module.exports = joi
           .pattern(/^(?:[^<>]*)$/),
         ru: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/),
         az: joi
           .string()
-          .required()
           .allow("", null)
           .trim()
           .pattern(/^(?:[^<>]*)$/)
@@ -27,10 +25,7 @@ module.exports = joi
       .unknown(false),
     to: joi.when("all", {
       is: joi.valid(true),
-      then: joi
-        .string()
-        .allow("", null)
-        .required(),
+      then: joi.string().allow("", null),
       otherwise: joi
         .string()
         .required()
