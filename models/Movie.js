@@ -45,6 +45,11 @@ const MovieSchema = new Schema({
     us: String,
     ru: String,
     az: String
+  },
+  tmdbId: {
+    type: Number,
+    unique: true,
+    sparse: true
   }
 });
 

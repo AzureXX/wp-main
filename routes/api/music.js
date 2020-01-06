@@ -84,7 +84,7 @@ router.post('/youtube',  async (req, res, next) => {
       }
    const data = response.data.items[0]
    const musicObj = new Music({
-     name: data.snippet.title,
+     name: req.body.customName || data.snippet.title,
      video: id,
      released: data.snippet.publishedAt,
      img: data.snippet.thumbnails.medium.url,
