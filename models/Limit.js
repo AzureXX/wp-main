@@ -7,14 +7,38 @@ const LimitSchema = new Schema({
     required: true
   },
   recommendations: {
-    book: 3,
-    movie:3,
-    music: 3,
-    course: 3,
-    career: 3,
-    education: 3
+    book: {
+      type: Number,
+      default: 3,
+      min: 0
+    },
+    movie: {
+      type: Number,
+      default: 3,
+      min: 0
+    },
+    music: {
+      type: Number,
+      default: 3,
+      min: 0
+    },
+    course: {
+      type: Number,
+      default: 3,
+      min: 0
+    },
+    career: {
+      type: Number,
+      default: 3,
+      min: 0
+    },
+    education: {
+      type: Number,
+      default: 3,
+      min: 0
+    }
   }
 });
 
-const Limit = mongoose.model("ActivationCode", LimitSchema);
+const Limit = mongoose.model("Limit", LimitSchema);
 module.exports = Limit;
