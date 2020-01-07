@@ -272,7 +272,9 @@ module.exports = {
       const itemModel = models.getModel(name);
       const itemRecommendationModel = models.getRecommendationModel(name);
       const plural = transformation.getPlural(name);
-
+      if(res.user.role !== "admin" || res.user.role !== "moderator") {
+        this.checkLimit(req.user.id, name);
+      }
       const ratings = await itemRatingModel
         .find({ userId: req.user._id })
         .lean();
@@ -306,6 +308,11 @@ module.exports = {
           }
         )
         .populate(plural + ".data");
+        
+        if(res.user.role !== "admin" || res.user.role !== "moderator") {
+          this.changeLimit(req.user.id, name, -1);
+        }
+        
       return res.json(recs);
     } catch (error) {
       next(error);
