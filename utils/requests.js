@@ -267,7 +267,7 @@ module.exports = {
   ************************/
   async updateItemRecommendations(req, res, next, name) {
     try {
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, name);
       }
       const itemRatingModel = models.getRatingModel(name);
@@ -304,7 +304,7 @@ module.exports = {
         )
         .populate(plural + ".data");
 
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         recommendation.changeLimit(req.user._id, name, -1);
       }
       return res.json(recs);
@@ -314,7 +314,7 @@ module.exports = {
   },
   async updateVacancyRecommendations(req, res, next) {
     try {
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, "career");
       }
       const VacancyRecommendation = models.getRecommendationModel("vacancy");
@@ -340,7 +340,7 @@ module.exports = {
           new: true
         }
       ).populate("vacancies.data");
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         recommendation.changeLimit(req.user._id, "career", -1);
       }
       return res.json(recs);
@@ -350,7 +350,7 @@ module.exports = {
   },
   async updateEducationRecommendations(req, res, next) {
     try {
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, "education");
       }
       const Education = models.getRecommendationModel("education");
@@ -411,7 +411,7 @@ module.exports = {
         path: "categories.data subcategories.data topics.data subtopics.data",
         select: "name icon"
       });
-      if (req.user.role !== "admin" || req.user.role !== "moderator") {
+      if (req.user.role !== "admin" && req.user.role !== "moderator") {
         recommendation.changeLimit(req.user._id, "education", -1);
       }
       return res.json(recs);
