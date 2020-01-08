@@ -4,7 +4,7 @@ const CronJob = require("cron").CronJob;
 // model
 const Limit = require("../models/Limit");
 
-const job = new CronJob("00 45 * * * *", async () => {
+const job = new CronJob("00 00 00 * * *", async () => {
   try {
     console.log("Starting to reset recommendation count of all users.");
     await mongoose.connect(process.env.MONGO_URI, {
