@@ -36,8 +36,8 @@ router.post("/add", passport.authenticate("jwt", { session: false }), roles.isMo
 //@route   PUT api/achievements/edit
 //@desc    edit selected achievement
 //@access  admin & moderator
-router.put("/edit", passport.authenticate("jwt", { session: false }), roles.isModerator, async (req, res, next) => {
-  await requests.createItem(req, res, next, "achievement");
+router.put("/edit/:id", passport.authenticate("jwt", { session: false }), roles.isModerator, async (req, res, next) => {
+  await requests.editItem(req, res, next, "achievement");
 });
 
 //@route   PUT api/achievements/delete
