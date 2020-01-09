@@ -72,15 +72,15 @@ router.post(
     try {
       if (!req.body.id) throw new Error('id.required');
       const exist = await Book.findOne({
-        "website.us": 'https://books.google.az/books?id=' + req.body.id
+        "website.us": 'https://books.google.com/books?id=' + req.body.id
       }, "_id").lean()
       if (exist) throw new Error("book.exist")
       const response = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/' + req.body.id
       );
-      const description = sanitizeHTML(response.data.volumeInfo.description, {
+      const description = req.body.withDescription ?  sanitizeHTML(response.data.volumeInfo.description, {
         allowedTags: []
-      });
+      }) : null;
       const genres = req.body.genres ?
         req.body.genres.split(',').map(i => i.trim().toLowerCase()) :
         null;
