@@ -12,7 +12,7 @@ const router = express.Router();
 //@access  Public
 router.get("/get/all", async (req, res, next) => {
   try {
-    const achievements = await Achievement.find({}).lean();
+    const achievements = await Achievement.find({}).sort("order").lean();
     res.json(achievements);
   } catch (error) {
     next(error);
