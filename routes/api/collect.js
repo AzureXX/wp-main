@@ -17,6 +17,7 @@ const CourseRecommendation = require('../../models/Recommendations/CourseRecomme
 const MusicRecommendation = require('../../models/Recommendations/MusicRecommendation');
 router.get('/initial', roles.isUser, async (req, res, next) => {
   try {
+    res.io.emit("hello", { message: "hi"})
     let ratedBooks = [];
     let ratedMovies = [];
     let ratedMusic = [];

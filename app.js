@@ -8,6 +8,18 @@ const helmet = require("helmet");
 const app = express();
 const compression = require("compression");
 
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+app.use((req, res, next) => {
+  res.io = io;
+  next();
+});
+
+io.on('connection',  (socket) => {
+  require("./services/socket-io")(socket)
+});
+
 app.use(compression());
 app.use(helmet());
 mongoose
@@ -24,6 +36,7 @@ app.use(passport.initialize());
 
 //Passport Config
 require("./config/passport.js")(passport);
+
 
 //Actions route
 const actionsRoute = require("./routes/api/actions");
@@ -116,4 +129,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+module.exports = {app: app, server: server};
