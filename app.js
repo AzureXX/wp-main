@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 });
 
 io.on('connection',  (socket) => {
-  require("./services/socket-io")(socket)
+  require("./services/socket-io")(socket, io)
 });
 
 app.use(compression());
