@@ -8,6 +8,8 @@ const helmet = require("helmet");
 const app = express();
 const compression = require("compression");
 
+app.use(cors());
+
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
@@ -83,7 +85,6 @@ app.use(
     extended: false
   })
 );
-app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/verify", emailVerificationRoute);
