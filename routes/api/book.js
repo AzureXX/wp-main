@@ -52,6 +52,7 @@ router.delete(
 //@desc    Get all books by page
 //@access  Public
 router.get('/get/all/:page?', async (req, res, next) => {
+  res.io.emit("hello", { message: "hi"})
   await requests.getAllItems(req, res, next, 'books', 20);
 });
 
