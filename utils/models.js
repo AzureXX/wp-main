@@ -36,7 +36,6 @@ const Questionnaire = require("../models/Questionnaire");
 //Vacancy Models
 const Vacancy = require("../models/Vacancy");
 // Other Models
-const Achievement = require("../models/Achievement");
 const AccessGroup = require("../models/AccessGroup");
 const Message = require("../models/Message");
 const Notification = require("../models/Notification");
@@ -94,9 +93,6 @@ module.exports = {
       case "notification":
       case "notifications":
         return Message;
-      case "achievement":
-      case "achievements":
-        return Achievement;
       default:
         return null;
     }
