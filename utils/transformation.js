@@ -1,6 +1,5 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 const validator = {
-  Achievement: require("../validation/validators/achievement"),
   Book: require("../validation/validators/book"),
   Movie: require("../validation/validators/movie"),
   Music: require("../validation/validators/music"),
@@ -102,8 +101,6 @@ module.exports = {
   },
   getObject(req, type) {
     switch (type) {
-      case "achievement":
-        return this.getAchievementObject(req.body);
       case "book":
         return this.getBookObject(req.body);
       case "movie":
@@ -138,15 +135,7 @@ module.exports = {
         return this.getNotificationObject(req.body);
     }
   },
-  getAchievementObject(body) {
-    validator.Achievement(body);
-    return {
-      order: body.order,
-      title: this.multi(body.title),
-      description: this.multi(body.description),
-      img: body.img
-    };
-  },
+
   getBookObject(body) {
     validator.Book(body);
     return {
