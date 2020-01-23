@@ -34,7 +34,7 @@ router.get("/get/id/:id", async (req, res, next) => {
 //@access  Public
 router.get("/user/:id", async (req, res, next) => {
   try {
-    const response = await axios.get(process.env.ACHIEVEMENTS_LINK + "/user/get/id/"+ req.params.id)
+    const response = await axios.get(process.env.ACHIEVEMENTS_LINK + "user/get/id/"+ req.params.id)
     res.json(response.data)
   } catch (error) {
     next(error);

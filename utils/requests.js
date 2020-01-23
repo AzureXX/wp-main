@@ -2,7 +2,7 @@ const validation = require("./validation");
 const models = require("./models");
 const transformation = require("./transformation");
 const recommendation = require("../services/recommendation");
-
+const axios = require("axios")
 module.exports = {
   /*****************
     CRUD FOR ITEMS
@@ -725,6 +725,7 @@ module.exports = {
   },
   async getMyTasks(req, res, next) {
     try {
+      this.checkAchievement(req, res, next, "registration")
       const Task = models.getModel("task");
       const tasks = await Task.find({ creator: req.user._id })
         .populate("user item", "name username")
@@ -818,6 +819,15 @@ module.exports = {
       }
     } catch (error) {
       next(error);
+    }
+  },
+  async checkAchievement(req, res, next, type) {
+    try {
+      const response = await axios.post(process.env.ACHIEVEMENTS_LINK + `user/calculate/${type}/${req.user._id}`);
+      if(response.data.new) res.io.emit("achievement", response.data.id)
+      return;
+    } catch (error) {
+      console.log(error.response.data);
     }
   }
 };
