@@ -270,6 +270,8 @@ module.exports = {
       if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, name);
       }
+      this.checkAchievement(req, res, next, "recommendation");
+
       const itemRatingModel = models.getRatingModel(name);
       const itemModel = models.getModel(name);
       const itemRecommendationModel = models.getRecommendationModel(name);
@@ -317,6 +319,8 @@ module.exports = {
       if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, "career");
       }
+      this.checkAchievement(req, res, next, "recommendation");
+
       const VacancyRecommendation = models.getRecommendationModel("vacancy");
       const Vacancy = models.getModel("vacancy");
       let vacancies = await Vacancy.find().lean();
@@ -353,6 +357,8 @@ module.exports = {
       if (req.user.role !== "admin" && req.user.role !== "moderator") {
         await recommendation.checkLimit(req.user._id, "education");
       }
+      this.checkAchievement(req, res, next, "recommendation");
+
       const Education = models.getRecommendationModel("education");
       const Category = models.getModel("category");
       const Subcategory = models.getModel("subcategory");
@@ -824,7 +830,7 @@ module.exports = {
   async checkAchievement(req, res, next, type) {
     try {
       const response = await axios.post(process.env.ACHIEVEMENTS_LINK + `user/calculate/${type}/${req.user._id}`);
-      if(response.data.new) res.io.emit("achievement", response.data.id)
+      if(response.data.new) res.io.emit("achievement", response.data)
       return;
     } catch (error) {
       console.log(error.response.data);

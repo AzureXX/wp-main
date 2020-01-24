@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const models = require('../../utils/models');
+const requests = require('../../utils/requests');
 
 const transformation = require('../../utils/transformation');
 
@@ -60,7 +61,9 @@ router.post(
         }
         
       }
+      requests.checkAchievement(req, res, next, type);
       const response = await RatingModel.find({userId: req.user._id}).populate({path: singular, select:"name"}).lean()
+
       return res.json(response)
     } catch (error) {
       next(error);
