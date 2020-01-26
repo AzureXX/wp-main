@@ -833,7 +833,7 @@ module.exports = {
       if(response.data.new) res.io.emit("achievement", response.data)
       return;
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
     }
   }
 };
