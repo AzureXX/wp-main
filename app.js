@@ -10,16 +10,16 @@ const compression = require("compression");
 
 app.use(cors());
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
 
 app.use((req, res, next) => {
   res.io = io;
   next();
 });
 
-io.on('connection',  (socket) => {
-  require("./services/socket-io")(socket, io)
+io.on("connection", socket => {
+  require("./services/socket-io")(socket, io);
 });
 
 app.use(compression());
@@ -38,7 +38,6 @@ app.use(passport.initialize());
 
 //Passport Config
 require("./config/passport.js")(passport);
-
 
 //Actions route
 const actionsRoute = require("./routes/api/actions");
@@ -121,6 +120,7 @@ app.use("/api/message", messageRoute);
 app.use("/api/notification", notificationRoute);
 app.use("/api/files", require("./routes/api/files"));
 
+// error handler
 app.use((err, req, res, next) => {
   res.status(500);
   return res.json({
@@ -128,4 +128,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = {app: app, server: server};
+module.exports = { app: app, server: server };

@@ -14,9 +14,9 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
         Authorization: process.env.RECOMMENDATION_ACCESS_TOKEN
       }
     });
-    return res.json(response.data);
+    res.json(response.data);
   } catch (error) {
-    next(error);
+    next(error.response.data);
   }
 });
 
@@ -25,8 +25,13 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
 //@access  Private
 router.post("/", passport.authenticate("jwt", { session: false }), async (req, res, next) => {
   try {
-    const response = await axios.post(process.env.RECOMMENDATION_LINK + `update/book/${req.user._id}`);
-    await requests.updateItemRecommendations(req, res, next, "book");
+    const response = await axios.post(process.env.RECOMMENDATION_LINK + `update/book/${req.user._id}`, {
+      headers: {
+        Authorization: process.env.RECOMMENDATION_ACCESS_TOKEN
+      }
+    });
+    requests.checkAchievement(req, res, next, "recommendation");
+    res.json(response.data);
   } catch (error) {
     next(error);
   }

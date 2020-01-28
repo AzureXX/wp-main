@@ -10,7 +10,6 @@ const passport = require("passport");
 const roles = require("../../utils/roles");
 
 const User = require("../../models/User");
-const Limit = require("../../models/Limit");
 
 //@route   POST api/auth/signup
 //@desc    Return JWT
@@ -53,7 +52,7 @@ router.post(
         accountType: type
       });
       const newUser = await user.save();
-      await Limit.create({ userID: newUser._id });
+
       // temporary here
       const verificationCode = emailVerification(newUser.id, newUser.email);
 
