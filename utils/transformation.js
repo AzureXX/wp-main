@@ -39,26 +39,6 @@ module.exports = {
         return null;
     }
   },
-  getPlural(name) {
-    switch (name) {
-      case "book":
-        return "books";
-      case "movie":
-        return "movies";
-      case "course":
-        return "courses";
-      case "person":
-        return "people";
-      case "music":
-        return "music";
-      case "vacancy":
-        return "vacancies";
-      case "education":
-        return "education";
-      default:
-        return null;
-    }
-  },
   getSingular(name) {
     switch (name) {
       case "books":
