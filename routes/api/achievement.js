@@ -3,7 +3,6 @@ const passport = require('passport');
 const requests = require('../../utils/requests');
 const roles = require('../../utils/roles');
 const axios = require('axios');
-const passport = require('passport');
 const router = express.Router();
 //@route   GEt api/achievements/get/all
 //@desc    Get all achievements from database

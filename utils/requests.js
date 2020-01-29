@@ -830,10 +830,10 @@ module.exports = {
   async checkAchievement(req, res, next, type) {
     try {
       const response = await axios.post(process.env.ACHIEVEMENTS_LINK + `user/calculate/${type}/${req.user._id}`);
-      if(response.data.new) res.io.emit("achievement", response.data)
+      if(response.data.new) res.io.to(req.headers.socket).emit("achievement", response.data)
       return;
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response ? error.response.data: error);
     }
   }
 };
