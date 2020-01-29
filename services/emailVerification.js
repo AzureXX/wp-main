@@ -10,6 +10,7 @@ module.exports = (userId, userEmail) => {
   };
   const emailActivationCode = new EmailVerification(verificationCodeObject);
   emailActivationCode.save();
+  
+  sendNoReplyMail(verificationCodeObject);
   return verificationCodeObject.code;
-  // sendNoReplyMail(userEmail, verificationCodeObject);
 };
