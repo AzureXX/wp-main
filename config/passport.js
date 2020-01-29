@@ -13,8 +13,8 @@ module.exports = passport => {
     new JwtStrategy(opts, async (jwt_payload, done) => {
       try {
         const auth = await Auth.findOne({userId: jwt_payload.id}, "+password").populate("userId", "", User).lean()
-        const user = {...auth.userId, email: auth.email, password: auth.password}
         if (auth) {
+          const user = {...auth.userId, email: auth.email, password: auth.password}
           return done(null, user);
         }
         return done(null, false);
