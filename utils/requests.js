@@ -671,7 +671,8 @@ module.exports = {
         const data = await User.findById(user);
         return data.generalAccessOptions;
       }
-      if (req.user._id.toString() === user.toString()) {
+      
+      if (req.user._id.toString() === user.toString() || req.user.role === "admin") {
         return {
           showEmail: true,
           showPhone: true,
