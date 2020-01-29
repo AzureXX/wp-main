@@ -78,11 +78,11 @@ router.post(
 //@access  Public
 router.post('/signin', async (req, res, next) => {
   try {
-    console.log(req.body);
     validator.signIn(req.body);
     
     const { email, password } = req.body;
     const auth = await Auth.findOne({ email }, "+password").lean();
+    if (!auth) throw new Error('user.notfound');
     const user = await User.findById(auth.userId).lean();
     if (!user) throw new Error('user.notfound');
     const isMatch = await bcrypt.compare(password, auth.password);
