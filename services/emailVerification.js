@@ -4,7 +4,7 @@ const sendNoReplyMail = require("./noReplyMailSender");
 
 module.exports = (userId, userEmail) => {
   const verificationCodeObject = {
-    userID: userId,
+    userId: userId,
     email: userEmail,
     code: new mongoose.mongo.ObjectId().toString()
   };
