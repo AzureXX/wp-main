@@ -27,10 +27,12 @@ router.post("/", async (req, res, next) => {
 
 router.post("/resend", passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
-    const verificationCode = emailVerification(req.user._id, req.user.email);
-    res.json({
-      verificationLink: `/activation/${verificationCode}`
+    const sent = await EmailVerification.find({userId: req.user._id}, "date").lean();
+    sent.forEach(obj => {
+      if(Date.now() - new Date(`${obj.date}`).getTime() < 900000) throw new Error("email.alreaysent")
     })
+    emailVerification(req.user._id, req.user.email);
+    res.json("success")
   } catch (error) {
     next(error);
   }
