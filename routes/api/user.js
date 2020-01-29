@@ -6,6 +6,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcryptjs');
 const requests = require('../../utils/requests.js');
 const roles = require('../../utils/roles');
+const Auth = require('../../models/Auth');
 
 //@route   GET api/user/current
 //@desc    Return current user's email and id
@@ -143,7 +144,7 @@ router.put(
           throw new Error("password.notmatch");
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
-        await User.findByIdAndUpdate(req.user._id, {
+        await Auth.findByIdAndUpdate(req.user._id, {
           password: hash
         });
         return res.json('Password was succesfully changed');
@@ -173,6 +174,9 @@ router.delete(
       if (isMatch) {
         await User.findOneAndDelete({
           _id: req.user._id
+        });
+        await Auth.findOneAndDelete({
+          userId: req.user._id
         });
         return res.status(200).send('Successully deleted');
       } else {
