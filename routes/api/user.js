@@ -61,7 +61,7 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
     if (!user) throw new Error("user.notfound");
     const access = await requests.getUserAccess(req, res, next, user._id);
     return res.json({
-      email: access.showEmail ? user.email : "No access",
+      email: access.showEmail ? user.verified.email : "No access",
       username: user.username,
       id: user._id,
       role: user.role,
