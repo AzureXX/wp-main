@@ -123,7 +123,6 @@ app.use('/api/files', require('./routes/api/files'));
 
 // error handler
 app.use((err, req, res, next) => {
-  // console.log(err)
   res.status(500);
   return res.json({
     message: err.message
