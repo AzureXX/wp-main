@@ -16,7 +16,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
     });
     res.json(response.data);
   } catch (error) {
-    next(error.response.data);
+    next(error.response ? error.response.data : error);
   }
 });
 
@@ -37,7 +37,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
     requests.checkAchievement(req, res, next, 'recommendation');
     res.json(response.data);
   } catch (error) {
-    next(error.response.data);
+    next(error.response ? error.response.data : error);
   }
 });
 
