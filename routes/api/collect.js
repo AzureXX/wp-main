@@ -11,10 +11,8 @@ const MusicRating = require('../../models/Ratings/MusicRating');
 const Question = require('../../models/Question');
 const QuestionAnswer = require('../../models/QuestionAnswer');
 const roles = require('../../utils/roles');
-const BookRecommendation = require('../../models/Recommendations/BookRecommendation');
-const MovieRecommendation = require('../../models/Recommendations/MovieRecommendation');
-const CourseRecommendation = require('../../models/Recommendations/CourseRecommendation');
-const MusicRecommendation = require('../../models/Recommendations/MusicRecommendation');
+const axios = require('axios');
+
 router.get('/initial', roles.isUser, async (req, res, next) => {
   try {
     let ratedBooks = [];
@@ -23,27 +21,17 @@ router.get('/initial', roles.isUser, async (req, res, next) => {
     let ratedCourses = [];
     let answeredQuestion = [];
     let bookRec, movieRec, musicRec, courseRec;
-
+    
     if (req.user._id) {
-      [bookRec, movieRec, musicRec, courseRec] = await Promise.all([
-        BookRecommendation.findOne({ userId: req.user._id })
-          .lean()
-          .populate({path:'books.data', select: "name img"}),
-        MovieRecommendation.findOne({ userId: req.user._id })
-          .lean()
-          .populate({path:'movies.data', select: "name img"}),
-        MusicRecommendation.findOne({ userId: req.user._id })
-          .lean()
-          .populate({path:'music.data', select: "name img"}),
-        CourseRecommendation.findOne({ userId: req.user._id })
-          .lean()
-          .populate({path:'courses.data', select: "name img"})
-      ]);
-      
-      bookRec = bookRec && bookRec.books.map(item => item.data).slice(0, 20);
-      movieRec = movieRec && movieRec.movies.map(item => item.data).slice(0, 20);
-      musicRec = musicRec && musicRec.music.map(item => item.data).slice(0, 20);
-      courseRec = courseRec && courseRec.courses.map(item => item.data).slice(0, 20);
+      const response = await axios.get(process.env.RECOMMENDATION_LINK + `get/all/${req.user._id}`, {
+        headers: {
+          Authorization: process.env.RECOMMENDATION_ACCESS_TOKEN
+        }
+      });
+      bookRec = response.data.books && response.data.books.books.map(item => item.data).slice(0, 20);
+      movieRec = response.data.movies && response.data.movies.movies.map(item => item.data).slice(0, 20);
+      musicRec = response.data.music && response.data.music.music.map(item => item.data).slice(0, 20);
+      courseRec = response.data.courses && response.data.courses.courses.map(item => item.data).slice(0, 20);
       let bookRatings, movieRatings, musicRatings, courseRatings
       if(!bookRec) {
         bookRatings = BookRating.find({ userId: req.user._id }).lean();

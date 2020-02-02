@@ -49,8 +49,6 @@ router.post(
       });
       await auth.save();
       const newUser = await user.save();
-      await Limit.create({ userID: newUser._id });
-
       emailVerification(newUser._id, email);
 
       const payload = {
