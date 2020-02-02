@@ -11,7 +11,6 @@ const roles = require('../../utils/roles');
 
 const User = require('../../models/User');
 const Auth = require('../../models/Auth');
-const Limit = require('../../models/Limit');
 
 
 //@route   POST api/auth/signup
