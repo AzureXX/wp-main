@@ -1,25 +1,25 @@
-const express = require("express");
-require("dotenv").config();
-const cors = require("cors");
-const passport = require("passport");
-const logger = require("morgan");
-const mongoose = require("mongoose");
-const helmet = require("helmet");
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
+const passport = require('passport');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
 const app = express();
-const compression = require("compression");
+const compression = require('compression');
 
 app.use(cors());
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { origins: '*:*'});
+var io = require('socket.io')(server, { origins: '*:*' });
 
 app.use((req, res, next) => {
   res.io = io;
   next();
 });
 
-io.on('connection',  (socket) => {
-  require("./services/socket-io")(socket, io)
+io.on('connection', socket => {
+  require('./services/socket-io')(socket, io);
 });
 
 app.use(compression());
@@ -31,18 +31,17 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true
   })
-  .then(() => console.log("MongoDB connected"))
+  .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
 //Passport middleware
 app.use(passport.initialize());
 
 //Passport Config
-require("./config/passport.js")(passport);
-
+require('./config/passport.js')(passport);
 
 //Actions route
-const actionsRoute = require("./routes/api/actions");
+const actionsRoute = require('./routes/api/actions');
 //Require routes
 const authRoute = require('./routes/api/auth');
 const emailVerificationRoute = require('./routes/api/verifyEmail');
@@ -104,6 +103,7 @@ app.use('/api/education/subtopic', educationSubtopicRoute);
 
 app.use('/api/recommendations', recommendationsRoute);
 
+
 app.use('/api/collect', collectRoute);
 
 app.use('/api/search', searchRoute);
@@ -119,4 +119,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = {app: app, server: server};
+module.exports = { app: app, server: server };

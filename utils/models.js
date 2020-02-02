@@ -22,14 +22,6 @@ const EducationCategoryStatus = require("../models/Education/Status/EducationCat
 const EducationSubcategoryStatus = require("../models/Education/Status/EducationSubcategoryStatus");
 const EducationSubtopicStatus = require("../models/Education/Status/EducationSubtopicStatus");
 const EducationTopicStatus = require("../models/Education/Status/EducationTopicStatus");
-// RECOMENDATION MODELS
-const BookRecommendation = require("../models/Recommendations/BookRecommendation");
-const MovieRecommendation = require("../models/Recommendations/MovieRecommendation");
-const CourseRecommendation = require("../models/Recommendations/CourseRecommendation");
-const PersonRecommendation = require("../models/Recommendations/PersonRecommendation");
-const MusicRecommendation = require("../models/Recommendations/MusicRecommendation");
-const EducationRecommendation = require("../models/Recommendations/EducationRecommendation");
-const VacancyRecommendation = require("../models/Recommendations/VacancyRecommendation");
 //Questions Models
 const Question = require("../models/Question");
 const Questionnaire = require("../models/Questionnaire");
@@ -113,31 +105,6 @@ module.exports = {
       case "people":
       case "person":
         return PersonRating;
-      default:
-        return null;
-    }
-  },
-  getRecommendationModel(name) {
-    switch (name) {
-      case "books":
-      case "book":
-        return BookRecommendation;
-      case "movies":
-      case "movie":
-        return MovieRecommendation;
-      case "courses":
-      case "course":
-        return CourseRecommendation;
-      case "music":
-        return MusicRecommendation;
-      case "people":
-      case "person":
-        return PersonRecommendation;
-      case "education":
-        return EducationRecommendation;
-      case "vacancy":
-      case "vacancies":
-        return VacancyRecommendation;
       default:
         return null;
     }

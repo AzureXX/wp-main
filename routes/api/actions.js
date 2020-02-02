@@ -19,16 +19,16 @@ router.post(
       if (!types.includes(type)) 
         throw new Error('type.invalid');
       let { rating, status, id } = req.body;
-      const RecommendationModel = models.getRecommendationModel(type);
+      // const RecommendationModel = models.getRecommendationModel(type);
       const RatingModel = models.getRatingModel(type);
       
       const singular = transformation.getSingular(type);
-      if ((status !== 2 && status) || rating) {
-        RecommendationModel.updateOne(
-          { userId: req.user._id },
-          { $pull: { [type]: { data: id } } }
-        ).exec();
-      }
+      // if ((status !== 2 && status) || rating) {
+      //   RecommendationModel.updateOne(
+      //     { userId: req.user._id },
+      //     { $pull: { [type]: { data: id } } }
+      //   ).exec();
+      // }
       if (status === 2) {
         await RatingModel.deleteOne({
           userId: req.user._id,
@@ -63,7 +63,6 @@ router.post(
       }
       requests.checkAchievement(req, res, next, type);
       const response = await RatingModel.find({userId: req.user._id}).populate({path: singular, select:"name"}).lean()
-
       return res.json(response)
     } catch (error) {
       next(error);
