@@ -5,9 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const emailVerification = require('../../services/emailVerification');
 const validator = require('../../validation/validators/auth');
-
-const passport = require('passport');
-const roles = require('../../utils/roles');
+const requests = require('../../utils/requests');
 
 const User = require('../../models/User');
 const Auth = require('../../models/Auth');
@@ -41,6 +39,10 @@ router.post(
         username: username,
         accountType: type
       });
+
+      req.user = user
+      requests.checkAchievement(req, res, next, "registration")
+      
       const auth = new Auth({
         email: email,
         password: hash,

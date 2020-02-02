@@ -432,7 +432,7 @@ module.exports = {
   },
   async getMyTasks(req, res, next) {
     try {
-      this.checkAchievement(req, res, next, "registration")
+      
       const Task = models.getModel("task");
       const tasks = await Task.find({ creator: req.user._id })
         .populate("user item", "name username")
