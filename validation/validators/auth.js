@@ -1,7 +1,6 @@
 const schema = require('../schemas/auth');
 
 module.exports.signUp = reqBody => {
-  reqBody.policies = false
   let validationResult = schema.signUp.validate(reqBody, {
     abortEarly: false
   });
