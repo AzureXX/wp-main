@@ -11,7 +11,7 @@ const compression = require('compression');
 app.use(cors());
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { origins: '*:*' });
+var io = require('socket.io')(server, { origins: '*:*' , cookie: false});
 app.use((req, res, next) => {
   res.setHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict")
   next();
