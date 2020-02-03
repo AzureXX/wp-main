@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const models = require('../../utils/models');
 const requests = require('../../utils/requests');
-
+const axios = require("axios");
 const transformation = require('../../utils/transformation');
 
 //@route   POST api/actions/rate/:type
@@ -19,16 +19,21 @@ router.post(
       if (!types.includes(type)) 
         throw new Error('type.invalid');
       let { rating, status, id } = req.body;
-      // const RecommendationModel = models.getRecommendationModel(type);
+
       const RatingModel = models.getRatingModel(type);
       
       const singular = transformation.getSingular(type);
-      // if ((status !== 2 && status) || rating) {
-      //   RecommendationModel.updateOne(
-      //     { userId: req.user._id },
-      //     { $pull: { [type]: { data: id } } }
-      //   ).exec();
-      // }
+      if ((status !== 2 && status) || rating) {
+        axios.patch(
+          process.env.RECOMMENDATION_LINK + 'update/remove',
+          {user: req.user._id, type: type, id: id},
+          {
+            headers: {
+              Authorization: process.env.RECOMMENDATION_ACCESS_TOKEN
+            }
+          }
+        ).catch((err)=> console.log(err.response.data))
+      }
       if (status === 2) {
         await RatingModel.deleteOne({
           userId: req.user._id,
