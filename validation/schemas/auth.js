@@ -1,4 +1,4 @@
-const joi = require("@hapi/joi");
+const joi = require('@hapi/joi');
 
 module.exports.signIn = joi
   .object({
@@ -21,18 +21,19 @@ module.exports.signUp = joi
       .string()
       .required()
       .min(5),
-    password2: joi.ref("password"),
+    password2: joi.ref('password'),
     username: joi
       .string()
       .trim()
-      .allow("", null)
+      .allow('', null)
       .min(3)
       .max(20)
       .pattern(/^(?:[^<> ]*)$/),
     type: joi
       .string()
       .required()
-      .valid("private", "business")
+      .valid('private', 'business'),
+    policies: joi.required().valid(true)
   })
   .required()
   .unknown(true);
