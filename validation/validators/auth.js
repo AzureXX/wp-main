@@ -1,4 +1,4 @@
-const schema = require("../schemas/auth");
+const schema = require('../schemas/auth');
 
 module.exports.signUp = reqBody => {
   let validationResult = schema.signUp.validate(reqBody, {
@@ -8,56 +8,64 @@ module.exports.signUp = reqBody => {
     throw new Error(
       validationResult.error.details.map(e => {
         switch (e.path[0]) {
-          case "email": {
+          case 'email': {
             switch (e.type) {
-              case "string.email":
-                return "email.invalidFormat";
-              case "string.empty":
-                return "email.empty";
+              case 'string.email':
+                return 'email.invalidFormat';
+              case 'string.empty':
+                return 'email.empty';
               default:
-                return "email.modified";
+                return 'email.modified';
             }
           }
-          case "password": {
+          case 'password': {
             switch (e.type) {
-              case "string.empty":
-                return "password.empty";
-              case "string.min":
-                return "password.minLength";
+              case 'string.empty':
+                return 'password.empty';
+              case 'string.min':
+                return 'password.minLength';
               default:
-                return "password.modified";
+                return 'password.modified';
             }
           }
-          case "password2": {
+          case 'password2': {
             switch (e.type) {
-              case "any.only":
-                return "password2.notMatch";
+              case 'any.only':
+                return 'password2.notMatch';
               default:
-                return "password2.modified";
+                return 'password2.modified';
             }
           }
-          case "username": {
+          case 'username': {
             switch (e.type) {
-              case "string.min":
-                return "username.minLength";
-              case "string.max":
-                return "username.maxLength";
-              case "string.pattern.base":
-                return "username.invalidFormat";
+              case 'string.min':
+                return 'username.minLength';
+              case 'string.max':
+                return 'username.maxLength';
+              case 'string.pattern.base':
+                return 'username.invalidFormat';
               default:
-                return "username.modified";
+                return 'username.modified';
             }
           }
-          case "type": {
+          case 'type': {
             switch (e.type) {
-              case "any.only":
-                return "userType.invalidValue";
+              case 'any.only':
+                return 'userType.invalidValue';
               default:
-                return "userType.modified";
+                return 'userType.modified';
+            }
+          }
+          case 'policies': {
+            switch (e.type) {
+              case 'any.only':
+                return 'policies.invalidValue';
+              default:
+                return 'policies.modified';
             }
           }
           default:
-            return "signUpBody.modified";
+            return 'signUpBody.modified';
         }
       })
     );
@@ -72,26 +80,26 @@ module.exports.signIn = reqBody => {
     throw new Error(
       validationResult.error.details.map(e => {
         switch (e.path[0]) {
-          case "email": {
+          case 'email': {
             switch (e.type) {
-              case "string.empty":
-                return "email.empty";
-              case "string.email":
-                return "email.invalidFormat";
+              case 'string.empty':
+                return 'email.empty';
+              case 'string.email':
+                return 'email.invalidFormat';
               default:
-                return "email.modified";
+                return 'email.modified';
             }
           }
-          case "password": {
+          case 'password': {
             switch (e.type) {
-              case "string.empty":
-                return "password.empty";
+              case 'string.empty':
+                return 'password.empty';
               default:
-                return "password.modified";
+                return 'password.modified';
             }
           }
           default:
-            return "signInBody.modified";
+            return 'signInBody.modified';
         }
       })
     );
