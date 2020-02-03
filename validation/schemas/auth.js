@@ -33,7 +33,7 @@ module.exports.signUp = joi
       .string()
       .required()
       .valid('private', 'business'),
-    policies: joi.required().valid(true, false)
+    policies: joi.required().valid(true)
   })
   .required()
   .unknown(true);
