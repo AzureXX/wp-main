@@ -255,7 +255,7 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      await User.update({
+      await User.updateOne({
         _id: req.user._id
       }, {
         emotion: req.body.emotion || "neutral"
