@@ -11,9 +11,9 @@ const compression = require('compression');
 app.use(cors());
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server, { origins: '*:*' , cookie: false});
+var io = require('socket.io')(server, { origins: '*:*', cookie: false });
 app.use((req, res, next) => {
-  res.setHeader("Set-Cookie", "HttpOnly;Secure;SameSite=Strict")
+  res.setHeader('Set-Cookie', 'HttpOnly;Secure;SameSite=Strict');
   next();
 });
 
@@ -49,6 +49,7 @@ const actionsRoute = require('./routes/api/actions');
 //Require routes
 const authRoute = require('./routes/api/auth');
 const emailVerificationRoute = require('./routes/api/verifyEmail');
+const forgotPasswordRoute = require('./routes/api/forgotPassword');
 const userRoute = require('./routes/api/user');
 const achievementRoute = require('./routes/api/achievement');
 const bookRoute = require('./routes/api/book');
@@ -70,7 +71,6 @@ const educationSubtopicRoute = require('./routes/api/education/subtopic');
 
 const recommendationsRoute = require('./routes/api/recommendations');
 
-
 const collectRoute = require('./routes/api/collect');
 const searchRoute = require('./routes/api/search');
 
@@ -86,6 +86,7 @@ app.use(
 
 app.use('/api/auth', authRoute);
 app.use('/api/verify', emailVerificationRoute);
+app.use('/api/forgotPassword', forgotPasswordRoute);
 app.use('/api/user', userRoute);
 app.use('/api/actions', actionsRoute);
 app.use('/api/achievements', achievementRoute);
@@ -106,7 +107,6 @@ app.use('/api/education/topic', educationTopicRoute);
 app.use('/api/education/subtopic', educationSubtopicRoute);
 
 app.use('/api/recommendations', recommendationsRoute);
-
 
 app.use('/api/collect', collectRoute);
 

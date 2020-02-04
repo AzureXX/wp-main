@@ -28,7 +28,7 @@ module.exports.signUp = joi
       .allow('', null)
       .min(3)
       .max(20)
-      .pattern(/^(?:[^<> ]*)$/),
+      .pattern(/^(?:[^<>]*)$/),
     type: joi
       .string()
       .required()
