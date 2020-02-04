@@ -25,7 +25,7 @@ module.exports.signUp = joi
     username: joi
       .string()
       .trim()
-      .allow('', null)
+      .allow(null)
       .min(3)
       .max(20)
       .pattern(/^(?:[^<>]*)$/),
