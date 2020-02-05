@@ -17,6 +17,7 @@ const router = express.Router();
 //@access  Public
 router.post('/forgot', async (req, res, next) => {
   try {
+    console.log(req.body)
     if (
       !joi
         .string()
