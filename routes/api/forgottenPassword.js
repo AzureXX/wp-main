@@ -13,7 +13,7 @@ const ForgottenPasswordCode = require('../../models/ForgottenPasswordCode');
 const router = express.Router();
 
 //@route   POST api/password/forgot
-//@desc    helping users to get their forgotten passwords
+//@desc    helping users to get their forgotten passwords by sending mail
 //@access  Public
 router.post('/forgot', async (req, res, next) => {
   try {
@@ -36,6 +36,9 @@ router.post('/forgot', async (req, res, next) => {
   }
 });
 
+//@route   POST api/password/change
+//@desc    allowing users to change their password 
+//@access  Public
 router.post('/change', async (req, res, next) => {
   try {
     validateChangePassword(req.body);
