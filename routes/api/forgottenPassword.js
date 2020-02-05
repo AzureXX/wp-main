@@ -44,14 +44,11 @@ router.post('/change', async (req, res, next) => {
   try {
     validateChangePassword(req.body);
 
-
     const passwordDoc = await ForgottenPasswordCode.findOneAndDelete({ code: req.body.code }).lean();
     if(!passwordDoc) throw new Error("code.invalid")
     
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(req.body.password1, salt);
-
-    
+    const hash = await bcrypt.hash(req.body.password1, salt);    
 
     await Auth.findOneAndUpdate({ userId: passwordDoc.userId }, { password: hash });
     res.json({ message: 'success' });
