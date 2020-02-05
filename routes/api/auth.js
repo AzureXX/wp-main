@@ -3,13 +3,12 @@ const router = express.Router();
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const emailVerification = require('../../services/emailVerification');
+const verifyEmail = require('../../services/verifyEmail');
 const validator = require('../../validation/validators/auth');
 const requests = require('../../utils/requests');
 
 const User = require('../../models/User');
 const Auth = require('../../models/Auth');
-
 
 //@route   POST api/auth/signup
 //@desc    Return JWT
@@ -23,7 +22,7 @@ router.post(
   async (req, res, next) => {
     try {
       validator.signUp(req.body);
-
+      
       const { username, email, password, type } = req.body;
 
       let exist = await Auth.findOne({ email }, '_id').lean();
@@ -40,9 +39,9 @@ router.post(
         accountType: type
       });
 
-      req.user = user
-      requests.checkAchievement(req, res, next, "registration")
-      
+      req.user = user;
+      requests.checkAchievement(req, res, next, 'registration');
+
       const auth = new Auth({
         email: email,
         password: hash,
@@ -50,7 +49,7 @@ router.post(
       });
       await auth.save();
       const newUser = await user.save();
-      emailVerification(newUser._id, email);
+      verifyEmail(newUser._id, email);
 
       const payload = {
         id: newUser.id,
@@ -77,9 +76,9 @@ router.post(
 router.post('/signin', async (req, res, next) => {
   try {
     validator.signIn(req.body);
-    
+
     const { email, password } = req.body;
-    const auth = await Auth.findOne({ email }, "+password").lean();
+    const auth = await Auth.findOne({ email }, '+password').lean();
     if (!auth) throw new Error('user.notfound');
     const user = await User.findById(auth.userId).lean();
     if (!user) throw new Error('user.notfound');

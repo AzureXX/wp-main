@@ -13,7 +13,7 @@ module.exports = body => {
               case "any.only":
                 return "education.invalidValue";
               default:
-                return "education.modified";
+                return "education.notPresent";
             }
           }
           case "position": {
@@ -23,7 +23,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "position.invalidFormat";
               default:
-                return "position.modified";
+                return "position.notPresent";
             }
           }
           case "email": {
@@ -31,7 +31,7 @@ module.exports = body => {
               case "string.email":
                 return "email.invalidFormat";
               default:
-                return "email.modified";
+                return "email.notPresent";
             }
           }
           case "phone": {
@@ -39,7 +39,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "phone.invalidFormat";
               default:
-                return "phone.modified";
+                return "phone.notPresent";
             }
           }
           case "ageMin": {
@@ -47,7 +47,7 @@ module.exports = body => {
               case "number.min":
                 return "ageMin.minLimit";
               default:
-                return "ageMin.modified";
+                return "ageMin.notPresent";
             }
           }
           case "ageMax": {
@@ -55,7 +55,7 @@ module.exports = body => {
               case "number.min":
                 return "ageMax.refLimit";
               default:
-                return "ageMax.modified";
+                return "ageMax.notPresent";
             }
           }
           case "requirements": {
@@ -63,7 +63,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "requirements.invalidFormat";
               default:
-                return "requirements.modified";
+                return "requirements.notPresent";
             }
           }
           case "workInfo": {
@@ -71,7 +71,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "workInfo.invalidFormat";
               default:
-                return "workInfo.modified";
+                return "workInfo.notPresent";
             }
           }
           case "companyName": {
@@ -79,7 +79,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "companyName.invalidFormat";
               default:
-                return "companyName.modified";
+                return "companyName.notPresent";
             }
           }
           case "contactPerson": {
@@ -87,7 +87,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "contactPerson.invalidFormat";
               default:
-                return "contactPerson.modified";
+                return "contactPerson.notPresent";
             }
           }
           case "subcategories": {
@@ -99,20 +99,20 @@ module.exports = body => {
                   case "any.custom":
                     return "subcategories.data.invalidID";
                   default:
-                    return "subcategories.data.modified";
+                    return "subcategories.data.notPresent";
                 }
               case "status": {
                 switch (e.type) {
                   case "any.only":
                     return "subcategories.status.invalidValue";
                   default:
-                    return "subcategories.status.modified";
+                    return "subcategories.status.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "subcategories.modified";
+                return "subcategories.notPresent";
             }
           }
           case "topics": {
@@ -124,20 +124,20 @@ module.exports = body => {
                   case "any.custom":
                     return "topics.data.invalidID";
                   default:
-                    return "topics.data.modified";
+                    return "topics.data.notPresent";
                 }
               case "status": {
                 switch (e.type) {
                   case "any.only":
                     return "topics.status.invalidValue";
                   default:
-                    return "topics.status.modified";
+                    return "topics.status.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "topics.modified";
+                return "topics.notPresent";
             }
           }
           case "subtopics": {
@@ -149,20 +149,20 @@ module.exports = body => {
                   case "any.custom":
                     return "subtopics.data.invalidID";
                   default:
-                    return "subtopics.data.modified";
+                    return "subtopics.data.notPresent";
                 }
               case "status": {
                 switch (e.type) {
                   case "any.only":
                     return "subtopics.status.invalidValue";
                   default:
-                    return "subtopics.status.modified";
+                    return "subtopics.status.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "subtopics.modified";
+                return "subtopics.notPresent";
             }
           }
           case "experience":
@@ -170,21 +170,21 @@ module.exports = body => {
               case "any.only":
                 return "experience.invalidValue";
               default:
-                return "experience.modified";
+                return "experience.notPresent";
             }
           case "salary":
             switch (e.type) {
               case "any.only":
                 return "salary.invalidValue";
               default:
-                return "salary.modified";
+                return "salary.notPresent";
             }
           case "city": {
             switch (e.type) {
               case "string.pattern.base":
                 return "city.invalidFormat";
               default:
-                return "city.modified";
+                return "city.notPresent";
             }
           }
           case "category": {
@@ -192,11 +192,11 @@ module.exports = body => {
               case "any.only":
                 return "category.invalidValue";
               default:
-                return "category.modified";
+                return "category.notPresent";
             }
           }
           default:
-            return "vacancyBody.modified";
+            return "vacancyBody.notPresent";
         }
       })
     );

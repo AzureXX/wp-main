@@ -49,7 +49,7 @@ const actionsRoute = require('./routes/api/actions');
 //Require routes
 const authRoute = require('./routes/api/auth');
 const emailVerificationRoute = require('./routes/api/verifyEmail');
-const forgotPasswordRoute = require('./routes/api/forgotPassword');
+const forgottenPasswordRoute = require('./routes/api/forgottenPassword');
 const userRoute = require('./routes/api/user');
 const achievementRoute = require('./routes/api/achievement');
 const bookRoute = require('./routes/api/book');
@@ -86,7 +86,7 @@ app.use(
 
 app.use('/api/auth', authRoute);
 app.use('/api/verify', emailVerificationRoute);
-app.use('/api/forgotPassword', forgotPasswordRoute);
+app.use('/api/password', forgottenPasswordRoute);
 app.use('/api/user', userRoute);
 app.use('/api/actions', actionsRoute);
 app.use('/api/achievements', achievementRoute);

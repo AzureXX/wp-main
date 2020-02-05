@@ -15,7 +15,7 @@ module.exports = body => {
               case "any.custom":
                 return "user.invalidID";
               default:
-                return "user.modified";
+                return "user.notPresent";
             }
           }
           case "type": {
@@ -23,7 +23,7 @@ module.exports = body => {
               case "any.only":
                 return "type.invalidValue";
               default:
-                return "type.modified";
+                return "type.notPresent";
             }
           }
           case "deadline": {
@@ -31,7 +31,7 @@ module.exports = body => {
               case "date.format":
                 return "date.invalidFormat";
               default:
-                return "date.modified";
+                return "date.notPresent";
             }
           }
           case "comment": {
@@ -39,7 +39,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "comment.invalidFormat";
               default:
-                return "comment.modified";
+                return "comment.notPresent";
             }
           }
           case "level": {
@@ -47,7 +47,7 @@ module.exports = body => {
               case "any.only":
                 return "level.invalidValue";
               default:
-                return "level.modified";
+                return "level.notPresent";
             }
           }
           case "item": {
@@ -55,11 +55,11 @@ module.exports = body => {
               case "any.custom":
                 return "item.invalidID";
               default:
-                return "item.modified";
+                return "item.notPresent";
             }
           }
           default:
-            return "taskBody.modified";
+            return "taskBody.notPresent";
         }
       })
     );

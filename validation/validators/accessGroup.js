@@ -15,7 +15,7 @@ module.exports = body => {
               case "string.empty":
                 return "groupName.empty";
               default:
-                return "groupName.modified";
+                return "groupName.notPresent";
             }
           }
           case "users": {
@@ -23,7 +23,7 @@ module.exports = body => {
               case "any.custom":
                 return "users.invalidID";
               default:
-                return "users.modified";
+                return "users.notPresent";
             }
           }
           case "showEmail":
@@ -40,11 +40,11 @@ module.exports = body => {
               case "any.only":
                 return "accessOptions.invalidValue";
               default:
-                return "accessOptions.modified";
+                return "accessOptions.notPresent";
             }
           }
           default:
-            return "accessGroupBody.modified";
+            return "accessGroupBody.notPresent";
         }
       })
     );

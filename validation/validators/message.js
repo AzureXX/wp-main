@@ -17,7 +17,7 @@ module.exports = body => {
                   case "string.empty":
                     return "textUS.empty";
                   default:
-                    return "textUS.modified";
+                    return "textUS.notPresent";
                 }
               }
               case "ru": {
@@ -25,7 +25,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "textRU.invalidFormat";
                   default:
-                    return "textRU.modified";
+                    return "textRU.notPresent";
                 }
               }
               case "az": {
@@ -33,13 +33,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "textAZ.invalidFormat";
                   default:
-                    return "textAZ.modified";
+                    return "textAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "text.modified";
+                return "text.notPresent";
             }
           }
           case "to": {
@@ -49,7 +49,7 @@ module.exports = body => {
               case "any.custom":
                 return "receivers.invalidID";
               default:
-                return "receivers.modified";
+                return "receivers.notPresent";
             }
           }
           case "all": {
@@ -57,11 +57,11 @@ module.exports = body => {
               case "any.only":
                 return "all.invalidValue";
               default:
-                return "all.modified";
+                return "all.notPresent";
             }
           }
           default:
-            return "messageBody.modified";
+            return "messageBody.notPresent";
         }
       })
     );

@@ -17,7 +17,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameUS.invalidFormat";
                   default:
-                    return "nameUS.modified";
+                    return "nameUS.notPresent";
                 }
               }
               case "ru": {
@@ -25,7 +25,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameRU.invalidFormat";
                   default:
-                    return "nameRU.modified";
+                    return "nameRU.notPresent";
                 }
               }
               case "az": {
@@ -33,13 +33,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameAZ.invalidFormat";
                   default:
-                    return "nameAZ.modified";
+                    return "nameAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "name.modified";
+                return "name.notPresent";
             }
           }
           case "description": {
@@ -49,7 +49,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionUS.invalidFormat";
                   default:
-                    return "descriptionUS.modified";
+                    return "descriptionUS.notPresent";
                 }
               }
               case "ru": {
@@ -57,7 +57,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionRU.invalidFormat";
                   default:
-                    return "descriptionRU.modified";
+                    return "descriptionRU.notPresent";
                 }
               }
               case "az": {
@@ -65,13 +65,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionAZ.invalidFormat";
                   default:
-                    return "descriptionAZ.modified";
+                    return "descriptionAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "description.modified";
+                return "description.notPresent";
             }
           }
           case "img": {
@@ -81,7 +81,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgUS.invalidFormat";
                   default:
-                    return "imgUS.modified";
+                    return "imgUS.notPresent";
                 }
               }
               case "ru": {
@@ -89,7 +89,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgRU.invalidFormat";
                   default:
-                    return "imgRU.modified";
+                    return "imgRU.notPresent";
                 }
               }
               case "az": {
@@ -97,13 +97,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgAZ.invalidFormat";
                   default:
-                    return "imgAZ.modified";
+                    return "imgAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "img.modified";
+                return "img.notPresent";
             }
           }
           case "tags": {
@@ -111,7 +111,7 @@ module.exports = body => {
               case "any.custom":
                 return "tags.invalidFormat";
               default:
-                return "tags.modified";
+                return "tags.notPresent";
             }
           }
           case "actors": {
@@ -119,7 +119,7 @@ module.exports = body => {
               case "any.custom":
                 return "actors.invalidID";
               default:
-                return "actors.modified";
+                return "actors.notPresent";
             }
           }
           // case "crew": {
@@ -127,7 +127,7 @@ module.exports = body => {
           //     case "any.custom":
           //       return "crew.invalidID";
           //     default:
-          //       return "crew.modified";
+          //       return "crew.notPresent";
           //   }
           // }
           // case "duration": {
@@ -135,7 +135,7 @@ module.exports = body => {
           //     case "string.pattern.base":
           //       return "duration.invalidFormat";
           //     default:
-          //       return "duration.modified";
+          //       return "duration.notPresent";
           //   }
           // }
           case "genres": {
@@ -143,7 +143,7 @@ module.exports = body => {
               case "any.custom":
                 return "genre.invalidFormat";
               default:
-                return "genres.modified";
+                return "genres.notPresent";
             }
           }
           case "released": {
@@ -151,7 +151,7 @@ module.exports = body => {
               case "date.format":
                 return "released.invalidFormat";
               default:
-                return "relased.modified";
+                return "relased.notPresent";
             }
           }
           // case "wikipediaLink": {
@@ -161,7 +161,7 @@ module.exports = body => {
           //         case "string.pattern.base":
           //           return "wikipediaLinkUS.invalidFormat";
           //         default:
-          //           return "wikipediaLinkUS.modified";
+          //           return "wikipediaLinkUS.notPresent";
           //       }
           //     }
           //     case "ru": {
@@ -169,7 +169,7 @@ module.exports = body => {
           //         case "string.pattern.base":
           //           return "wikipediaLinkRU.invalidFormat";
           //         default:
-          //           return "wikipediaLinkRU.modified";
+          //           return "wikipediaLinkRU.notPresent";
           //       }
           //     }
           //     case "az": {
@@ -177,13 +177,13 @@ module.exports = body => {
           //         case "string.pattern.base":
           //           return "wikipediaLinkAZ.invalidFormat";
           //         default:
-          //           return "wikipediaLinkAZ.modified";
+          //           return "wikipediaLinkAZ.notPresent";
           //       }
           //     }
           //   }
           //   switch (e.type) {
           //     default:
-          //       return "wikipediaLink.modified";
+          //       return "wikipediaLink.notPresent";
           //   }
           // }
           case "website": {
@@ -193,7 +193,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteUS.invalidFormat";
                   default:
-                    return "websiteUS.modified";
+                    return "websiteUS.notPresent";
                 }
               }
               case "ru": {
@@ -201,7 +201,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteRU.invalidFormat";
                   default:
-                    return "websiteRU.modified";
+                    return "websiteRU.notPresent";
                 }
               }
               case "az": {
@@ -209,17 +209,17 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "websiteAZ.invalidFormat";
                   default:
-                    return "websiteAZ.modified";
+                    return "websiteAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "website.modified";
+                return "website.notPresent";
             }
           }
           default:
-            return "movieBody.modified";
+            return "movieBody.notPresent";
         }
       })
     );

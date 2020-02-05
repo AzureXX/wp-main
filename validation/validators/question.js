@@ -13,7 +13,7 @@ module.exports = body => {
               case "any.only":
                 return "multiple.invalidValue";
               default:
-                return "multiple.modified";
+                return "multiple.notPresent";
             }
           }
           case "text": {
@@ -25,7 +25,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "textUS.invalidFormat";
                   default:
-                    return "textUS.modified";
+                    return "textUS.notPresent";
                 }
               }
               case "ru": {
@@ -33,7 +33,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "textRU.invalidFormat";
                   default:
-                    return "textRU.modified";
+                    return "textRU.notPresent";
                 }
               }
               case "az": {
@@ -41,13 +41,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "textAZ.invalidFormat";
                   default:
-                    return "textAZ.modified";
+                    return "textAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "text.modified";
+                return "text.notPresent";
             }
           }
           case "answers": {
@@ -61,7 +61,7 @@ module.exports = body => {
                       case "string.pattern.base":
                         return "answer.textUS.invalidFormat";
                       default:
-                        return "answer.textUS.modified";
+                        return "answer.textUS.notPresent";
                     }
                   }
                   case "ru": {
@@ -79,7 +79,7 @@ module.exports = body => {
                 }
                 switch (e.type) {
                   default:
-                    return "answer.text.modified";
+                    return "answer.text.notPresent";
                 }
               }
               case "result": {
@@ -93,19 +93,19 @@ module.exports = body => {
                       case "string.empty":
                         return "answer.tagName.empty";
                       default:
-                        return "answer.tagName.modified";
+                        return "answer.tagName.notPresent";
                     }
                   }
                   case "effect": {
                     switch (e.type) {
                       default:
-                        return "answer.effect.modified";
+                        return "answer.effect.notPresent";
                     }
                   }
                 }
                 switch (e.type) {
                   default:
-                    return "answer.result.modified";
+                    return "answer.result.notPresent";
                 }
               }
             }
@@ -113,7 +113,7 @@ module.exports = body => {
               case "array.min":
                 return "answer.empty";
               default:
-                return "answer.modified";
+                return "answer.notPresent";
             }
           }
           case "tags": {
@@ -121,11 +121,11 @@ module.exports = body => {
               case "any.custom":
                 return "tags.invalidFormat";
               default:
-                return "tags.modified";
+                return "tags.notPresent";
             }
           }
           default:
-            return "questionBody.modified";
+            return "questionBody.notPresent";
         }
       })
     );

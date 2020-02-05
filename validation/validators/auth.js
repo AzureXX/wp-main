@@ -15,7 +15,7 @@ module.exports.signUp = reqBody => {
               case 'string.empty':
                 return 'email.empty';
               default:
-                return 'email.modified';
+                return 'email.notPresent';
             }
           }
           case 'password': {
@@ -25,7 +25,7 @@ module.exports.signUp = reqBody => {
               case 'string.min':
                 return 'password.minLength';
               default:
-                return 'password.modified';
+                return 'password.notPresent';
             }
           }
           case 'password2': {
@@ -33,7 +33,7 @@ module.exports.signUp = reqBody => {
               case 'any.only':
                 return 'password2.notMatch';
               default:
-                return 'password2.modified';
+                return 'password2.notPresent';
             }
           }
           case 'username': {
@@ -45,7 +45,7 @@ module.exports.signUp = reqBody => {
               case 'string.pattern.base':
                 return 'username.invalidFormat';
               default:
-                return 'username.modified';
+                return 'username.notPresent';
             }
           }
           case 'type': {
@@ -53,7 +53,7 @@ module.exports.signUp = reqBody => {
               case 'any.only':
                 return 'userType.invalidValue';
               default:
-                return 'userType.modified';
+                return 'userType.notPresent';
             }
           }
           case 'policies': {
@@ -61,11 +61,11 @@ module.exports.signUp = reqBody => {
               case 'any.only':
                 return 'policies.invalidValue';
               default:
-                return 'policies.modified';
+                return 'policies.notPresent';
             }
           }
           default:
-            return 'signUpBody.modified';
+            return 'signUpBody.notPresent';
         }
       })
     );
@@ -87,7 +87,7 @@ module.exports.signIn = reqBody => {
               case 'string.email':
                 return 'email.invalidFormat';
               default:
-                return 'email.modified';
+                return 'email.notPresent';
             }
           }
           case 'password': {
@@ -95,11 +95,11 @@ module.exports.signIn = reqBody => {
               case 'string.empty':
                 return 'password.empty';
               default:
-                return 'password.modified';
+                return 'password.notPresent';
             }
           }
           default:
-            return 'signInBody.modified';
+            return 'signInBody.notPresent';
         }
       })
     );

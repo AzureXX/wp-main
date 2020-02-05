@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const EmailVerification = require("../models/EmailVerification");
-const sendNoReplyMail = require("./noReplyMailSender");
+const mongoose = require('mongoose');
+const EmailVerification = require('../models/EmailVerification');
+const sendEmailVerificationMail = require('../mailSender/emailVerification');
 
 module.exports = (userId, userEmail) => {
   const verificationCodeObject = {
@@ -10,7 +10,6 @@ module.exports = (userId, userEmail) => {
   };
   const emailActivationCode = new EmailVerification(verificationCodeObject);
   emailActivationCode.save();
-  
-  sendNoReplyMail(verificationCodeObject);
-  return verificationCodeObject.code;
+
+  sendEmailVerificationMail(verificationCodeObject);
 };

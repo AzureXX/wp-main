@@ -15,7 +15,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "name.invalidFormat";
               default:
-                return "name.modified";
+                return "name.notPresent";
             }
           }
           case "singers": {
@@ -23,7 +23,7 @@ module.exports = body => {
               case "any.custom":
                 return "singers.invalidID";
               default:
-                return "singers.modified";
+                return "singers.notPresent";
             }
           }
           case "duration": {
@@ -31,7 +31,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "duration.invalidFormat";
               default:
-                return "duration.modified";
+                return "duration.notPresent";
             }
           }
           case "released": {
@@ -39,7 +39,7 @@ module.exports = body => {
               case "date.format":
                 return "released.invalidFormat";
               default:
-                return "released.modified";
+                return "released.notPresent";
             }
           }
           case "genres": {
@@ -47,7 +47,7 @@ module.exports = body => {
               case "any.custom":
                 return "genre.invalidFormat";
               default:
-                return "genres.modified";
+                return "genres.notPresent";
             }
           }
           case "img": {
@@ -55,7 +55,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "img.invalidFormat";
               default:
-                return "img.modified";
+                return "img.notPresent";
             }
           }
           case "video": {
@@ -63,7 +63,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "video.invalidFormat";
               default:
-                return "video.modified";
+                return "video.notPresent";
             }
           }
           case "audio": {
@@ -71,7 +71,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "audio.invalidFormat";
               default:
-                return "audio.modified";
+                return "audio.notPresent";
             }
           }
           case "tags": {
@@ -79,11 +79,11 @@ module.exports = body => {
               case "any.custom":
                 return "tags.invalidFormat";
               default:
-                return "tags.modified";
+                return "tags.notPresent";
             }
           }
           default:
-            return "musicBody.modified";
+            return "musicBody.notPresent";
         }
       })
     );

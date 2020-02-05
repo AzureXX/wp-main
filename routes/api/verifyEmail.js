@@ -2,7 +2,7 @@ const express = require("express");
 const EmailVerification = require("../../models/EmailVerification");
 const User = require("../../models/User");
 const router = express.Router();
-const emailVerification = require("../../services/emailVerification");
+const verifyEmail = require("../../services/verifyEmail");
 const passport = require("passport");
 
 router.post("/", async (req, res, next) => {
@@ -32,7 +32,7 @@ router.post("/resend", passport.authenticate('jwt', { session: false }), async (
       console.log(Date.now() - new Date(`${obj.date}`).getTime())
       if(Date.now() - new Date(`${obj.date}`).getTime() < 900000) throw new Error("email.alreadysent")
     })
-    emailVerification(req.user._id, req.user.email);
+    verifyEmail(req.user._id, req.user.email);
     res.json("success")
   } catch (error) {
     next(error);

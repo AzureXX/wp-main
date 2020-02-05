@@ -17,7 +17,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameUS.invalidFormat";
                   default:
-                    return "nameUS.modified";
+                    return "nameUS.notPresent";
                 }
               }
               case "ru": {
@@ -25,7 +25,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameRU.invalidFormat";
                   default:
-                    return "nameRU.modified";
+                    return "nameRU.notPresent";
                 }
               }
               case "az": {
@@ -33,13 +33,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "nameAZ.invalidFormat";
                   default:
-                    return "nameAZ.modified";
+                    return "nameAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "name.modified";
+                return "name.notPresent";
             }
           }
           case "description": {
@@ -49,7 +49,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionUS.invalidFormat";
                   default:
-                    return "descriptionUS.modified";
+                    return "descriptionUS.notPresent";
                 }
               }
               case "ru": {
@@ -57,7 +57,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionRU.invalidFormat";
                   default:
-                    return "descriptionRU.modified";
+                    return "descriptionRU.notPresent";
                 }
               }
               case "az": {
@@ -65,13 +65,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "descriptionAZ.invalidFormat";
                   default:
-                    return "descriptionAZ.modified";
+                    return "descriptionAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "description.modified";
+                return "description.notPresent";
             }
           }
           case "img": {
@@ -81,7 +81,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgUS.invalidFormat";
                   default:
-                    return "imgUS.modified";
+                    return "imgUS.notPresent";
                 }
               }
               case "ru": {
@@ -89,7 +89,7 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgRU.invalidFormat";
                   default:
-                    return "imgRU.modified";
+                    return "imgRU.notPresent";
                 }
               }
               case "az": {
@@ -97,13 +97,13 @@ module.exports = body => {
                   case "string.pattern.base":
                     return "imgAZ.invalidFormat";
                   default:
-                    return "imgAZ.modified";
+                    return "imgAZ.notPresent";
                 }
               }
             }
             switch (e.type) {
               default:
-                return "img.modified";
+                return "img.notPresent";
             }
           }
           case "tags": {
@@ -111,7 +111,7 @@ module.exports = body => {
               case "any.custom":
                 return "tags.invalidFormat";
               default:
-                return "tags.modified";
+                return "tags.notPresent";
             }
           }
           case "subcategories": {
@@ -119,7 +119,7 @@ module.exports = body => {
               case "any.custom":
                 return "subCategories.invalidID";
               default:
-                return "subCategories.modified";
+                return "subCategories.notPresent";
             }
           }
           case "icon": {
@@ -127,7 +127,7 @@ module.exports = body => {
               case "string.pattern.base":
                 return "icon.invalidFormat";
               default:
-                return "icon.modified";
+                return "icon.notPresent";
             }
           }
           case "courses": {
@@ -135,11 +135,11 @@ module.exports = body => {
               case "any.custom":
                 return "courses.invalidID";
               default:
-                return "courses.modified";
+                return "courses.notPresent";
             }
           }
           default:
-            return "educationCategoryBody.modified";
+            return "educationCategoryBody.notPresent";
         }
       })
     );

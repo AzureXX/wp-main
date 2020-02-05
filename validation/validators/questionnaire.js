@@ -15,7 +15,7 @@ module.exports = body => {
               case "any.custom":
                 return "questions.invalidID";
               default:
-                return "questions.modified";
+                return "questions.notPresent";
             }
           }
           case "tags": {
@@ -23,11 +23,11 @@ module.exports = body => {
               case "any.custom":
                 return "tags.invalidFormat";
               default:
-                return "tags.modified";
+                return "tags.notPresent";
             }
           }
           default:
-            return "questionnaireBody.modified";
+            return "questionnaireBody.notPresent";
         }
       })
     );
