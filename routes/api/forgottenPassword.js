@@ -2,6 +2,7 @@ const express = require('express');
 const joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 // validator
+const validateForgotPassword = require('../../validation/validators/forgotPassword');
 const validateChangePassword = require('../../validation/validators/changePassword');
 // service
 const forgotPassword = require('../../services/forgotPassword');
@@ -17,15 +18,8 @@ const router = express.Router();
 //@access  Public
 router.post('/forgot', async (req, res, next) => {
   try {
-    console.log(req.body)
-    if (
-      !joi
-        .string()
-        .email()
-        .validate(req.body.email)
-    ) {
-      next(new Error('email.invalidFormat'));
-    }
+    validateForgotPassword(req.body);
+
     let user = await User.findOne({ verified: { email: req.body.email } }, 'verified').lean();
     if (!user) {
       throw new Error('user.notFound');
@@ -38,17 +32,17 @@ router.post('/forgot', async (req, res, next) => {
 });
 
 //@route   POST api/password/change
-//@desc    allowing users to change their password 
+//@desc    allowing users to change their password
 //@access  Public
 router.post('/change', async (req, res, next) => {
   try {
     validateChangePassword(req.body);
 
     const passwordDoc = await ForgottenPasswordCode.findOneAndDelete({ code: req.body.code }).lean();
-    if(!passwordDoc) throw new Error("code.invalid")
-    
+    if (!passwordDoc) throw new Error('code.invalid');
+
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(req.body.password1, salt);    
+    const hash = await bcrypt.hash(req.body.password1, salt);
 
     await Auth.findOneAndUpdate({ userId: passwordDoc.userId }, { password: hash });
     res.json({ message: 'success' });
