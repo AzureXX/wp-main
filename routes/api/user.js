@@ -144,7 +144,7 @@ router.put(
           throw new Error("password.notmatch");
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(newPassword, salt);
-        await Auth.findByIdAndUpdate(req.user._id, {
+        await Auth.findOneAndUpdate({userId: req.user._id}, {
           password: hash
         });
         return res.json('Password was succesfully changed');
