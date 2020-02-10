@@ -1,9 +1,8 @@
 const express = require('express');
 const passport = require('passport');
-const requests = require('../../utils/requests');
-const roles = require('../../utils/roles');
 const axios = require('axios');
 const router = express.Router();
+
 //@route   GEt api/achievements/get/all
 //@desc    Get all achievements from database
 //@access  Public

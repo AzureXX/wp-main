@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const roles = require('../../../utils/roles');
-
 const requests = require('../../../utils/requests');
 
 //@route   POST api/education/subcategory/add
@@ -54,7 +53,6 @@ router.get('/get/all/:page?',  async (req, res, next) => {
 router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'subcategories');
 });
-
 
 //@route   POST api/education/subcategory/setstatus
 //@desc    Sets status for education subcategory

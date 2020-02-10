@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
-const AccessGroup = require("../../models/AccessGroup");
 const requests = require('../../utils/requests');
+// model
+const AccessGroup = require("../../models/AccessGroup");
 
 //@route   POST api/accessgroup/add
 //@desc    Adds new access group to database

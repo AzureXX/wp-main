@@ -54,8 +54,6 @@ router.get('/get/id/:id',  async (req, res, next) => {
   await requests.getItem(req, res, next, 'topic');
 });
 
-
-
 //@route   POST api/education/topic/setstatus
 //@desc    Sets status for education topic
 //@access  Private
