@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
-    "@sendgrid/mail": "^6.5.1",
-    "aws-sdk": "^2.610.0",
+    "@sendgrid/mail": "^6.5.2",
+    "aws-sdk": "^2.614.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
