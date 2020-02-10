@@ -425,6 +425,8 @@ module.exports = {
       const access = await this.getUserAccess(req, res, next, req.body.user);
       if (!access.giveTasks) throw new Error("access.false");
       const task = await newTask.save();
+      this.checkAchievement(req, res, next, "task");
+
       res.status(200).json(task);
     } catch (error) {
       next(error);
