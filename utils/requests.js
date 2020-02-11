@@ -1,7 +1,7 @@
-const validation = require("./validation");
-const models = require("./models");
-const transformation = require("./transformation");
-const axios = require("axios")
+const validation = require('./validation');
+const models = require('./models');
+const transformation = require('./transformation');
+const axios = require('axios');
 
 module.exports = {
   /*****************
@@ -10,10 +10,10 @@ module.exports = {
   async getAllItems(req, res, next, name, size) {
     try {
       const model = models.getModel(name);
-      const populate = req.query.populate ? req.query.populate : "";
-      let select = req.query.select ? req.query.select : "";
-      if (select.match(/password/i)) select = "_id";
-      const only = req.query.only ? req.query.only : "";
+      const populate = req.query.populate ? req.query.populate : '';
+      let select = req.query.select ? req.query.select : '';
+      if (select.match(/password/i)) select = '_id';
+      const only = req.query.only ? req.query.only : '';
       const filter = {};
       if (req.query.filter) {
         filterJSON = JSON.parse(req.query.filter);
@@ -38,9 +38,9 @@ module.exports = {
             })
           : null;
 
-        filterJSON.category && filterJSON.category != "all" ? (filter.category = filterJSON.category) : null;
+        filterJSON.category && filterJSON.category != 'all' ? (filter.category = filterJSON.category) : null;
 
-        filterJSON.city && filterJSON.city != "all" ? (filter.city = filterJSON.city) : null;
+        filterJSON.city && filterJSON.city != 'all' ? (filter.city = filterJSON.city) : null;
       }
       const offset = transformation.getOffset(req.params.page, size);
       let items = await model
@@ -51,10 +51,10 @@ module.exports = {
           path: populate,
           select: select,
           populate: {
-            path: "categories subcategories topics subtopics courses"
+            path: 'categories subcategories topics subtopics courses'
           }
         })
-        .sort("-released -published")
+        .sort('-released -published')
         .lean();
 
       return res.json({
@@ -69,10 +69,10 @@ module.exports = {
     try {
       const model = models.getModel(name);
       const id = transformation.mongooseId(req.params.id);
-      const populate = req.query.populate ? req.query.populate : "";
-      let select = req.query.select ? req.query.select : "";
-      if (select.match(/password/i)) select = "_id";
-      const deep = req.query.deeppopulate || "categories subcategories topics subtopics courses";
+      const populate = req.query.populate ? req.query.populate : '';
+      let select = req.query.select ? req.query.select : '';
+      if (select.match(/password/i)) select = '_id';
+      const deep = req.query.deeppopulate || 'categories subcategories topics subtopics courses';
       const item = await model.findById(id).populate({
         path: populate,
         select: select,
@@ -90,25 +90,25 @@ module.exports = {
   async deleteItem(req, res, next, name, check) {
     try {
       const model = models.getModel(name);
-      if (!validation.mongooseId(req.params.id)) throw new Error("id.invalid");
-      if (check && req.user.role !== "admin") {
+      if (!validation.mongooseId(req.params.id)) throw new Error('id.invalid');
+      if (check && req.user.role !== 'admin') {
         const item = await model.findById(req.params.id);
-        if (item.creator.toString() !== req.user._id) throw new Error("auth.false");
+        if (item.creator.toString() !== req.user._id) throw new Error('auth.false');
       }
-      if (["book", "movie", "course", "person", "music"].includes(name)) {
+      if (['book', 'movie', 'course', 'person', 'music'].includes(name)) {
         const Rating = models.getRatingModel(name);
         Rating.deleteMany({
           [name]: req.params.id
         }).exec();
       }
-      if (["category", "subcategory", "topic", "subtopic"].includes(name)) {
+      if (['category', 'subcategory', 'topic', 'subtopic'].includes(name)) {
         const Status = models.getEducationStatusModel(name);
         Status.deleteMany({
           [name]: req.params.id
         }).exec();
       }
       await model.findByIdAndDelete(req.params.id);
-      return res.json("Success");
+      return res.json('Success');
     } catch (error) {
       next(error);
     }
@@ -119,8 +119,8 @@ module.exports = {
       const id = transformation.mongooseId(req.params.id);
       const item = await Model.findById(id);
       if (!item) throw new Error(`item.notfound`);
-      if (check && req.user.role !== "admin") {
-        if (item.creator.toString() !== req.user._id) throw new Error("auth.false");
+      if (check && req.user.role !== 'admin') {
+        if (item.creator.toString() !== req.user._id) throw new Error('auth.false');
       }
       const saved = await Model.findByIdAndUpdate(id, transformation.getObject(req, name));
       res.status(200).json(saved);
@@ -157,34 +157,34 @@ module.exports = {
 
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
-          .getModel("user")
-          .findOne({ username: req.params.id }, "_id")
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id')
           .lean();
-        if (!user) throw new Error("user.notfound");
+        if (!user) throw new Error('user.notfound');
         req.params.id = user._id;
       }
 
       const access = await this.getUserAccess(req, res, next, req.params.id);
-      if (type === "book" && !access.showBookInfo)
+      if (type === 'book' && !access.showBookInfo)
         return res.json({
           ratings: []
         });
-      if (type === "movie" && !access.showMovieInfo)
+      if (type === 'movie' && !access.showMovieInfo)
         return res.json({
           ratings: []
         });
-      if (type === "music" && !access.showMusicInfo)
+      if (type === 'music' && !access.showMusicInfo)
         return res.json({
           ratings: []
         });
-      if (type === "course" && !access.showCourseInfo)
+      if (type === 'course' && !access.showCourseInfo)
         return res.json({
           ratings: []
         });
       const ratings = await Model.findOne({ userId: req.params.id })
         .populate({
-          path: !req.query.populate ? type + ".id" : "",
-          select: "name"
+          path: !req.query.populate ? type + '.id' : '',
+          select: 'name'
         })
         .lean();
       return res.json(ratings);
@@ -194,17 +194,17 @@ module.exports = {
   },
   async getUserRatingListAll(req, res, next) {
     try {
-      const BookRating = models.getRatingModel("books");
-      const MovieRating = models.getRatingModel("movies");
-      const CourseRating = models.getRatingModel("courses");
-      const MusicRating = models.getRatingModel("music");
+      const BookRating = models.getRatingModel('books');
+      const MovieRating = models.getRatingModel('movies');
+      const CourseRating = models.getRatingModel('courses');
+      const MusicRating = models.getRatingModel('music');
 
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
-          .getModel("user")
-          .findOne({ username: req.params.id }, "_id")
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id')
           .lean();
-        if (!user) throw new Error("user.notfound");
+        if (!user) throw new Error('user.notfound');
 
         req.params.id = user._id;
       }
@@ -217,8 +217,8 @@ module.exports = {
           userId: req.params.id
         })
           .populate({
-            path: "book",
-            select: "name"
+            path: 'book',
+            select: 'name'
           })
           .lean();
       let movieRating =
@@ -227,24 +227,24 @@ module.exports = {
           userId: req.params.id
         })
           .populate({
-            path: "movie",
-            select: "name"
+            path: 'movie',
+            select: 'name'
           })
           .lean();
       let musicRating =
         access.showMusicInfo &&
         MusicRating.find({ userId: req.params.id })
           .populate({
-            path: "music",
-            select: "name"
+            path: 'music',
+            select: 'name'
           })
           .lean();
       let courseRating =
         access.showCourseInfo &&
         CourseRating.find({ userId: req.params.id })
           .populate({
-            path: "course",
-            select: "name"
+            path: 'course',
+            select: 'name'
           })
           .lean();
 
@@ -282,7 +282,7 @@ module.exports = {
           upsert: true
         }
       );
-      return res.json("success");
+      return res.json('success');
     } catch (error) {
       next(error);
     }
@@ -293,10 +293,10 @@ module.exports = {
 
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
-          .getModel("user")
-          .findOne({ username: req.params.id }, "_id")
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id')
           .lean();
-        if (!user) throw new Error("user.notfound");
+        if (!user) throw new Error('user.notfound');
         req.params.id = user._id;
       }
       const access = await this.getUserAccess(req, res, next, req.params.id);
@@ -314,16 +314,16 @@ module.exports = {
   },
   async getUserEducationStatusAll(req, res, next) {
     try {
-      const Subcategory = models.getEducationStatusModel("subcategory");
-      const Topic = models.getEducationStatusModel("topic");
-      const Subtopic = models.getEducationStatusModel("subtopic");
+      const Subcategory = models.getEducationStatusModel('subcategory');
+      const Topic = models.getEducationStatusModel('topic');
+      const Subtopic = models.getEducationStatusModel('subtopic');
 
       if (!validation.mongooseId(req.params.id)) {
         const user = await models
-          .getModel("user")
-          .findOne({ username: req.params.id }, "_id")
+          .getModel('user')
+          .findOne({ username: req.params.id }, '_id')
           .lean();
-        if (!user) throw new Error("user.notfound");
+        if (!user) throw new Error('user.notfound');
         req.params.id = user._id;
       }
 
@@ -335,17 +335,17 @@ module.exports = {
           subtopics: []
         });
 
-      let subcategories = Subcategory.find({ userId: req.params.id }, "-_id -__v")
-        .populate({ path: "subcategory", select: "name" })
+      let subcategories = Subcategory.find({ userId: req.params.id }, '-_id -__v')
+        .populate({ path: 'subcategory', select: 'name' })
         .lean();
-      let topics = Topic.find({ userId: req.params.id }, "-_id -__v")
+      let topics = Topic.find({ userId: req.params.id }, '-_id -__v')
         .populate({
-          path: "topic",
-          select: "name"
+          path: 'topic',
+          select: 'name'
         })
         .lean();
-      let subtopics = Subtopic.find({ userId: req.params.id }, "-_id -__v")
-        .populate({ path: "subtopic", select: "name" })
+      let subtopics = Subtopic.find({ userId: req.params.id }, '-_id -__v')
+        .populate({ path: 'subtopic', select: 'name' })
         .lean();
       subcategories = await subcategories;
       topics = await topics;
@@ -365,14 +365,14 @@ module.exports = {
   ************/
   async getUserAccess(req, res, next, user) {
     try {
-      const User = models.getModel("user");
-      const AccessModel = models.getModel("accessgroup");
+      const User = models.getModel('user');
+      const AccessModel = models.getModel('accessgroup');
       if (!req.user) {
         const data = await User.findById(user);
         return data.generalAccessOptions;
       }
-      
-      if (req.user._id.toString() === user.toString() || req.user.role === "admin") {
+
+      if (req.user._id.toString() === user.toString() || req.user.role === 'admin') {
         return {
           showEmail: true,
           showPhone: true,
@@ -420,12 +420,12 @@ module.exports = {
   ********/
   async createTask(req, res, next) {
     try {
-      const Task = models.getModel("task");
-      const newTask = new Task(transformation.getObject(req, "task"));
+      const Task = models.getModel('task');
+      const newTask = new Task(transformation.getObject(req, 'task'));
       const access = await this.getUserAccess(req, res, next, req.body.user);
-      if (!access.giveTasks) throw new Error("access.false");
+      if (!access.giveTasks) throw new Error('access.false');
       const task = await newTask.save();
-      this.checkAchievement(req, res, next, "task");
+      this.checkAchievement(req, res, next, 'task');
 
       res.status(200).json(task);
     } catch (error) {
@@ -434,10 +434,9 @@ module.exports = {
   },
   async getMyTasks(req, res, next) {
     try {
-      
-      const Task = models.getModel("task");
+      const Task = models.getModel('task');
       const tasks = await Task.find({ creator: req.user._id })
-        .populate("user item", "name username")
+        .populate('user item', 'name username')
         .lean();
       return res.json(tasks);
     } catch (error) {
@@ -446,9 +445,9 @@ module.exports = {
   },
   async getTasksForMe(req, res, next) {
     try {
-      const Task = models.getModel("task");
+      const Task = models.getModel('task');
       const tasks = await Task.find({ user: req.user._id })
-        .populate("creator item", "name username")
+        .populate('creator item', 'name username')
         .lean();
       return res.json(tasks);
     } catch (error) {
@@ -457,10 +456,10 @@ module.exports = {
   },
   async updateTaskStatus(req, res, next) {
     try {
-      const Task = models.getModel("task");
+      const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
       if (!task) {
-        throw new Error("task.notfound");
+        throw new Error('task.notfound');
       } else if (task.creator.toString() == req.user._id.toString() || task.user.toString() == req.user._id.toString()) {
         Task.updateOne(
           {
@@ -471,20 +470,20 @@ module.exports = {
           }
         ).exec();
       } else {
-        throw new Error("auth.false");
+        throw new Error('auth.false');
       }
-      return res.json("success");
+      return res.json('success');
     } catch (error) {
       next(error);
     }
   },
   async updateTaskArchive(req, res, next) {
     try {
-      const Task = models.getModel("task");
+      const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
 
       if (!task) {
-        throw new Error("task.required");
+        throw new Error('task.required');
       }
       const isCreator = task.creator.toString() == req.user._id.toString();
       const isUser = task.user.toString() == req.user._id.toString();
@@ -492,20 +491,20 @@ module.exports = {
       if (isCreator || isUser) {
         Task.updateOne({ _id: req.params.id }, { archived: req.body.archived }).exec();
       } else {
-        throw new Error("auth.false");
+        throw new Error('auth.false');
       }
-      return res.json("success");
+      return res.json('success');
     } catch (error) {
       next(error);
     }
   },
   async deleteTask(req, res, next) {
     try {
-      const Task = models.getModel("task");
+      const Task = models.getModel('task');
       const task = await Task.findById(req.params.id);
 
       if (!task) {
-        throw new Error("task.required");
+        throw new Error('task.required');
       }
       const isCreator = task.creator.toString() == req.user._id.toString();
       const isUser = task.user.toString() == req.user._id.toString();
@@ -516,15 +515,15 @@ module.exports = {
         (isCreator && isUser)
       ) {
         Task.deleteOne({ _id: req.params.id }).exec();
-        return res.json("deleted");
+        return res.json('deleted');
       } else if (isCreator) {
         Task.updateOne({ _id: req.params.id }, { allowDelete: { creator: !task.allowDelete.creator } }).exec();
-        return res.json("allowed");
+        return res.json('allowed');
       } else if (isUser) {
         Task.updateOne({ _id: req.params.id }, { allowDelete: { user: !task.allowDelete.user } }).exec();
-        return res.json("allowed");
+        return res.json('allowed');
       } else {
-        throw new Error("auth.false");
+        throw new Error('auth.false');
       }
     } catch (error) {
       next(error);
@@ -533,10 +532,22 @@ module.exports = {
   async checkAchievement(req, res, next, type) {
     try {
       const response = await axios.post(process.env.ACHIEVEMENTS_LINK + `user/calculate/${type}/${req.user._id}`);
-      if(response.data.new) res.io.to(req.headers.socket).emit("achievement", response.data)
+      if (response.data.new) res.io.to(req.headers.socket).emit('achievement', response.data);
       return;
     } catch (error) {
-      console.log(error.response ? error.response.data: error);
+      console.log(error.response ? error.response.data : error);
+    }
+  },
+  /**
+   * @param {String} actionType -
+   * @param {String} item - 
+   * @param {Number} value -
+   * @param {String} action - 
+   */
+  async createUserLog(req, res, next, actionType, item, value, action) {
+    try {
+    } catch (error) {
+      console.log(error.response ? error.response.data : error);
     }
   }
 };

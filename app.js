@@ -66,6 +66,7 @@ const educationSubcategoryRoute = require('./routes/api/education/subcategory');
 const educationTopicRoute = require('./routes/api/education/topic');
 const educationSubtopicRoute = require('./routes/api/education/subtopic');
 const recommendationsRoute = require('./routes/api/recommendations');
+const logsRoute = require('./routes/api/logs');
 const collectRoute = require('./routes/api/collect');
 const searchRoute = require('./routes/api/search');
 const messageRoute = require('./routes/api/message');
@@ -83,6 +84,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/verify', emailVerificationRoute);
 app.use('/api/password', forgottenPasswordRoute);
 app.use('/api/user', userRoute);
+app.use('/api/logs', logsRoute);
 app.use('/api/actions', actionsRoute);
 app.use('/api/achievements', achievementRoute);
 app.use('/api/book', bookRoute);
@@ -95,16 +97,12 @@ app.use('/api/question', questionRoute);
 app.use('/api/questionnaire', questionnaireRoute);
 app.use('/api/task', taskRoute);
 app.use('/api/accessgroup', accessGroupRoute);
-
 app.use('/api/education/category', educationCategoryRoute);
 app.use('/api/education/subcategory', educationSubcategoryRoute);
 app.use('/api/education/topic', educationTopicRoute);
 app.use('/api/education/subtopic', educationSubtopicRoute);
-
 app.use('/api/recommendations', recommendationsRoute);
-
 app.use('/api/collect', collectRoute);
-
 app.use('/api/search', searchRoute);
 app.use('/api/message', messageRoute);
 app.use('/api/notification', notificationRoute);
