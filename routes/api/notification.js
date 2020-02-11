@@ -3,12 +3,9 @@ const router = express.Router();
 const passport = require('passport');
 const Notification = require("../../models/Notification")
 
-
-
 //@route   GET api/notification/get/current
 //@desc    Get notification for current user
 //@access  Public
-
 router.get("/get/current", passport.authenticate('jwt', {
   session: false
 }), async (req, res, next) => {
@@ -25,6 +22,5 @@ router.get("/get/current", passport.authenticate('jwt', {
     next(error)
   }
 })
-
 
 module.exports = router;

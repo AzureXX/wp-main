@@ -10,8 +10,8 @@ const compression = require('compression');
 
 app.use(cors());
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server, { origins: '*:*', cookie: false });
+const server = require('http').Server(app);
+const io = require('socket.io')(server, { origins: '*:*', cookie: false });
 app.use((req, res, next) => {
   res.setHeader('Set-Cookie', 'HttpOnly;Secure;SameSite=Strict');
   next();
@@ -26,8 +26,8 @@ io.on('connection', socket => {
   require('./services/socket-io')(socket, io);
 });
 
-app.use(compression());
 app.use(helmet());
+app.use(compression());
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -44,10 +44,9 @@ app.use(passport.initialize());
 //Passport Config
 require('./config/passport.js')(passport);
 
-//Actions route
-const actionsRoute = require('./routes/api/actions');
 //Require routes
 const authRoute = require('./routes/api/auth');
+const actionsRoute = require('./routes/api/actions');
 const emailVerificationRoute = require('./routes/api/verifyEmail');
 const forgottenPasswordRoute = require('./routes/api/forgottenPassword');
 const userRoute = require('./routes/api/user');
@@ -61,21 +60,17 @@ const vacancyRoute = require('./routes/api/vacancy');
 const questionRoute = require('./routes/api/question');
 const questionnaireRoute = require('./routes/api/questionnaire');
 const taskRoute = require('./routes/api/task');
-
 const accessGroupRoute = require('./routes/api/accessgroup');
-
 const educationCategoryRoute = require('./routes/api/education/category');
 const educationSubcategoryRoute = require('./routes/api/education/subcategory');
 const educationTopicRoute = require('./routes/api/education/topic');
 const educationSubtopicRoute = require('./routes/api/education/subtopic');
-
 const recommendationsRoute = require('./routes/api/recommendations');
-
 const collectRoute = require('./routes/api/collect');
 const searchRoute = require('./routes/api/search');
-
 const messageRoute = require('./routes/api/message');
 const notificationRoute = require('./routes/api/notification');
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(
@@ -123,4 +118,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = { app: app, server: server };
+module.exports = { app, server };
