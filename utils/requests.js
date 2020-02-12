@@ -2,6 +2,7 @@ const validation = require('./validation');
 const models = require('./models');
 const transformation = require('./transformation');
 const axios = require('axios');
+const MongoID = require('mongoose').Schema.Types.ObjectId;
 
 module.exports = {
   /*****************
@@ -539,13 +540,19 @@ module.exports = {
     }
   },
   /**
-   * @param {String} actionType -
-   * @param {String} item - 
-   * @param {Number} value -
-   * @param {String} action - 
+   * Writes to MongoDB.LogDocuments.logs[ userLogObj ]
+   * @param {String} actionType - userLogObj.type
+   * @param {MongoID=} [item] - userLogObj.item
+   * @param {Number=} [value] - userLogObj.value
+   * @param {String} action - userLogObj.action
    */
   async createUserLog(req, res, next, actionType, item, value, action) {
     try {
+      if (item && value) {
+        axios.post(process.env.LOGS_LINK + `logs/${req.user._id}`, { actionType, item, value, action });
+      } else {
+        axios.post(process.env.LOGS_LINK + `logs/${req.user._id}`, { actionType, action });
+      }
     } catch (error) {
       console.log(error.response ? error.response.data : error);
     }

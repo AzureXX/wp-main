@@ -22,7 +22,7 @@ router.post(
   async (req, res, next) => {
     try {
       validator.signUp(req.body);
-      
+
       const { username, email, password, type } = req.body;
 
       let exist = await Auth.findOne({ email }, '_id').lean();
@@ -49,7 +49,9 @@ router.post(
       });
       await auth.save();
       const newUser = await user.save();
+
       verifyEmail(newUser._id, email);
+      requests.createUserLog(req, res, next, 'registration', undefined, undefined, 'registered');
 
       const payload = {
         id: newUser.id,
@@ -60,6 +62,7 @@ router.post(
       const token = jwt.sign(payload, process.env.SECRET_OR_KEY, {
         expiresIn: 360000
       });
+
       return res.json({
         success: true,
         token: 'Bearer ' + token
