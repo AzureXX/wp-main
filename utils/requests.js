@@ -2,7 +2,6 @@ const validation = require('./validation');
 const models = require('./models');
 const transformation = require('./transformation');
 const axios = require('axios');
-const MongoID = require('mongoose').Schema.Types.ObjectId;
 
 module.exports = {
   /*****************
@@ -133,10 +132,9 @@ module.exports = {
     try {
       const Model = models.getModel(name);
       const newItem = new Model(transformation.getObject(req, name));
-      
 
       const item = await newItem.save();
-      if(name == "vacancy") requests.createUserLog(req,res,next, "vacancy", newItem._id, null, "create")
+      if (name == 'vacancy') requests.createUserLog(req, res, next, 'vacancy', newItem._id, null, 'create');
       res.status(200).json(item);
     } catch (error) {
       next(error);
@@ -545,17 +543,21 @@ module.exports = {
   /**
    * Writes to MongoDB.LogDocuments.logs[ userLogObj ]
    * @param {String} actionType - userLogObj.type
-   * @param {MongoID=} [item] - userLogObj.item
-   * @param {Number=} [value] - userLogObj.value
+   * @param {String} [item] - userLogObj.item
+   * @param {Number} [value] - userLogObj.value
    * @param {String} action - userLogObj.action
    */
   async createUserLog(req, res, next, actionType, item, value, action) {
     try {
-      if (item && value) {
-        axios.post(process.env.LOGS_LINK + `logs/${req.user._id}`, { actionType, item, value, action });
-      } else {
-        axios.post(process.env.LOGS_LINK + `logs/${req.user._id}`, { actionType, action });
-      }
+      axios.post(
+        process.env.LOGS_LINK + `logs/${req.user._id}`,
+        { actionType, item, value, action },
+        {
+          headers: {
+            Authorization: process.env.LOGS_ACCESS_TOKEN
+          }
+        }
+      );
     } catch (error) {
       console.log(error.response ? error.response.data : error);
     }
