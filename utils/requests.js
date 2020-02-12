@@ -134,7 +134,7 @@ module.exports = {
       const newItem = new Model(transformation.getObject(req, name));
 
       const item = await newItem.save();
-      if (name == 'vacancy') requests.createUserLog(req, res, next, 'vacancy', newItem._id, null, 'create');
+      if (name == 'vacancy') this.createUserLog(req, res, next, 'vacancy', newItem._id, null, 'create');
       res.status(200).json(item);
     } catch (error) {
       next(error);
