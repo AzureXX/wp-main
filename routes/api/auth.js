@@ -38,10 +38,9 @@ router.post(
         username: username,
         accountType: type
       });
-
       req.user = user;
       requests.checkAchievement(req, res, next, 'registration');
-
+      requests.createUserLog(req,res,next, "registration", null, null, "registration")
       const auth = new Auth({
         email: email,
         password: hash,

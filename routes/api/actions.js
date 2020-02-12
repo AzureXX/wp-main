@@ -66,6 +66,11 @@ router.post(
         }
         
       }
+      if(status || status === 0) {
+        requests.createUserLog(req,res,next, type, id, status, "status")
+      } else if (rating) {
+        requests.createUserLog(req,res,next, type, id, rating, "rating")
+      }
       requests.checkAchievement(req, res, next, type);
       const response = await RatingModel.find({userId: req.user._id}).populate({path: singular, select:"name"}).lean()
       return res.json(response)
