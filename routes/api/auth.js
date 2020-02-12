@@ -49,6 +49,7 @@ router.post(
       const newUser = await user.save();
       
       verifyEmail(newUser._id, email);
+      req.user = newUser;
       requests.createUserLog(req,res,next, "registration", null, null, "registration")
 
       const payload = {
