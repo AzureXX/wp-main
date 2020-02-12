@@ -67,9 +67,9 @@ router.post(
         
       }
       if (rating) {
-        requests.createUserLog(req,res,next, type, id, rating, "rating")
+        requests.createUserLog(req,res,next, singular, id, rating, "rating")
       } else if(status || status === 0) {
-        requests.createUserLog(req,res,next, type, id, status, "status")
+        requests.createUserLog(req,res,next, singular, id, status, "status")
       }
         
       requests.checkAchievement(req, res, next, type);
