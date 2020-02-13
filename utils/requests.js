@@ -284,6 +284,7 @@ module.exports = {
           upsert: true
         }
       );
+      this.createUserLog(req, res, next, type, req.body.id, req.body.status, 'status');
       return res.json('success');
     } catch (error) {
       next(error);
