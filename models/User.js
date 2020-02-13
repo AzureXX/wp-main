@@ -5,7 +5,7 @@ const UserSchema = new Schema({
   username: {
     type: String,
     unique: true,
-    sparse: true
+    partialFilterExpression:{username:{$type:"string"}}
   },
   accountType: {
     type: String,

@@ -49,7 +49,7 @@ const MovieSchema = new Schema({
   tmdbId: {
     type: Number,
     unique: true,
-    sparse: true
+    partialFilterExpression: {username: {$type : "string" }}
   }
 });
 
