@@ -47,10 +47,10 @@ router.post(
       });
       await auth.save();
       const newUser = await user.save();
-      
+
       verifyEmail(newUser._id, email);
       req.user = newUser;
-      requests.createUserLog(req,res,next, "registration", null, null, "registration")
+      requests.createUserLog(req, 'registration', null, null, 'registration');
 
       const payload = {
         id: newUser.id,

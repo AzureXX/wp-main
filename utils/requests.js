@@ -134,7 +134,7 @@ module.exports = {
       const newItem = new Model(transformation.getObject(req, name));
 
       const item = await newItem.save();
-      if (name == 'vacancy') this.createUserLog(req, res, next, 'vacancy', newItem._id, null, 'create');
+      if (name == 'vacancy') this.createUserLog(req, 'vacancy', newItem._id, null, 'create');
       res.status(200).json(item);
     } catch (error) {
       next(error);
@@ -284,7 +284,7 @@ module.exports = {
           upsert: true
         }
       );
-      this.createUserLog(req, res, next, type, req.body.id, req.body.status, 'status');
+      this.createUserLog(req, type, req.body.id, req.body.status, 'status');
       return res.json('success');
     } catch (error) {
       next(error);
@@ -429,7 +429,7 @@ module.exports = {
       if (!access.giveTasks) throw new Error('access.false');
       const task = await newTask.save();
       this.checkAchievement(req, res, next, 'task');
-      this.createUserLog(req, res, next, 'task', task._id, null, 'create');
+      this.createUserLog(req, 'task', task._id, null, 'create');
 
       res.status(200).json(task);
     } catch (error) {
@@ -544,12 +544,13 @@ module.exports = {
   },
   /**
    * Writes to MongoDB.LogDocuments.logs[ userLogObj ]
+   * @param {Request} req - express Request object
    * @param {String} actionType - userLogObj.type
    * @param {String} [item] - userLogObj.item
-   * @param {Number} [value] - userLogObj.value
+   * @param {*} [value] - userLogObj.value
    * @param {String} action - userLogObj.action
    */
-  async createUserLog(req, res, next, actionType, item, value, action) {
+  async createUserLog(req, actionType, item, value, action) {
     try {
       axios.post(
         process.env.LOGS_LINK + `logs/${req.user._id}`,
