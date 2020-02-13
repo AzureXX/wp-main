@@ -1,50 +1,14 @@
 const express = require('express');
-require('dotenv').config();
 const cors = require('cors');
 const passport = require('passport');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const app = express();
 const compression = require('compression');
-
-app.use(cors());
-
-const server = require('http').Server(app);
-const io = require('socket.io')(server, { origins: '*:*', cookie: false });
-app.use((req, res, next) => {
-  res.setHeader('Set-Cookie', 'HttpOnly;Secure;SameSite=Strict');
-  next();
-});
-
-app.use((req, res, next) => {
-  res.io = io;
-  next();
-});
-
-io.on('connection', socket => {
-  require('./services/socket-io')(socket, io);
-});
-
-app.use(helmet());
-app.use(compression());
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-  })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
-
-//Passport middleware
-app.use(passport.initialize());
-
-//Passport Config
+require('dotenv').config();
 require('./config/passport.js')(passport);
 
-//Require routes
+// Require routes
 const authRoute = require('./routes/api/auth');
 const actionsRoute = require('./routes/api/actions');
 const emailVerificationRoute = require('./routes/api/verifyEmail');
@@ -71,14 +35,46 @@ const collectRoute = require('./routes/api/collect');
 const searchRoute = require('./routes/api/search');
 const messageRoute = require('./routes/api/message');
 const notificationRoute = require('./routes/api/notification');
+const filesRoute = require('./routes/api/files');
+
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server, { origins: '*:*', cookie: false });
 
 app.use(logger('dev'));
+app.use(helmet());
+app.use(cors());
+
+io.on('connection', socket => {
+  require('./services/socket-io')(socket, io);
+});
+
+app.use((req, res, next) => {
+  res.setHeader('Set-Cookie', 'HttpOnly;Secure;SameSite=Strict');
+  next();
+});
+app.use((req, res, next) => {
+  res.io = io;
+  next();
+});
+app.use(compression());
+app.use(passport.initialize());
 app.use(express.json());
 app.use(
   express.urlencoded({
     extended: false
   })
 );
+
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
 
 app.use('/api/auth', authRoute);
 app.use('/api/verify', emailVerificationRoute);
@@ -106,11 +102,11 @@ app.use('/api/collect', collectRoute);
 app.use('/api/search', searchRoute);
 app.use('/api/message', messageRoute);
 app.use('/api/notification', notificationRoute);
-app.use('/api/files', require('./routes/api/files'));
+app.use('/api/files', filesRoute);
 
 // error handler
 app.use((err, req, res, next) => {
-  console.log(err)
+  console.log(err);
   res.status(500);
   return res.json({
     message: err.message
