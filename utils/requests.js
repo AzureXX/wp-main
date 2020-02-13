@@ -429,6 +429,7 @@ module.exports = {
       if (!access.giveTasks) throw new Error('access.false');
       const task = await newTask.save();
       this.checkAchievement(req, res, next, 'task');
+      this.createUserLog(req, res, next, 'task', task._id, null, 'create');
 
       res.status(200).json(task);
     } catch (error) {
