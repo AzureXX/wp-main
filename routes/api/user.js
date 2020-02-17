@@ -80,8 +80,8 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
   }
 });
 
-//@route   GET api/user/getall/:page
-//@desc    Return user by username or id
+//@route   GET api/user/getall/:page?/:docLimit?
+//@desc    Returns all users
 //@access  Public
 router.get('/getall/:page?/:docLimit?', async (req, res, next) => {
   try {
