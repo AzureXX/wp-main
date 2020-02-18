@@ -4,6 +4,20 @@ const passport = require('passport');
 const roles = require('../../../utils/roles');
 const requests = require('../../../utils/requests');
 
+//@route   GET api/education/category/get/all/:page?
+//@desc    Get all education categories by page
+//@access  Public
+router.get('/get/all/:page?',  async (req, res, next) => {
+  await requests.getAllItems(req, res, next, 'categories', 1000);
+});
+
+//@route   GET api/education/category/get/id/:id
+//@desc    Get education category by id
+//@access  Public
+router.get('/get/id/:id',  async (req, res, next) => {
+  await requests.getItem(req, res, next, 'categories');
+});
+
 //@route   POST api/education/category/add
 //@desc    Adds new education category to database
 //@access  Private/Moderator
@@ -29,7 +43,7 @@ router.put(
 );
 
 //@route   DELETE api/education/category/delete/:id
-//@desc     Delete education category from database
+//@desc    Delete education category from database
 //@access  Private/Moderator
 router.delete(
   '/delete/:id',
@@ -39,20 +53,5 @@ router.delete(
     await requests.deleteItem(req, res, next, "category");
   }
 );
-
-//@route   GET api/education/category/get/all/:page
-//@desc    Get all education categories by page
-//@access  Public
-router.get('/get/all/:page?',  async (req, res, next) => {
-  await requests.getAllItems(req, res, next, 'categories', 1000);
-});
-
-//@route   GET api/education/category/get/id/:id
-//@desc    Get education category by id
-//@access  Public
-router.get('/get/id/:id',  async (req, res, next) => {
-  await requests.getItem(req, res, next, 'categories');
-});
-
 
 module.exports = router;

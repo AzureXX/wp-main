@@ -1,0 +1,70 @@
+{
+    "education": {
+        "category": {
+            "get": [
+                "public - api/education/category/get/all/:page?",
+                "public - api/education/category/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/education/category/add"
+            ],
+            "put": [
+                "private/moderator - api/education/category/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/education/category/delete/:id"
+            ]
+        },
+        "subcategory": {
+            "get": [
+                "public - api/education/subcategory/get/all/:page?",
+                "public - api/education/subcategory/get/id/:id",
+                "public - api/education/subcategory/get/parent/:id"
+            ],
+            "post": [
+                "private/moderator - api/education/subcategory/add",
+                "private - api/education/subcategory/setstatus"
+            ],
+            "put": [
+                "private/moderator - api/education/subcategory/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/education/subcategory/delete/:id"
+            ]
+        },
+        "topic": {
+            "get": [
+                "public - api/education/topic/get/all/:page?",
+                "public - api/education/topic/get/id/:id",
+                "public - api/education/topic/get/parent/:id"
+            ],
+            "post": [
+                "private/moderator - api/education/topic/add",
+                "private - api/education/topic/setstatus"
+            ],
+            "put": [
+                "private/moderator - api/education/topic/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/education/topic/delete/:id"
+            ]
+        },
+        "subtopic": {
+            "get": [
+                "public - api/education/subtopic/get/all/:page?",
+                "public - api/education/subtopic/get/id/:id",
+                "public - api/education/subtopic/get/parent/:id"
+            ],
+            "post": [
+                "private/moderator - api/education/subtopic/add",
+                "private - api/education/subtopic/setstatus"
+            ],
+            "put": [
+                "private/moderator - api/education/subtopic/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/education/subtopic/delete/:id"
+            ]
+        }
+    }
+}

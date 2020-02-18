@@ -4,6 +4,27 @@ const passport = require('passport');
 const roles = require('../../../utils/roles');
 const requests = require('../../../utils/requests');
 
+//@route   GET api/education/subtopic/get/all/:page?
+//@desc    Get all education subtopics by page
+//@access  Public
+router.get('/get/all/:page?',  async (req, res, next) => {
+  await requests.getAllItems(req, res, next, 'subtopics', 1000);
+});
+
+//@route   GET api/education/subtopic/get/id/:id
+//@desc    Get education subtopic by id
+//@access  Public
+router.get('/get/id/:id',  async (req, res, next) => {
+  await requests.getItem(req, res, next, 'subtopic');
+});
+
+//@route   GET api/education/subtopic/get/parent/:id
+//@desc    Get education topics of subtopic by id
+//@access  Public
+router.get('/get/parent/:id',  async (req, res, next) => {
+  await requests.getParent(req, res, next, 'subtopics');
+});
+
 //@route   POST api/education/subtopic/add
 //@desc    Adds new education subtopic to database
 //@access  Private/Moderator
@@ -13,6 +34,17 @@ router.post(
   roles.isModerator,
   async (req, res, next) => {
     await requests.createItem(req, res, next, 'subtopic');
+  }
+);
+
+//@route   POST api/education/subtopic/setstatus
+//@desc    Sets status for education subtopic
+//@access  Private
+router.post(
+  '/setstatus',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    await requests.setEducationStatus(req, res, next, 'subtopic');
   }
 );
 
@@ -29,7 +61,7 @@ router.put(
 );
 
 //@route   DELETE api/education/subtopic/delete/:id
-//@desc     Delete education subtopic from database
+//@desc    Delete education subtopic from database
 //@access  Private/Moderator
 router.delete(
   '/delete/:id',
@@ -40,35 +72,4 @@ router.delete(
   }
 );
 
-//@route   GET api/education/subtopic/get/all/:page
-//@desc    Get all education subtopics by page
-//@access  Public
-router.get('/get/all/:page?',  async (req, res, next) => {
-  await requests.getAllItems(req, res, next, 'subtopics', 1000);
-});
-
-//@route   GET api/education/subtopic/get/id/:id
-//@desc    Get education subtopic by id
-//@access  Public
-router.get('/get/id/:id',  async (req, res, next) => {
-  await requests.getItem(req, res, next, 'subtopic');
-});
-
-//@route   POST api/education/subtopic/setstatus
-//@desc    Sets status for education subtopic
-//@access  Private
-router.post(
-  '/setstatus',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    await requests.setEducationStatus(req, res, next, 'subtopic');
-  }
-);
-
-//@route   GET api/education/subtopic/get/parent/:id
-//@desc    Get education subcategories of subtopic by id
-//@access  Public
-router.get('/get/parent/:id',  async (req, res, next) => {
-  await requests.getParent(req, res, next, 'subtopics');
-});
 module.exports = router;
