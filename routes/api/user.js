@@ -85,8 +85,8 @@ router.get('/get/:username', roles.isUser, async (req, res, next) => {
 //@access  Public
 router.get('/getall/:page?/:docLimit?', async (req, res, next) => {
   try {
-    const page = req.params.page && req.params.page >= 0 ? req.params.page : 0;
-    const docLimit = req.params.docLimit && req.params.docLimit >= 1 ? req.params.docLimit : 100;
+    const page = req.params.page >= 0 ? req.params.page : 0;
+    const docLimit = req.params.docLimit >= 1 ? req.params.docLimit : 100;
     const users = await User.find({}, 'username')
       .skip(page == 0 || page == 1 ? 0 : (page - 1) * docLimit)
       .limit(+docLimit)
