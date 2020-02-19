@@ -1,18 +1,23 @@
 const express = require('express');
-const router = express.Router();
+const axios = require('axios');
+// custom modules
+const roles = require('../../utils/roles');
+// models
 const Book = require('../../models/Book');
-const BookRating = require('../../models/Ratings/BookRating');
 const Movie = require('../../models/Movie');
-const MovieRating = require('../../models/Ratings/MovieRating');
 const Course = require('../../models/Course');
-const CourseRating = require('../../models/Ratings/CourseRating');
 const Music = require('../../models/Music');
-const MusicRating = require('../../models/Ratings/MusicRating');
 const Question = require('../../models/Question');
 const QuestionAnswer = require('../../models/QuestionAnswer');
-const roles = require('../../utils/roles');
-const axios = require('axios');
+const BookRating = require('../../models/Ratings/BookRating');
+const MovieRating = require('../../models/Ratings/MovieRating');
+const CourseRating = require('../../models/Ratings/CourseRating');
+const MusicRating = require('../../models/Ratings/MusicRating');
 
+const router = express.Router();
+// @route   GET api/collect/initial
+// @desc    Get initial recommendations for user
+// @access  Private/User
 router.get('/initial', roles.isUser, async (req, res, next) => {
   try {
     let ratedBooks = [];
@@ -21,7 +26,7 @@ router.get('/initial', roles.isUser, async (req, res, next) => {
     let ratedCourses = [];
     let answeredQuestion = [];
     let bookRec, movieRec, musicRec, courseRec;
-    
+
     if (req.user._id) {
       const response = await axios.get(process.env.RECOMMENDATION_LINK + `get/all/${req.user._id}`, {
         headers: {
@@ -32,17 +37,17 @@ router.get('/initial', roles.isUser, async (req, res, next) => {
       movieRec = response.data.movies && response.data.movies.movies.map(item => item.data).slice(0, 20);
       musicRec = response.data.music && response.data.music.music.map(item => item.data).slice(0, 20);
       courseRec = response.data.courses && response.data.courses.courses.map(item => item.data).slice(0, 20);
-      let bookRatings, movieRatings, musicRatings, courseRatings
-      if(!bookRec) {
+      let bookRatings, movieRatings, musicRatings, courseRatings;
+      if (!bookRec) {
         bookRatings = BookRating.find({ userId: req.user._id }).lean();
       }
-      if(!movieRec) {
-         movieRatings = MovieRating.find({ userId: req.user._id }).lean();
+      if (!movieRec) {
+        movieRatings = MovieRating.find({ userId: req.user._id }).lean();
       }
-      if(!musicRec) {
-         musicRatings = MusicRating.find({ userId: req.user._id }).lean();
+      if (!musicRec) {
+        musicRatings = MusicRating.find({ userId: req.user._id }).lean();
       }
-      if(!courseRec) {
+      if (!courseRec) {
         courseRatings = CourseRating.find({ userId: req.user._id }).lean();
       }
       let questionAnswers = QuestionAnswer.find({
@@ -77,22 +82,22 @@ router.get('/initial', roles.isUser, async (req, res, next) => {
     }
     let books =
       bookRec ||
-      Book.find({ _id: { $nin: ratedBooks } }, "name img")
+      Book.find({ _id: { $nin: ratedBooks } }, 'name img')
         .limit(20)
         .lean();
     let movies =
       movieRec ||
-      Movie.find({ _id: { $nin: ratedMovies } }, "name img")
+      Movie.find({ _id: { $nin: ratedMovies } }, 'name img')
         .limit(20)
         .lean();
     let music =
       musicRec ||
-      Music.find({ _id: { $nin: ratedMusic } }, "name img")
+      Music.find({ _id: { $nin: ratedMusic } }, 'name img')
         .limit(20)
         .lean();
     let courses =
       courseRec ||
-      Course.find({ _id: { $nin: ratedCourses } }, "name img")
+      Course.find({ _id: { $nin: ratedCourses } }, 'name img')
         .limit(20)
         .lean();
     let questions = Question.find({ _id: { $nin: answeredQuestion } })
@@ -108,4 +113,5 @@ router.get('/initial', roles.isUser, async (req, res, next) => {
     next(err);
   }
 });
+
 module.exports = router;

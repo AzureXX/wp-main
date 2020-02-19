@@ -1,24 +1,26 @@
 const express = require('express');
-const router = express.Router();
 const passport = require('passport');
-const models = require('../../utils/models');
-const requests = require('../../utils/requests');
 const axios = require('axios');
+// custom modules
+const requests = require('../../utils/requests');
 const transformation = require('../../utils/transformation');
+const models = require('../../utils/models');
 
-//@route   POST api/actions/rate/:type
-//@desc    Rates content
-//@access  Private
+const router = express.Router();
+// @route   POST api/actions/rate/:type
+// @desc    Rates content
+// @access  Private
 router.post('/rate/:type', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const types = ['books', 'movies', 'courses', 'people', 'music'];
     const { type } = req.params;
+
     if (!types.includes(type)) throw new Error('type.invalid');
+
     let { rating, status, id } = req.body;
-
     const RatingModel = models.getRatingModel(type);
-
     const singular = transformation.getSingular(type);
+
     if ((status !== 2 && status) || rating) {
       axios
         .patch(
@@ -68,7 +70,6 @@ router.post('/rate/:type', passport.authenticate('jwt', { session: false }), asy
     } else if (status || status === 0) {
       requests.createUserLog(req, singular, id, status, 'status');
     }
-
     requests.checkAchievement(req, res, next, type);
     const response = await RatingModel.find({ userId: req.user._id })
       .populate({ path: singular, select: 'name' })
@@ -78,4 +79,5 @@ router.post('/rate/:type', passport.authenticate('jwt', { session: false }), asy
     next(error);
   }
 });
+
 module.exports = router;

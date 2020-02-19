@@ -3,9 +3,9 @@ const axios = require('axios');
 const passport = require('passport');
 
 const router = express.Router();
-//@route   GET api/logs/
-//@desc    gets all user logs
-//@access  private
+// @route   GET api/logs/
+// @desc    gets all user logs
+// @access  Private
 router.get('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const response = await axios.get(process.env.LOGS_LINK + `logs/${req.user._id}`, {
@@ -19,9 +19,9 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
   }
 });
 
-//@route   DELETE api/logs/
-//@desc    clears user logs
-//@access  private
+// @route   DELETE api/logs/
+// @desc    clears user logs
+// @access  Private
 router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const response = await axios.delete(process.env.LOGS_LINK + `logs/${req.user._id}`, {

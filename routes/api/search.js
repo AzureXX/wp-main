@@ -1,17 +1,19 @@
 const express = require('express');
-const router = express.Router();
+// custom modules
+const { getModel } = require('../../utils/models');
+// custom function
+const searchOptions = regex => [{ 'name.us': regex }, { 'name.ru': regex }, { 'name.az': regex }];
+// models
 const Book = require('../../models/Book');
 const Course = require('../../models/Course');
 const Movie = require('../../models/Movie');
 const Person = require('../../models/Person');
 const User = require('../../models/User');
-const { getModel } = require('../../utils/models');
 
-const searchOptions = regex => [
-  { 'name.us': regex },
-  { 'name.ru': regex },
-  { 'name.az': regex }
-];
+const router = express.Router();
+// @route   GET api/search?search=...
+// @desc    Adds new questionnaire to database
+// @access  Public
 router.get('/', async (req, res, next) => {
   try {
     const regex = new RegExp(req.query.search, 'i');
@@ -33,41 +35,74 @@ router.get('/', async (req, res, next) => {
         $or: search
       },
       'name img'
-    ).limit(20).lean();
+    )
+      .limit(20)
+      .lean();
     let subcategories = Subcategory.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20).lean();
+    )
+      .limit(20)
+      .lean();
     let topics = Topic.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20).lean();
+    )
+      .limit(20)
+      .lean();
     let subtopics = Subtopic.find(
       {
         $or: search
       },
       'name img'
-    ).limit(20).lean();
+    )
+      .limit(20)
+      .lean();
 
-    let books = Book.find({
-      $or: search
-    },'name img description').limit(20).lean();
-    let movies = Movie.find({
-      $or: search
-    },'name img description').limit(20).lean();
-    let courses = Course.find({
-      $or: search
-    }, 'name img description').limit(20).lean();
-    let people = Person.find({
-      $or: search
-    }, 'name img description').limit(20).lean();
-    let music = Music.find({
-      name: regex
-    },'name img').limit(20).lean();
+    let books = Book.find(
+      {
+        $or: search
+      },
+      'name img description'
+    )
+      .limit(20)
+      .lean();
+    let movies = Movie.find(
+      {
+        $or: search
+      },
+      'name img description'
+    )
+      .limit(20)
+      .lean();
+    let courses = Course.find(
+      {
+        $or: search
+      },
+      'name img description'
+    )
+      .limit(20)
+      .lean();
+    let people = Person.find(
+      {
+        $or: search
+      },
+      'name img description'
+    )
+      .limit(20)
+      .lean();
+    let music = Music.find(
+      {
+        name: regex
+      },
+      'name img'
+    )
+      .limit(20)
+      .lean();
 
     categories = await categories;
     subcategories = await subcategories;
@@ -95,24 +130,14 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// @route   GET api/search/:type
+// @desc    Filter search results by type
+// @access  Public
 router.get('/:type', async (req, res, next) => {
   try {
-    const types = [
-      'books',
-      'movies',
-      'courses',
-      'people',
-      'categories',
-      'subcategories',
-      'topics',
-      'subtopics',
-      'users',
-      'education',
-      "music"
-    ];
+    const types = ['books', 'movies', 'courses', 'people', 'categories', 'subcategories', 'topics', 'subtopics', 'users', 'education', 'music'];
 
-    if (!types.includes(req.params.type))
-      throw new Error("search.invalidtype");
+    if (!types.includes(req.params.type)) throw new Error('search.invalidtype');
 
     const regex = new RegExp(req.query.search, 'i');
     const search = searchOptions(regex);
@@ -130,48 +155,59 @@ router.get('/:type', async (req, res, next) => {
           $or: search
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       let subcategories = Subcategory.find(
         {
           $or: search
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       let topics = Topic.find(
         {
           $or: search
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       let subtopics = Subtopic.find(
         {
           $or: search
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       categories = await categories;
       subcategories = await subcategories;
       topics = await topics;
       subtopics = await subtopics;
       return res.json({ categories, subcategories, topics, subtopics });
     } else if (req.params.type === 'music') {
-      const Music = getModel("music");
-      let  music = await Music.find(
+      const Music = getModel('music');
+      let music = await Music.find(
         {
           name: regex
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       return res.json(music);
-    }
-    else {
+    } else {
       const Model = getModel(req.params.type);
       let items = await Model.find(
         {
           $or: search
         },
         'name'
-      ).limit(20).lean();
+      )
+        .limit(20)
+        .lean();
       return res.json(items);
     }
   } catch (error) {

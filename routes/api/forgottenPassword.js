@@ -1,10 +1,8 @@
 const express = require('express');
-const joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
-// validator
+// custom modules
 const validateForgotPassword = require('../../validation/validators/forgotPassword');
 const validateChangePassword = require('../../validation/validators/changePassword');
-// service
 const forgotPassword = require('../../services/forgotPassword');
 // models
 const User = require('../../models/User');
@@ -12,10 +10,9 @@ const Auth = require('../../models/Auth');
 const ForgottenPasswordCode = require('../../models/ForgottenPasswordCode');
 
 const router = express.Router();
-
-//@route   POST api/password/forgot
-//@desc    helping users to get their forgotten passwords by sending mail
-//@access  Public
+// @route   POST api/password/forgot
+// @desc    helping users to get their forgotten passwords by sending mail
+// @access  Public
 router.post('/forgot', async (req, res, next) => {
   try {
     validateForgotPassword(req.body);
@@ -31,9 +28,9 @@ router.post('/forgot', async (req, res, next) => {
   }
 });
 
-//@route   POST api/password/change
-//@desc    allowing users to change their password
-//@access  Public
+// @route   POST api/password/change
+// @desc    allowing users to change their password
+// @access  Public
 router.post('/change', async (req, res, next) => {
   try {
     validateChangePassword(req.body);

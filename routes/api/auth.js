@@ -1,18 +1,18 @@
 const express = require('express');
-const router = express.Router();
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+// custom modules
 const verifyEmail = require('../../services/verifyEmail');
 const validator = require('../../validation/validators/auth');
 const requests = require('../../utils/requests');
-
+// models
 const User = require('../../models/User');
 const Auth = require('../../models/Auth');
 
-//@route   POST api/auth/signup
-//@desc    Return JWT
-//@access  Public
+const router = express.Router();
+// @route   POST api/auth/signup
+// @desc    Return JWT
+// @access  Public
 router.post(
   '/signup',
   // passport.authenticate('jwt', {
@@ -28,6 +28,7 @@ router.post(
       let exist = await Auth.findOne({ email }, '_id').lean();
 
       if (exist) throw new Error('email.exist');
+
       if (username) {
         exist = await User.findOne({ username }, '_id').lean();
         if (exist) throw new Error('user.exist');
@@ -72,9 +73,9 @@ router.post(
   }
 );
 
-//@route   POST api/auth/signin
-//@desc    Return JWT
-//@access  Public
+// @route   POST api/auth/signin
+// @desc    Return JWT
+// @access  Public
 router.post('/signin', async (req, res, next) => {
   try {
     validator.signIn(req.body);

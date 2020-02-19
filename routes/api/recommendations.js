@@ -1,18 +1,18 @@
 const express = require('express');
-const router = express.Router();
 const passport = require('passport');
-const requests = require('../../utils/requests');
 const axios = require('axios');
+// custom modules
+const requests = require('../../utils/requests');
 
-//@route   GET api/recommendations/:type
-//@desc    Gets certain types recommendations from database
-//@access  Private
+const router = express.Router();
+// @route   GET api/recommendations/:type
+// @desc    Gets certain types recommendations from database
+// @access  Private
 router.get('/:type', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const types = ['book', 'movie', 'course', 'person', 'music', 'vacancy', 'education'];
     const { type } = req.params;
-    if (!types.includes(type)) 
-      throw new Error('type.invalid');
+    if (!types.includes(type)) throw new Error('type.invalid');
 
     const response = await axios.get(process.env.RECOMMENDATION_LINK + `get/${req.params.type}/${req.user._id}`, {
       headers: {
@@ -25,15 +25,14 @@ router.get('/:type', passport.authenticate('jwt', { session: false }), async (re
   }
 });
 
-//@route   POST api/recommendations/:type
-//@desc    Calculate recommendations for certain type
-//@access  Private
+// @route   POST api/recommendations/:type
+// @desc    Calculate recommendations for certain type
+// @access  Private
 router.post('/:type', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const types = ['book', 'movie', 'course', 'person', 'music', 'vacancy', 'education'];
     const { type } = req.params;
-    if (!types.includes(type)) 
-      throw new Error('type.invalid');
+    if (!types.includes(type)) throw new Error('type.invalid');
 
     const response = await axios.post(
       process.env.RECOMMENDATION_LINK + `update/${req.params.type}/${req.user._id}`,
