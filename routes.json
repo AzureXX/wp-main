@@ -272,5 +272,60 @@
             "public - api/search?search=...",
             "public - api/search/:type"
         ]
+    },
+    "task": {
+        "get": [
+            "private - api/task/my",
+            "private - api/task/forme"
+        ],
+        "post": [
+            "private - api/task/add"
+        ],
+        "put": [
+            "private - api/task/status/:id",
+            "private - api/task/archived/:id",
+            "private - api/task/delete/:id"
+        ]
+    },
+    "user": {
+        "get": [
+            "private - api/user/current",
+            "private/user - api/user/get/:username",
+            "public - api/user/getall/:page?/:docLimit?",
+            "private/user - api/user/getrating/:type/:id",
+            "private/user - api/user/getedustatus/:type/:id",
+            "private - api/user/tags"
+        ],
+        "put": [
+            "private - api/user/update",
+            "private - api/user/changepass",
+            "private - api/user/emote",
+            "private - api/user/generalaccess"
+        ],
+        "delete": [
+            "private - api/user/delete"
+        ]
+    },
+    "vacancy": {
+        "get": [
+            "public - api/vacancy/get/all/:page?",
+            "private/business - api/vacancy/get/current",
+            "public - api/vacancy/get/id/:id"
+        ],
+        "post": [
+            "private/business - api/vacancy/add"
+        ],
+        "put": [
+            "private/business - api/vacancy/edit/:id"
+        ],
+        "delete": [
+            "private/business - api/vacancy/delete/:id"
+        ]
+    },
+    "verifyEmail": {
+        "post": [
+            "public - api/verify",
+            "private - api/verify/resend"
+        ]
     }
 }
