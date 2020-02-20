@@ -1,331 +1,378 @@
 {
-    "education": {
-        "category": {
+    "https://wisepanda.io/": {
+        "education": {
+            "category": {
+                "get": [
+                    "public - api/education/category/get/all/:page?",
+                    "public - api/education/category/get/id/:id"
+                ],
+                "post": [
+                    "private/moderator - api/education/category/add"
+                ],
+                "put": [
+                    "private/moderator - api/education/category/edit/:id"
+                ],
+                "delete": [
+                    "private/moderator - api/education/category/delete/:id"
+                ]
+            },
+            "subcategory": {
+                "get": [
+                    "public - api/education/subcategory/get/all/:page?",
+                    "public - api/education/subcategory/get/id/:id",
+                    "public - api/education/subcategory/get/parent/:id"
+                ],
+                "post": [
+                    "private/moderator - api/education/subcategory/add",
+                    "private - api/education/subcategory/setstatus"
+                ],
+                "put": [
+                    "private/moderator - api/education/subcategory/edit/:id"
+                ],
+                "delete": [
+                    "private/moderator - api/education/subcategory/delete/:id"
+                ]
+            },
+            "topic": {
+                "get": [
+                    "public - api/education/topic/get/all/:page?",
+                    "public - api/education/topic/get/id/:id",
+                    "public - api/education/topic/get/parent/:id"
+                ],
+                "post": [
+                    "private/moderator - api/education/topic/add",
+                    "private - api/education/topic/setstatus"
+                ],
+                "put": [
+                    "private/moderator - api/education/topic/edit/:id"
+                ],
+                "delete": [
+                    "private/moderator - api/education/topic/delete/:id"
+                ]
+            },
+            "subtopic": {
+                "get": [
+                    "public - api/education/subtopic/get/all/:page?",
+                    "public - api/education/subtopic/get/id/:id",
+                    "public - api/education/subtopic/get/parent/:id"
+                ],
+                "post": [
+                    "private/moderator - api/education/subtopic/add",
+                    "private - api/education/subtopic/setstatus"
+                ],
+                "put": [
+                    "private/moderator - api/education/subtopic/edit/:id"
+                ],
+                "delete": [
+                    "private/moderator - api/education/subtopic/delete/:id"
+                ]
+            }
+        },
+        "accessgroup": {
             "get": [
-                "public - api/education/category/get/all/:page?",
-                "public - api/education/category/get/id/:id"
+                "private - api/accessgroup/get/current",
+                "private - api/accessgroup/get/id/:id"
             ],
             "post": [
-                "private/moderator - api/education/category/add"
+                "private - api/accessgroup/add"
             ],
             "put": [
-                "private/moderator - api/education/category/edit/:id"
+                "private - api/accessgroup/edit/:id"
             ],
             "delete": [
-                "private/moderator - api/education/category/delete/:id"
+                "private - api/accessgroup/delete/:id"
             ]
         },
-        "subcategory": {
+        "achievements": {
             "get": [
-                "public - api/education/subcategory/get/all/:page?",
-                "public - api/education/subcategory/get/id/:id",
-                "public - api/education/subcategory/get/parent/:id"
-            ],
-            "post": [
-                "private/moderator - api/education/subcategory/add",
-                "private - api/education/subcategory/setstatus"
-            ],
-            "put": [
-                "private/moderator - api/education/subcategory/edit/:id"
-            ],
-            "delete": [
-                "private/moderator - api/education/subcategory/delete/:id"
+                "public - api/achievements/get/all",
+                "public - api/achievements/get/id/:id",
+                "private - api/achievements/user/current",
+                "public - api/achievements/user/id/:id"
             ]
         },
-        "topic": {
-            "get": [
-                "public - api/education/topic/get/all/:page?",
-                "public - api/education/topic/get/id/:id",
-                "public - api/education/topic/get/parent/:id"
-            ],
+        "actions": {
             "post": [
-                "private/moderator - api/education/topic/add",
-                "private - api/education/topic/setstatus"
-            ],
-            "put": [
-                "private/moderator - api/education/topic/edit/:id"
-            ],
-            "delete": [
-                "private/moderator - api/education/topic/delete/:id"
+                "private - api/actions/rate/:type"
             ]
         },
-        "subtopic": {
+        "auth": {
+            "post": [
+                "public - api/auth/signup",
+                "public - api/auth/signin"
+            ]
+        },
+        "book": {
             "get": [
-                "public - api/education/subtopic/get/all/:page?",
-                "public - api/education/subtopic/get/id/:id",
-                "public - api/education/subtopic/get/parent/:id"
+                "public - api/book/get/all/:page?",
+                "public - api/book/get/id/:id"
             ],
             "post": [
-                "private/moderator - api/education/subtopic/add",
-                "private - api/education/subtopic/setstatus"
+                "private/moderator - api/book/add",
+                "private/admin - api/book/google"
             ],
             "put": [
-                "private/moderator - api/education/subtopic/edit/:id"
+                "private/moderator - api/book/edit/:id"
             ],
             "delete": [
-                "private/moderator - api/education/subtopic/delete/:id"
+                "private/moderator - api/book/delete/:id"
+            ]
+        },
+        "collect": {
+            "get": [
+                "private/user - api/collect/initial"
+            ]
+        },
+        "course": {
+            "get": [
+                "public - api/course/get/all/:page?",
+                "public - api/course/get/id/:id",
+                "private/moderator - api/course/edx"
+            ],
+            "post": [
+                "private/moderator - api/course/add",
+                "private/moderator - api/course/udemy",
+                "private/moderator - api/course/edx disabled"
+            ],
+            "put": [
+                "private/moderator - api/course/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/course/delete/:id"
+            ]
+        },
+        "files": {
+            "post": [
+                "private/admin - api/files"
+            ]
+        },
+        "password": {
+            "post": [
+                "public - api/password/forgot",
+                "public - api/password/change"
+            ]
+        },
+        "logs": {
+            "get": [
+                "private - api/logs"
+            ],
+            "delete": [
+                "private - api/logs"
+            ]
+        },
+        "message": {
+            "get": [
+                "public - api/message/get/all/:page?",
+                "public - api/message/get/id/:id",
+                "private - api/message/get/current"
+            ],
+            "post": [
+                "private/moderator - api/message/add"
+            ],
+            "put": [
+                "private/moderator - api/message/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/message/delete/:id"
+            ]
+        },
+        "movie": {
+            "get": [
+                "public - api/movie/get/all/:page?",
+                "public - api/movie/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/movie/add",
+                "private/admin - api/movie/tmdb",
+                "private/admin - api/movie/masstmdb disabled"
+            ],
+            "put": [
+                "private/moderator - api/movie/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/movie/delete/:id"
+            ]
+        },
+        "music": {
+            "get": [
+                "public - api/music/get/all/:page?",
+                "public - api/music/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/music/add",
+                "private/admin - api/music/youtube"
+            ],
+            "put": [
+                "private/moderator - api/music/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/music/delete/:id"
+            ]
+        },
+        "notification": {
+            "get": [
+                "private - api/notification/get/current"
+            ]
+        },
+        "person": {
+            "get": [
+                "public - api/person/get/all/:page?",
+                "public - api/person/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/person/add"
+            ],
+            "put": [
+                "private/moderator - api/person/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/person/delete/:id"
+            ]
+        },
+        "question": {
+            "get": [
+                "public - api/question/get/all/:page?",
+                "public - api/question/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/question/add",
+                "private/moderator - api/question/answer"
+            ],
+            "put": [
+                "private/moderator - api/question/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/question/delete/:id"
+            ]
+        },
+        "questionnaire": {
+            "get": [
+                "public - api/questionnaire/get/all/:page?",
+                "public - api/questionnaire/get/id/:id"
+            ],
+            "post": [
+                "private/moderator - api/questionnaire/add"
+            ],
+            "put": [
+                "private/moderator - api/questionnaire/edit/:id"
+            ],
+            "delete": [
+                "private/moderator - api/questionnaire/delete/:id"
+            ]
+        },
+        "recommendations": {
+            "get": [
+                "private - api/recommendations/:type"
+            ],
+            "post": [
+                "private - api/recommendations/:type"
+            ]
+        },
+        "search": {
+            "get": [
+                "public - api/search?search=...",
+                "public - api/search/:type"
+            ]
+        },
+        "task": {
+            "get": [
+                "private - api/task/my",
+                "private - api/task/forme"
+            ],
+            "post": [
+                "private - api/task/add"
+            ],
+            "put": [
+                "private - api/task/status/:id",
+                "private - api/task/archived/:id",
+                "private - api/task/delete/:id"
+            ]
+        },
+        "user": {
+            "get": [
+                "private - api/user/current",
+                "private/user - api/user/get/:username",
+                "public - api/user/getall/:page?/:docLimit?",
+                "private/user - api/user/getrating/:type/:id",
+                "private/user - api/user/getedustatus/:type/:id",
+                "private - api/user/tags"
+            ],
+            "put": [
+                "private - api/user/update",
+                "private - api/user/changepass",
+                "private - api/user/emote",
+                "private - api/user/generalaccess"
+            ],
+            "delete": [
+                "private - api/user/delete"
+            ]
+        },
+        "vacancy": {
+            "get": [
+                "public - api/vacancy/get/all/:page?",
+                "private/business - api/vacancy/get/current",
+                "public - api/vacancy/get/id/:id"
+            ],
+            "post": [
+                "private/business - api/vacancy/add"
+            ],
+            "put": [
+                "private/business - api/vacancy/edit/:id"
+            ],
+            "delete": [
+                "private/business - api/vacancy/delete/:id"
+            ]
+        },
+        "verifyEmail": {
+            "post": [
+                "public - api/verify",
+                "private - api/verify/resend"
             ]
         }
     },
-    "accessgroup": {
-        "get": [
-            "private - api/accessgroup/get/current",
-            "private - api/accessgroup/get/id/:id"
-        ],
-        "post": [
-            "private - api/accessgroup/add"
-        ],
-        "put": [
-            "private - api/accessgroup/edit/:id"
-        ],
-        "delete": [
-            "private - api/accessgroup/delete/:id"
-        ]
+    "https://wp-achievements.herokuapp.com/": {
+        "achievements": {
+            "get": [
+                "public - get/all",
+                "public - get/id/:id"
+            ]
+        },
+        "userAchievements": {
+            "get": [
+                "public - user/get/all",
+                "public - user/get/id/:id"
+            ],
+            "post": [
+                "public - user/calculate/:type/:id"
+            ]
+        }
     },
-    "achievements": {
-        "get": [
-            "public - api/achievements/get/all",
-            "public - api/achievements/get/id/:id",
-            "private - api/achievements/user/current",
-            "public - api/achievements/user/id/:id"
-        ]
+    "https://wp-logs.herokuapp.com/": {
+        "logs": {
+            "get": [
+                "private/access_token - logs/:userId"
+            ],
+            "post": [
+                "private/access_token - logs/:userId"
+            ],
+            "delete": [
+                "private/access_token - logs/:userId"
+            ]
+        }
     },
-    "actions": {
-        "post": [
-            "private - api/actions/rate/:type"
-        ]
-    },
-    "auth": {
-        "post": [
-            "public - api/auth/signup",
-            "public - api/auth/signin"
-        ]
-    },
-    "book": {
-        "get": [
-            "public - api/book/get/all/:page?",
-            "public - api/book/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/book/add",
-            "private/admin - api/book/google"
-        ],
-        "put": [
-            "private/moderator - api/book/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/book/delete/:id"
-        ]
-    },
-    "collect": {
-        "get": [
-            "private/user - api/collect/initial"
-        ]
-    },
-    "course": {
-        "get": [
-            "public - api/course/get/all/:page?",
-            "public - api/course/get/id/:id",
-            "private/moderator - api/course/edx"
-        ],
-        "post": [
-            "private/moderator - api/course/add",
-            "private/moderator - api/course/udemy",
-            "private/moderator - api/course/edx disabled"
-        ],
-        "put": [
-            "private/moderator - api/course/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/course/delete/:id"
-        ]
-    },
-    "files": {
-        "post": [
-            "private/admin - api/files"
-        ]
-    },
-    "password": {
-        "post": [
-            "public - api/password/forgot",
-            "public - api/password/change"
-        ]
-    },
-    "logs": {
-        "get": [
-            "private - api/logs"
-        ],
-        "delete": [
-            "private - api/logs"
-        ]
-    },
-    "message": {
-        "get": [
-            "public - api/message/get/all/:page?",
-            "public - api/message/get/id/:id",
-            "private - api/message/get/current"
-        ],
-        "post": [
-            "private/moderator - api/message/add"
-        ],
-        "put": [
-            "private/moderator - api/message/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/message/delete/:id"
-        ]
-    },
-    "movie": {
-        "get": [
-            "public - api/movie/get/all/:page?",
-            "public - api/movie/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/movie/add",
-            "private/admin - api/movie/tmdb",
-            "private/admin - api/movie/masstmdb disabled"
-        ],
-        "put": [
-            "private/moderator - api/movie/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/movie/delete/:id"
-        ]
-    },
-    "music": {
-        "get": [
-            "public - api/music/get/all/:page?",
-            "public - api/music/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/music/add",
-            "private/admin - api/music/youtube"
-        ],
-        "put": [
-            "private/moderator - api/music/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/music/delete/:id"
-        ]
-    },
-    "notification": {
-        "get": [
-            "private - api/notification/get/current"
-        ]
-    },
-    "person": {
-        "get": [
-            "public - api/person/get/all/:page?",
-            "public - api/person/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/person/add"
-        ],
-        "put": [
-            "private/moderator - api/person/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/person/delete/:id"
-        ]
-    },
-    "question": {
-        "get": [
-            "public - api/question/get/all/:page?",
-            "public - api/question/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/question/add",
-            "private/moderator - api/question/answer"
-        ],
-        "put": [
-            "private/moderator - api/question/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/question/delete/:id"
-        ]
-    },
-    "questionnaire": {
-        "get": [
-            "public - api/questionnaire/get/all/:page?",
-            "public - api/questionnaire/get/id/:id"
-        ],
-        "post": [
-            "private/moderator - api/questionnaire/add"
-        ],
-        "put": [
-            "private/moderator - api/questionnaire/edit/:id"
-        ],
-        "delete": [
-            "private/moderator - api/questionnaire/delete/:id"
-        ]
-    },
-    "recommendations": {
-        "get": [
-            "private - api/recommendations/:type"
-        ],
-        "post": [
-            "private - api/recommendations/:type"
-        ]
-    },
-    "search": {
-        "get": [
-            "public - api/search?search=...",
-            "public - api/search/:type"
-        ]
-    },
-    "task": {
-        "get": [
-            "private - api/task/my",
-            "private - api/task/forme"
-        ],
-        "post": [
-            "private - api/task/add"
-        ],
-        "put": [
-            "private - api/task/status/:id",
-            "private - api/task/archived/:id",
-            "private - api/task/delete/:id"
-        ]
-    },
-    "user": {
-        "get": [
-            "private - api/user/current",
-            "private/user - api/user/get/:username",
-            "public - api/user/getall/:page?/:docLimit?",
-            "private/user - api/user/getrating/:type/:id",
-            "private/user - api/user/getedustatus/:type/:id",
-            "private - api/user/tags"
-        ],
-        "put": [
-            "private - api/user/update",
-            "private - api/user/changepass",
-            "private - api/user/emote",
-            "private - api/user/generalaccess"
-        ],
-        "delete": [
-            "private - api/user/delete"
-        ]
-    },
-    "vacancy": {
-        "get": [
-            "public - api/vacancy/get/all/:page?",
-            "private/business - api/vacancy/get/current",
-            "public - api/vacancy/get/id/:id"
-        ],
-        "post": [
-            "private/business - api/vacancy/add"
-        ],
-        "put": [
-            "private/business - api/vacancy/edit/:id"
-        ],
-        "delete": [
-            "private/business - api/vacancy/delete/:id"
-        ]
-    },
-    "verifyEmail": {
-        "post": [
-            "public - api/verify",
-            "private - api/verify/resend"
-        ]
+    "https://wp-recommendations.herokuapp.com/": {
+        "getRecommendation": {
+            "get": [
+                "private/access_token - get/:type/:userid"
+            ]
+        },
+        "updateRecommendation": {
+            "post": [
+                "private/access_token - update/:type/:userid"
+            ],
+            "patch": [
+                "private/access_token - update/remove"
+            ]
+        }
     }
 }
